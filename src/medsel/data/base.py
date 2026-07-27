@@ -62,9 +62,11 @@ class BaseLoader(ABC):
         return f"{self.name}-{self.config}-v{self.normalizer_version}"
 
     def check_split(self, split: str) -> None:
-        if self.splits and split not in self.splits:
+        """Validate a split name, tolerating Hub slice syntax such as ``train[:500]``."""
+        base = split.split("[", 1)[0]
+        if self.splits and base not in self.splits:
             raise ValueError(
-                f"{self.name} has no split {split!r}; available: {', '.join(self.splits)}"
+                f"{self.name} has no split {base!r}; available: {', '.join(self.splits)}"
             )
 
     def has_labels(self, split: str) -> bool:

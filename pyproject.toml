@@ -54,7 +54,8 @@ extraPaths = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q"
+# Default runs stay offline; opt into Hub checks with `pytest -m network`.
+addopts = "-q -m 'not network'"
 markers = [
     "network: test requires network access to the Hugging Face Hub",
 ]
