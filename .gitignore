@@ -1,6 +1,8 @@
-# Data and run artifacts (never committed - see docs/datasets.md to regenerate)
-data/
-runs/
+# Data and run artifacts (never committed - see docs/datasets.md to regenerate).
+# Leading slash anchors to the repo root: an unanchored `data/` would also swallow
+# the src/medsel/data package.
+/data/
+/runs/
 *.parquet
 *.jsonl
 !tests/fixtures/*.jsonl
