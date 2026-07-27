@@ -1,0 +1,25 @@
+# Data and run artifacts (never committed - see docs/datasets.md to regenerate)
+data/
+runs/
+*.parquet
+*.jsonl
+!tests/fixtures/*.jsonl
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+
+# Tooling / personal
+.claude/
+gotchas.md
+.env
+.DS_Store
+.idea/
+.vscode/

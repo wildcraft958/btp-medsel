@@ -1,0 +1,55 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "medsel"
+version = "0.1.0"
+description = "Multi-stage, multi-target data selection harness for medical foundation models"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Animesh Raj", email = "animeshraj958@gmail.com" }]
+keywords = ["medical-nlp", "data-selection", "continual-pretraining", "llm"]
+
+dependencies = [
+    "datasets>=2.19",
+    "huggingface-hub>=0.23",
+    "pyarrow>=15.0",
+    "pyyaml>=6.0",
+    "numpy>=1.24",
+    "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+train = [
+    "torch>=2.2",
+    "transformers>=4.44",
+    "accelerate>=0.33",
+    "peft>=0.12",
+    "trl>=0.9",
+]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[project.scripts]
+medsel = "medsel.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/medsel"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "network: test requires network access to the Hugging Face Hub",
+]
