@@ -47,6 +47,11 @@ target-version = "py310"
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
 
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+extraPaths = ["src"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
