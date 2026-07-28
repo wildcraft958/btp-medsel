@@ -45,7 +45,8 @@ pinning CPU builds for everyone would be worse.
 uv run ruff format .
 uv run ruff check .
 uv run pytest
-uv run medsel train --config configs/experiment/smoke_cpu.yaml   # a few minutes on CPU
+uv run medsel train --config configs/experiment/smoke_cpu.yaml       # CPT path, minutes on CPU
+uv run medsel train --config configs/experiment/sft_smoke_cpu.yaml   # SFT path, minutes on CPU
 ```
 
 The smoke run exercises the whole CPT path: shard fetch, filtering, packing, training,

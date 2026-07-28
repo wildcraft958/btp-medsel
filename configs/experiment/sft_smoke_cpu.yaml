@@ -1,0 +1,39 @@
+# SFT pipeline validation, not a result.
+#
+# Runs the whole SFT path (QA load, prompt rendering, response-masked training, checkpointing) on
+# a laptop CPU in a few minutes with a 135M model. Its purpose is to fail loudly when someone
+# breaks the stage, so run it before pushing.
+#
+#   uv run medsel train --config configs/experiment/sft_smoke_cpu.yaml
+#
+# Nothing here is tuned for learning anything: 20 steps over 200 examples teaches the model
+# nothing useful, and the loss curve should not be interpreted.
+name: sft-smoke-cpu
+stage: sft
+notes: CPU smoke test for the SFT stage. Validates the path end to end; produces no useful model.
+
+model: ../model/smollm2_135m.yaml
+
+data:
+  source: medmcqa
+  # `train`, not `validation`: validation is the evaluation set, and training on it would make
+  # every downstream MedMCQA number meaningless. `test` would fail outright, since it withholds
+  # gold answers.
+  split: train
+  limit: 200
+
+train:
+  output_dir: runs/sft-smoke-cpu
+  max_length: 512
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 4
+  learning_rate: 5.0e-5
+  max_steps: 20
+  warmup_ratio: 0.0
+  logging_steps: 5
+  save_steps: 1000        # above max_steps, so only the final save fires
+  seed: 42
+  # Off so the smoke test exercises the same target shape the evaluator scores. MedMCQA ships no
+  # explanation on many rows, so turning this on changes which examples carry a rationale and
+  # makes the smoke run less representative.
+  include_rationale: false

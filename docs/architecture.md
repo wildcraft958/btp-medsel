@@ -123,5 +123,5 @@ Written against `transformers` 5.x (`dtype` not `torch_dtype`, `processing_class
 | A dataset | New module in `src/medsel/data/`, subclass `BaseLoader`, `@register_loader` |
 | A selection method | New module in `src/medsel/selection/scorers/`, subclass `Scorer`, `@register_scorer` |
 | An experiment | New YAML in `configs/experiment/` |
-| A training stage | Implement `prepare`/`run` in the existing `stages/sft.py` or `stages/align.py` |
+| A training stage | Implement `prepare`/`run` in the existing `stages/align.py` |
 | A metric | Extend `EvalReport` in `src/medsel/eval/mcq.py` |

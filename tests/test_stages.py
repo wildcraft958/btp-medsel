@@ -3,8 +3,11 @@
 import pytest
 
 from medsel.config import DataConfig, ExperimentConfig, ModelConfig, TrainConfig
+from medsel.prompts.templates import render_continuation
+from medsel.schema import QAExample
 from medsel.stages import STAGES, AlignStage, CPTStage, SFTStage, available_stages, get_stage
 from medsel.stages.base import Stage
+from medsel.stages.sft import render_completion
 
 
 def config(source="pubmed", **train_kwargs) -> ExperimentConfig:
@@ -36,24 +39,96 @@ class TestStageRegistry:
 
 
 class TestUnimplementedStages:
-    @pytest.mark.parametrize("cls", [SFTStage, AlignStage])
-    def test_prepare_raises_with_guidance(self, cls):
+    def test_prepare_raises_with_guidance(self):
         with pytest.raises(NotImplementedError, match="src/medsel/stages"):
-            cls(config()).prepare()
+            AlignStage(config()).prepare()
 
-    @pytest.mark.parametrize("cls", [SFTStage, AlignStage])
-    def test_run_raises_with_guidance(self, cls):
+    def test_run_raises_with_guidance(self):
         with pytest.raises(NotImplementedError):
-            cls(config()).run()
-
-    def test_sft_message_names_the_intended_trainer(self):
-        with pytest.raises(NotImplementedError, match="SFTTrainer"):
-            SFTStage(config()).prepare()
+            AlignStage(config()).run()
 
     def test_align_message_names_the_real_blocker(self):
         # The blocker is dataset choice, not training code; the message should say so.
         with pytest.raises(NotImplementedError, match="preference dataset"):
             AlignStage(config()).prepare()
+
+
+class TestSFTSourceValidation:
+    """SFT is the mirror image of CPT: it needs QA examples, not raw corpus text."""
+
+    def test_corpus_sources_are_rejected_before_any_download(self):
+        with pytest.raises(ValueError, match="QAExample"):
+            SFTStage(config(source="pubmed")).prepare()
+
+    def test_rejection_points_at_the_right_sources(self):
+        with pytest.raises(ValueError, match="CPT stage"):
+            SFTStage(config(source="pubmed")).prepare()
+
+    def test_unknown_source_is_rejected(self):
+        with pytest.raises(KeyError, match="unknown loader"):
+            SFTStage(config(source="not_a_dataset")).prepare()
+
+    def test_unlabeled_split_is_refused(self):
+        # MedMCQA's `test` split ships cop = -1 on every row. Training on it would teach the
+        # model a constant wrong answer, silently.
+        cfg = config(source="medmcqa")
+        cfg.data.split = "test"
+        with pytest.raises(ValueError, match="withholds gold answers"):
+            SFTStage(cfg).prepare()
+
+
+class TestSFTCompletionRendering:
+    def test_leading_space_matches_the_evaluator(self):
+        # render_continuation puts the space on the continuation, so training must too, or the
+        # tokens differ between training and scoring.
+        example = QAExample(
+            uid="u/train/0",
+            source="u",
+            split="train",
+            question="q?",
+            options={"A": "alpha", "B": "beta"},
+            answer_key="A",
+        )
+        assert render_completion(example) == " A"
+        assert render_completion(example) == render_continuation(example, "A", "letter")
+
+    def test_rationale_is_appended_only_when_asked(self):
+        example = QAExample(
+            uid="u/train/1",
+            source="u",
+            split="train",
+            question="q?",
+            options={"A": "alpha", "B": "beta"},
+            answer_key="B",
+            rationale="because beta",
+        )
+        assert render_completion(example, include_rationale=False) == " B"
+        rendered = render_completion(example, include_rationale=True)
+        assert rendered.startswith(" B")
+        assert "because beta" in rendered
+
+    def test_missing_rationale_is_not_faked(self):
+        example = QAExample(
+            uid="u/train/2",
+            source="u",
+            split="train",
+            question="q?",
+            options={"A": "alpha", "B": "beta"},
+            answer_key="A",
+        )
+        assert render_completion(example, include_rationale=True) == " A"
+
+    def test_unlabeled_example_cannot_be_a_target(self):
+        example = QAExample(
+            uid="u/test/0",
+            source="u",
+            split="test",
+            question="q?",
+            options={"A": "alpha", "B": "beta"},
+            answer_key=None,
+        )
+        with pytest.raises(ValueError, match="no answer_key"):
+            render_completion(example)
 
 
 class TestCPTSourceValidation:

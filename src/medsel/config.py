@@ -72,6 +72,15 @@ class TrainConfig:
     drop_remainder: bool = True
     report_to: str = "none"
 
+    # SFT-stage only. block_size above governs CPT packing; max_length governs how long a single
+    # rendered instruction-response example may be before it is truncated.
+    max_length: int = 1024
+    # Train on the rationale as well as the answer letter, where the dataset ships one (MedMCQA
+    # `exp`, PubMedQA `long_answer`). Off by default because rationale coverage is partial: many
+    # MedMCQA rows have no explanation, so turning this on changes what fraction of the dataset
+    # is usable and that has to be a deliberate choice.
+    include_rationale: bool = False
+
 
 @dataclass
 class ExperimentConfig:

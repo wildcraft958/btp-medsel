@@ -24,10 +24,14 @@ dependencies = [
 [project.optional-dependencies]
 train = [
     "torch>=2.2",
-    "transformers>=4.44",
+    # transformers 5 renamed torch_dtype to dtype and Trainer(tokenizer=) to processing_class.
+    # The stages use both, so 4.x does not work and the floor says so rather than failing at
+    # runtime with a confusing TypeError.
+    "transformers>=5.0",
     "accelerate>=0.33",
     "peft>=0.12",
-    "trl>=0.9",
+    # SFTConfig(max_length=, completion_only_loss=) is TRL 1.x. Verified against 1.9.2.
+    "trl>=1.0",
 ]
 dev = [
     "pytest>=8.0",

@@ -65,7 +65,7 @@ src/medsel/
   schema.py       QAExample, CorpusDoc
   registry.py     name -> loader, so adding a dataset touches no core file
   data/           per-source loaders, parquet cache, token packing
-  stages/         cpt (implemented), sft / align (stubs)
+  stages/         cpt, sft (implemented), align (stub)
   selection/      Scorer interface + baseline scorers
   eval/           MCQ log-prob evaluator, per-capability breakdown
 configs/          data / model / experiment YAML
@@ -99,7 +99,7 @@ See `docs/contributing.md`.
 | MCQ evaluator with per-subject breakdown | done |
 | Selection interface + baseline scorers | done |
 | Literature review + docs | done |
-| SFT stage | stub, see `src/medsel/stages/sft.py` |
+| SFT stage | done, verified end to end on CPU |
 | Preference optimisation | stub, blocked on choosing a dataset |
 | Influence-based scorers (LESS, 3DS, TRAK) | not started |
 | PubMed→PubMedQA contamination filter | done, opt-in via `exclude_pmids` |
