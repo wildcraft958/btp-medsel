@@ -1,0 +1,11 @@
+# Gemma 3 1B base - the primary CPT target.
+#
+# A non-medical base is chosen on purpose: continually pretraining a model that is already
+# medically adapted (MedGemma) would make any gain impossible to attribute to our data selection.
+# MedGemma serves instead as the reference ceiling to compare against.
+#
+# Gated: run `hf auth login` and accept the licence at huggingface.co/google/gemma-3-1b-pt first.
+name_or_path: google/gemma-3-1b-pt
+dtype: auto
+use_lora: false
+gradient_checkpointing: true

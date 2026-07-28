@@ -1,0 +1,8 @@
+# Ungated tiny model used by the CPU smoke profile.
+#
+# Deliberately not Gemma: Gemma weights are licence-gated and need `hf auth login` plus manual
+# acceptance, so a new collaborator cloning this repo could not run the smoke test out of the box.
+name_or_path: HuggingFaceTB/SmolLM2-135M
+dtype: auto
+use_lora: false
+gradient_checkpointing: false

@@ -1,0 +1,36 @@
+# CPT baseline: no data selection at all.
+#
+# This is the control the whole project is measured against. It takes a contiguous slice of
+# PubMed with only trivial length filtering, so any later selection policy has to beat "just read
+# the corpus in order" on capability retention per token trained.
+#
+# Requires a GPU. Adjust num_shards to your disk budget: shards are ~60 MB each and ~20k
+# documents, and the loader refuses to start if free space cannot cover the download.
+name: cpt-baseline-nosel
+stage: cpt
+notes: Unselected PubMed baseline. Control condition for all data-selection experiments.
+
+model: ../model/gemma3_1b.yaml
+
+data:
+  source: pubmed
+  split: train
+  loader:
+    num_shards: 32        # ~2 GB, ~640k documents
+    min_chars: 200
+    dedup: true
+
+train:
+  output_dir: runs/cpt-baseline-nosel
+  block_size: 1024
+  per_device_train_batch_size: 4
+  gradient_accumulation_steps: 8
+  learning_rate: 2.0e-5
+  num_train_epochs: 1.0
+  warmup_ratio: 0.03
+  weight_decay: 0.01
+  lr_scheduler_type: cosine
+  logging_steps: 20
+  save_steps: 500
+  save_total_limit: 2
+  seed: 42
