@@ -172,6 +172,36 @@ yet demonstrated that it does, under fair comparison. That is a *better* motivat
 project than the optimistic framing: if generic medical CPT gives little, then showing that
 *selected* medical CPT gives more is a genuinely open and worthwhile result.
 
+### 3.6 The 2026 evidence: still contested, in both directions
+
+A deep research pass in July 2026 (25 claims extracted from 2025-2026 sources, each put through a
+3-vote adversarial verification, 16 survived) found the contrarian result neither settled nor
+overturned. Both directions strengthened.
+
+**Extending the contrarian finding.** LiveMedBench [Yn26], a contamination-free suite refreshed
+weekly from real clinical cases, reports MedGemma 27B scoring 5.9% against 6.4% for the
+general-purpose Gemini 2.5 Flash, a direct 2026 extension of Jeong et al.'s result to a newer
+medical model on a newer benchmark. Dorfner et al., peer-reviewed in JAMIA [Do25] (arXiv v1
+predates this window but the peer-reviewed version is 2025), independently find biomedical
+fine-tuning adds little on unseen clinical data under a fair comparison. MedCheck [Ch26] audited 56
+medical LLM benchmarks against 46 lifecycle criteria and found 49 of 56 do not address
+contamination at all, and names MedQA and MedMCQA explicitly as paradigm cases of
+convenience-driven benchmark design, exam questions standing in for clinical data.
+
+**Complicating it.** Medmarks [Wa26], a 30-benchmark open suite, reports medically adapted models
+beating their own bases with mean win-rate gains of 0.32 to 0.55 depending on model family,
+disconfirming evidence against the contrarian framing on this particular suite. Domingo-Aldama et
+al. [Dm26] find medical adaptation pays off specifically for under-served languages, a nuance
+rather than a reversal. Read together with Jeong et al., the honest summary is: fair comparison
+still finds medical adaptation an inconsistent win, model-family and benchmark dependent, not a
+settled loss. The project's reframed question, does *selected* CPT help where unselected CPT does
+not, remains open and is not weakened by either direction.
+
+**A benchmark-validity complication that cuts across both directions.** MedCheck [Ch26] also
+reports that 34% of the 56 audited benchmarks evaluate only a single dimension such as accuracy,
+and 50% align with no formal medical standard such as ICD or SNOMED CT. Any single number from
+MedQA, MedMCQA or PubMedQA, in either direction, should be read against that backdrop.
+
 ---
 
 ## 4. Stage 2: Supervised fine-tuning
@@ -208,6 +238,12 @@ and 3DS [D25] are both SFT-stage methods. Their headline results are strong: LES
 5% of the data, selected well, can beat the full dataset, which is the strongest available
 evidence that selection is worth doing at all.
 
+UltraMedical [Zg24] is worth naming as context rather than as a method: a large curated biomedical
+instruction corpus (NeurIPS 2024 Datasets and Benchmarks Track, Spotlight) built by synthesis and
+preference filtering rather than selection from a fixed pool. It shows the field's SFT-stage
+answer to data scarcity is generation, not only selection, an alternative worth weighing against
+selecting from the three QA sets already in scope.
+
 ---
 
 ## 5. Stage 3: Preference optimisation
@@ -227,12 +263,33 @@ public datasets in scope, it is not. Options, in rough order of cost:
    perturbed answer as rejected. Cheap, but the "rejected" side is artificial and the resulting
    preference signal may be about fluency rather than clinical correctness.
 2. Use MedMCQA explanations similarly, with the correct-option explanation as chosen.
-3. Adopt an existing open medical preference set, if one of adequate quality exists. This needs a
-   survey we have not yet done.
+3. Adopt an existing open medical preference set, if one of adequate quality exists. The survey
+   below answers this: no medical-specific set was found, but general open preference corpora are
+   concrete and usable now.
+
+**The survey.** Djuhera et al. [Dj26] audit five open, non-credentialed DPO corpora: TuluDPO
+(around 280k pairs), ORPO (`mlabonne/orpo-dpo-mix-40k`, 40k pairs), UltraFeedback, HelpSteer, and
+Code-Preference-Pairs. Two findings matter directly for option 3:
+
+- **Curated beats largest.** UltraMix, a 190k-pair mixture assembled selectively across all five
+  sources, is 30% smaller than the strongest individual source (TuluDPO) yet scores higher across
+  14 evaluation tasks. This is itself a preference-stage selection result: curating beats using the
+  single best full dataset, which is the same shape of claim the proposal makes for CPT and SFT.
+- **These corpora are noisy at the pair level.** Only 70 to 80% of pairs across TuluDPO, ORPO,
+  UltraFeedback and HelpSteer have a reward-model preference ordering that agrees with the labelled
+  chosen answer, meaning roughly 20 to 30% of pairs may carry a questionable or inverted label.
+  Code-Preference-Pairs is the exception, with better label agreement. Any DPO run built on these
+  sources inherits this noise floor and should not treat the labelled preference as ground truth
+  without a sanity check.
+
+None of the five is medical, so option 3 does not remove the need for options 1 and 2; it gives a
+general-domain preference set that could be mixed with medically-constructed pairs, the same
+replay logic as Section 3.2 applied to Stage 3.
 
 Safety and hallucination are the capabilities this stage is normally credited with, and they are
-also the ones our current benchmarks (three MCQ datasets) cannot measure at all. That gap should
-be stated plainly in any write-up.
+also the ones our current benchmarks (three MCQ datasets) cannot measure at all. Section 6.5 lists
+concrete open benchmarks that do measure some of this. That gap should be stated plainly in any
+write-up.
 
 ---
 
@@ -315,6 +372,31 @@ rather than ours.
 If full text becomes necessary (plausible for long-context or reasoning-oriented CPT), PubMed
 Central Open Access is the successor corpus, and MEDITRON's corpus construction [C23] is the
 reference for how to do it.
+
+### 6.5 Beyond MCQ: benchmarks for the other capabilities
+
+Open Question 5 (Section 10) names the project's admitted weakness: the proposal claims six
+clinical capabilities, and MedQA, MedMCQA and PubMedQA measure roughly one and a half. A 2026
+research pass looked specifically for open, non-credentialed benchmarks covering the rest, since
+this project cannot use MIMIC-IV-style credentialed data. Four are concrete and usable now:
+
+| Benchmark | Capability covered | Access | Headroom in 2026 |
+|---|---|---|---|
+| HealthBench [Op25] | Open-ended clinical response quality, safety, communication | CC BY-4.0, github.com/openai/simple-evals | Main split moved 16% to 60% in two years; HealthBench Hard still sits at 32% for the best model at release, so it has not saturated |
+| BRIDGE [Wu25] | Information extraction, ICD-10 coding, summarisation, NLI, classification | Open, 87 tasks over 59 real clinical text datasets | ICD-10 coding accuracy around 15%, generation tasks around 20%, large headroom |
+| ACI-Bench [Yi23] | Clinical summarisation (visit-note generation from dialogue) | CC BY 4.0, no credentialing, Figshare DOI 10.6084/m9.figshare.22494601 | Only 207 dialogue-note pairs total (40 per test split), too small to power a regression benchmark; usable as a qualitative probe only |
+| Medmarks [Wa26] | QA, information extraction, medical calculation, open-ended reasoning | Open, 30 benchmarks, includes an RL-trainable split (Medmarks-T) | Reports the MultiMedQA suite (MedQA, MedMCQA, PubMedQA's core) as mostly saturated, which independently confirms why this section exists |
+
+Two more are worth knowing about without adopting outright: LiveMedBench [Yn26] refreshes weekly
+from real clinical cases specifically to stay contamination-free, at the cost of being a moving
+target rather than a fixed benchmark a thesis can cite a stable number against; MedXpertQA [Zu25]
+is a harder MCQ-style benchmark (expert-level reasoning) that would raise the difficulty ceiling
+of the existing MCQ evaluation without adding a new capability.
+
+The practical implication: capability coverage no longer needs a custom benchmark built from
+scratch to grow past MCQ. The gap is integration effort (a fourth loader shape, since none of
+these four match `QAExample`), not the absence of a benchmark. This should be weighed against the
+month 9-10 validation timeline named in Section 10.
 
 ---
 
@@ -402,42 +484,138 @@ exactly the gap the proposal targets.
 | DSIR | pretrain | n-gram distribution match | very low | no |
 | Quality classifier | pretrain | learned quality score | low | no |
 | 3DS [D25] | SFT (medical) | decomposed difficulty | moderate | partially (3 difficulty axes) |
+| BETR [Be25] | pretrain | benchmark-embedding similarity, distilled to fastText | low at inference, one-time distillation cost | partially (diverse-target variant, one aggregate score) |
+| Data Mixing Agent [Ya26] | CPT | learned domain-mixture policy (offline RL) | moderate, one-time policy training | partially (multi-domain, single stage) |
+| Meta-rater [Zh25] | pretrain | multi-dimensional learned quality score | low at inference | no |
 | **This project** | **CPT + SFT + DPO** | **multiple, stage-specific** | **TBD** | **yes, by construction** |
+
+### 7.6 Corpus-scale selection, 2026 update
+
+Four results from a 2026 research pass bear directly on the CPT stage, and one of them changes
+how `resolve_budget` should be reasoned about.
+
+**The optimal selection ratio scales with compute, not a constant.** BETR [Be25] fits
+F_opt(C) = 4e-5 x C^0.25, the fraction of the corpus worth keeping, rising from about 3% at
+1e20 FLOPs to about 30% at 1e23 FLOPs. Larger training runs need *less* aggressive filtering. This
+is falsifiable and directly load-bearing: it means a keep-rate copied from a large published recipe
+is provably wrong at this project's scale, and a small-compute CPT run should filter far more
+aggressively than DataComp-LM or similar large-scale work would suggest.
+
+**Selecting for one target measurably costs the others.** BETR's own ablation is the clearest
+empirical support in this review for the multi-target premise: a variant targeted at one benchmark
+suite (Core) is best on that suite but falls to third place on held-out (Noncore) tasks. This
+confirms Gap 2 is a real cost, not a hypothetical one, though it also means BETR itself already
+occupies part of the multi-target space (Section 8 below).
+
+**A domain-specific signal beats a generic quality classifier for medicine.** Huang et al. [Hu26],
+at matched compute on a French medical encoder, find a medical-term density filter beats the
+standard educational-quality classifier as a single-axis filter (78.27 versus 59.16 win
+probability against an unfiltered baseline of 45.02), and the intersection of both beats either
+alone. This is the first published, concrete result naming a domain-specific corpus-scale filter
+for medical text, and it is a stronger baseline to beat than a generic FineWeb-Edu-style classifier
+for this project's CPT stage. Caveat carried with the claim: encoder MLM in French, not decoder CPT
+in English, and compared against unfiltered data, not a random subsample of equal size.
+
+**The scariest-looking result does not license skipping selection here.** Mohri et al. [Mo26]
+report unfiltered web data beating every quality filter tested, at model and data scale. The
+crossing point where unfiltered data wins is real, but the authors' own projection puts it near
+1e30 FLOPs for the full 240T-token pool, against roughly 5e26 FLOPs for a current frontier
+pretraining run, and they state plainly that "when compute is a bottleneck, we expect filtering to
+still be important." Below a model-size threshold the crossing does not occur at all. This
+project's compute budget sits nowhere near the regime where the result applies.
+
+One mechanism-level result changes what *not* to use as a selection signal: Nait Saada et al.
+[Na26] find that quality filtering's benefit does not come from selecting documents that resemble
+a high-quality reference distribution, which weakens the case for scoring CPT documents by
+similarity to a small in-domain seed set as a standalone signal, and argues for combining it with a
+direct quality or noise-removal criterion such as the medical-term density result above.
+
+### 7.7 Preference-stage data selection
+
+Section 5 covers this in detail as the answer to the Stage 3 data blocker. In selection terms, the
+one-line summary from Djuhera et al. [Dj26] is that curated preference data beats the largest
+single source: a 190k-pair mixture assembled across five open corpora beats the strongest
+280k-pair single source on 14 evaluation tasks, the same "selection beats scale" claim this project
+makes for CPT and SFT, now demonstrated for DPO too, on general-domain rather than medical data.
+
+For a broader map of data-centric efficient training methods than this section covers, Luo et al.'s
+2025 survey [Lu25] is worth citing wholesale rather than re-deriving.
 
 ---
 
 ## 8. Gap analysis
 
-Reading across Sections 3-7, four gaps are consistent:
+Reading across Sections 3-7, four gaps were consistent as of the original review. A 2026 research
+pass revisited each adversarially, specifically to check whether anyone had closed them since. Two
+were narrowed rather than closed; two stand as before; and one new gap emerged from the same pass.
 
-**Gap 1: Single-stage scope.** Nearly all selection work targets SFT. LESS, GLISTER, GradMatch
-and 3DS are all instruction-tuning methods. CPT-stage selection is dominated by cheap heuristics
-(dedup, quality classifiers, distribution matching) because per-example gradient methods do not
-scale to 23.9M documents. Nobody has asked whether the *right* CPT subset depends on what the SFT
-stage will subsequently do.
+**Gap 1: Single-stage scope. Narrowed, not closed.** Nearly all selection work targets SFT. LESS,
+GLISTER, GradMatch and 3DS are all instruction-tuning methods. CPT-stage selection is dominated by
+cheap heuristics (dedup, quality classifiers, distribution matching) because per-example gradient
+methods do not scale to 23.9M documents. The live threat is He et al. [He26], published June 2026,
+which states the same load-bearing premise this project makes, that different training stages want
+different data because they are credited with different learning roles, and instantiates it as a
+difficulty split between SFT and RL data. It has no CPT stage, single capability (math and logic
+reasoning), and two small non-medical models. Meta-rater [Zh25], an ACL 2025 Best Theme Paper on
+multi-dimensional pretraining selection, and Holistic Data Scheduler [Da26], KDD 2026, both remain
+scoped to a single stage and never ask whether the best pretraining subset depends on downstream
+SFT data. **The honest claim after this pass: someone now owns the SFT-to-RL half of Gap 1. Nobody
+has published a policy spanning CPT through SFT through DPO, which is what this project claims.**
 
-**Gap 2: Single-objective optimisation.** Selection is almost universally optimised against
-aggregate downstream accuracy on one benchmark. The proposal's list of clinical capabilities
-(diagnosis, summarisation, information extraction, ICD coding, QA, temporal reasoning) is not
-represented in any selection objective we found. Aggregate accuracy can improve while a
-capability collapses, and no current method would notice.
+**Gap 2: Single-objective optimisation. Under active contest, needs sharpening.** Selection is
+almost universally optimised against aggregate downstream accuracy on one benchmark. Three 2026
+papers now occupy part of this space and must be distinguished from, not just cited past: Data
+Mixing Agent [Ya26] explicitly balances performance across multiple domains (general versus math,
+general versus code) during CPT and reports cross-domain variance as a metric, all tested
+reweighting methods cut variance by over 200 versus the base model. Holistic Data Scheduler [Da26]
+ships under the literal phrase "multi-objective data selection," though its three objectives are
+internal training signals (a quality score, inter-domain loss influence, weight norms), not
+downstream capabilities. BETR [Be25] has a diverse-target variant that matches or exceeds
+single-target baselines on disjoint benchmarks. **None preserves several NAMED clinical
+capabilities separately; all collapse their targets into one aggregate score or a small number of
+coarse domains, and none combine multi-objective scope with the multi-stage scope of Gap 1.** The
+project can no longer claim multi-target selection is unexplored at pretraining scale. It can still
+claim that preserving named, distinct capabilities across stages is unexplored, which is a
+narrower and more defensible claim than the original phrasing, and a reviewer familiar with Data
+Mixing Agent or HDS will expect this distinction to be made explicitly.
 
-**Gap 3: Long-tail and rare-event coverage is not a constraint.** Selection methods rank and
-truncate. Anything scoring low is dropped, and rare diseases and underrepresented populations
+**Gap 3: Long-tail and rare-event coverage is not a constraint. Unchanged.** Selection methods rank
+and truncate. Anything scoring low is dropped, and rare diseases and underrepresented populations
 score low almost by definition, because they are rare. Making coverage a *constraint* rather than
 something the ranking might incidentally preserve is a genuine methodological difference, and it
 is why the harness separates scoring from selection and gives `select_stratified` a
-`min_per_group` floor.
+`min_per_group` floor. Nothing in the 2026 pass addressed long-tail coverage as a constraint rather
+than an incidental ranking outcome.
 
-**Gap 4: The baseline may be weaker than reported.** Per Jeong et al. [J24], the premise that
-medical CPT reliably helps is not well established. Rather than undermining the project, this
-sharpens it: the interesting claim is not "CPT helps" but "*selected* CPT helps where unselected
-CPT does not", and that is a comparison nobody has run.
+**Gap 4: The baseline may be weaker than reported. Unchanged, evidence on both sides grew.** Per
+Jeong et al. [J24], the premise that medical CPT reliably helps is not well established. Section
+3.6 covers the 2026 follow-up in full: LiveMedBench [Yn26] and Dorfner et al. [Do25] extend the
+contrarian finding to newer models and a fair clinical-task comparison, while Medmarks [Wa26] and
+Domingo-Aldama et al. [Dm26] complicate it without reversing it. Rather than undermining the
+project, this still sharpens it: the interesting claim is not "CPT helps" but "*selected* CPT helps
+where unselected CPT does not", and that comparison remains one nobody has run.
 
-A fifth, more practical gap: **auditability**. The proposal promises interpretable data-valuation
+**Gap 5: Benchmark and evaluation validity, new in this pass.** MedCheck [Ch26] audited 56 medical
+LLM benchmarks against 46 lifecycle criteria and found 49 of 56 (88%) do not address data
+contamination at all, 34% evaluate only a single dimension such as accuracy, and MedQA and MedMCQA
+are named explicitly as paradigm cases of exam questions substituting for real clinical data. This
+is not a new instance of Gap 4, it is a claim about the measuring instrument rather than the model:
+even a correctly-run base-model control, scored on MedQA and MedMCQA, is being scored against
+benchmarks whose own field-wide audit found wanting on contamination handling and dimensionality.
+Section 6.5 names four open, non-credentialed benchmarks that partially address this by measuring
+capabilities beyond MCQ; adopting even one would directly answer part of this gap. CapTrack [Th26]
+supplies a reusable framework for measuring what MedCheck's audit found underserved: it decomposes
+retention into three groups (latent competence, behavioural preference, protocol compliance)
+rather than a single aggregate score, which is closer to the per-capability measurement this
+project needs than accuracy alone.
+
+A sixth, more practical gap: **auditability**. The proposal promises interpretable data-valuation
 scores and explanations for why a sample was kept or discarded. Almost nothing in Section 7
 produces a human-readable justification; influence scores are numbers without narratives. In a
-clinical setting that is a real deficiency and a defensible contribution on its own.
+clinical setting that is a real deficiency and a defensible contribution on its own. Fully Open
+Meditron [Te26] is a concrete 2026 precedent worth reading for how an auditable clinical LLM
+pipeline can be built and documented, though it targets pipeline transparency rather than
+per-sample selection justification, so it does not close this gap either.
 
 ---
 
@@ -457,6 +635,10 @@ Design decisions in this repository that follow directly from the review:
 | Prompt templates are **shared and versioned** | §3.4: otherwise data effects and format effects confound |
 | **PMID-level exclusion** required before PubMedQA evaluation | §6.3 contamination |
 | `dedup` on by default in the PubMed loader | §7.3: dedup is high value per unit compute |
+| CPT selection ratio should scale with compute rather than being a fixed constant | §7.6: F_opt(C) = 4e-5 x C^0.25 [Be25] |
+| A domain-term-density scorer is a stronger CPT baseline than a generic quality classifier | §7.6: medical-term density beat educational quality on a matched-compute medical corpus [Hu26] |
+| Gap 1 and Gap 2 claims must be stated as the narrower, cross-stage and named-capability versions | §8: both gaps were partially occupied by 2026 work [He26] [Ya26] [Da26] |
+| A non-MCQ benchmark should be adopted before month 9-10 validation, not deferred | §6.5, §8 Gap 5: field-wide audit found MCQ-only evaluation and single-dimension scoring a documented weakness [Ch26] |
 
 Concrete near-term work items this review generates, beyond the proposal's plan:
 
@@ -467,8 +649,15 @@ Concrete near-term work items this review generates, beyond the proposal's plan:
    committed reference result.
 3. **Add bootstrap confidence intervals** to `EvalReport`. MedQA's 1,273-item test set cannot
    support the precision people routinely claim on it.
-4. **Survey open medical preference datasets** to unblock Stage 3, or decide explicitly to
-   construct pairs from PubMedQA.
+4. **Adopt at least one non-MCQ benchmark** from Section 6.5 (HealthBench, BRIDGE, ACI-Bench or
+   Medmarks) rather than deferring capability coverage past validation. The survey this item used
+   to depend on is now done.
+5. **Build a compute-aware selection budget** rather than a fixed keep-rate, following the
+   F_opt(C) relationship in Section 7.6, and treat medical-term density as the baseline the CPT
+   scorer must beat rather than a generic quality classifier.
+6. **Use the Djuhera et al. [Dj26] preference corpora as a general-domain replay source for Stage
+   3**, mixed with the medically-constructed pairs from options 1 and 2 in Section 5, rather than
+   waiting for a medical-specific preference set that a 2026 survey did not find.
 
 ---
 
@@ -486,23 +675,54 @@ Concrete near-term work items this review generates, beyond the proposal's plan:
 5. How should capability coverage be *measured* when we only have MedMCQA subject labels and
    PubMedQA MeSH terms to work with? Everything else in the proposal's capability list
    (diagnosis, summarisation, ICD coding, temporal reasoning) has no benchmark in our current set.
+   **Update, 2026:** this is now partly answerable rather than fully open. Section 6.5 names four
+   open, non-credentialed benchmarks (HealthBench, BRIDGE, ACI-Bench, Medmarks) that between them
+   cover information extraction, ICD-10 coding, summarisation and open-ended clinical reasoning.
+   The question narrows from "does a usable benchmark exist" to "which one to integrate first, and
+   whether integrating one is enough to defend the six-capability claim."
+6. Given that He et al. [He26] and Data Mixing Agent [Ya26] each occupy part of Gap 1 or Gap 2
+   individually, does *combining* stage-awareness and multi-capability preservation in one policy,
+   the project's actual claim, produce a result neither paper's narrower version would predict? If
+   the combination is separable into independent per-stage and per-capability effects, the
+   project's contribution is the engineering of the combination rather than a new empirical
+   finding, and that distinction should be decided before, not after, running experiments.
+7. Baek et al. [Ba26] argue domain data belongs as early in training as possible, which questions
+   whether CPT, SFT and DPO should be treated as needing separate policies at all, rather than one
+   policy that places domain data optimally across a blurred stage boundary. Does this apply to
+   medical CPT specifically, where the domain shift (general web text to biomedical abstracts) is
+   larger than the chemistry, music and proof domains the paper tested? This is a direct challenge
+   to the project's stage-separation premise and deserves an explicit answer, not a citation past.
 
-Question 5 is the most uncomfortable one. The proposal names six clinical capabilities; our three
-datasets measure roughly one and a half of them. Either the evaluation suite grows, or the
-capability claims narrow. This should be resolved before the month 9-10 validation phase, not
-during it.
+Question 5 was the most uncomfortable one in the original review, and is now the one where a 2026
+research pass changed the answer most: the proposal names six clinical capabilities; the three
+datasets measure roughly one and a half of them, but usable open benchmarks for several of the
+rest now exist and do not require new construction. Question 6 is the sharper novelty question the
+project must now answer given Section 8, since two separate 2026 papers each independently occupy
+half of the claimed novelty. Question 7 is the more fundamental challenge, since it questions the
+stage-separation premise directly rather than the coverage of existing selection methods. All three
+should be resolved before the month 9-10 validation phase, not during it.
 
 ---
 
 ## 11. References
 
-Keyed to `references.bib`.
+Keyed to `references.bib`. Entries tagged 2026-07 came from a deep research pass that post-dates
+the original review; see Section 3.6, 5, 6.5, 7.6, 7.7 and 8 for how each is used.
 
 - **[B24]** Bolton et al. *BioMedLM: A 2.7B Parameter Language Model Trained On Biomedical Text.* 2024.
+- **[Ba26]** Baek, Maini et al. *The Finetuner's Fallacy: When to Pretrain with Your Finetuning Data.* DatologyAI, 2026. arXiv:2603.16177. (2026-07)
+- **[Be25]** *Language Models Improve When Pretraining Data Matches Target Tasks (BETR).* 2025. arXiv:2507.12466. Author list unverified from the search snippet, verify before citing in a manuscript. (2026-07)
 - **[C23]** Chen et al. *MEDITRON-70B: Scaling Medical Pretraining for Large Language Models.* 2023.
+- **[Ch26]** Chen et al. *Beyond the Leaderboard: Rethinking Medical Benchmarks for Large Language Models (MedCheck).* 2025. arXiv:2508.04325. (2026-07)
 - **[D25]** Ding et al. *3DS: Medical Domain Adaptation of LLMs via Decomposed Difficulty-based Data Selection.* EMNLP 2025. arXiv:2410.10901.
+- **[Da26]** Dang, Ma, Liao. *Holistic Data Scheduler for LLM Pre-training via Multi-Objective Reinforcement Learning.* KDD 2026. arXiv:2606.24133. (2026-07)
+- **[Dj26]** Djuhera et al. *When Data is the Algorithm: A Systematic Study and Curation of Preference Optimization Datasets.* ICLR 2026. arXiv:2511.10985. (2026-07)
+- **[Dm26]** Domingo-Aldama et al. *To Adapt or not to Adapt: Rethinking the Value of Medical Knowledge-Aware Large Language Models.* 2026. arXiv:2604.06854. (2026-07)
+- **[Do25]** Dorfner et al. *Evaluating the Effectiveness of Biomedical Fine-tuning for Large Language Models on Clinical Tasks.* JAMIA 32(6):1015-1024, 2025. doi:10.1093/jamia/ocaf045. (2026-07)
 - **[G20]** Gururangan et al. *Don't Stop Pretraining: Adapt Language Models to Domains and Tasks.* ACL 2020.
 - **[G23]** Gadre et al. *DataComp: In Search of the Next Generation of Multimodal Datasets.* NeurIPS 2023.
+- **[He26]** He, Zhang, Wang, Li. *Learning What to Learn: Stage-Specific Data Sets for SFT-then-RL in Small Language Model Reasoning.* 2026. arXiv:2606.04466. (2026-07)
+- **[Hu26]** Huang et al. *Where Does the Signal Live? A Web Data Recipe for Medical Encoder Pretraining.* 2026. arXiv:2606.22079. (2026-07)
 - **[I24]** Ibrahim et al. *Simple and Scalable Strategies to Continually Pre-train Large Language Models.* TMLR 2024. arXiv:2403.08763.
 - **[J19]** Jin et al. *PubMedQA: A Dataset for Biomedical Research Question Answering.* EMNLP 2019.
 - **[J21]** Jin et al. *What Disease Does This Patient Have? A Large-Scale Open Domain Question Answering Dataset from Medical Exams (MedQA).* 2021.
@@ -512,10 +732,24 @@ Keyed to `references.bib`.
 - **[K21b]** Killamsetty et al. *GRAD-MATCH: Gradient Matching based Data Subset Selection.* ICML 2021.
 - **[L24]** Li et al. *DataComp-LM: In Search of the Next Generation of Training Sets for Language Models.* 2024. arXiv:2406.11794.
 - **[L24b]** Labrak et al. *BioMistral: A Collection of Open-Source Pretrained Large Language Models for Medical Domains.* 2024.
+- **[Lu25]** Luo et al. *A Survey on Efficient Large Language Model Training: From Data-centric Perspectives.* ACL 2025. arXiv:2510.25817. (2026-07)
 - **[M25]** MedGemma Team, Google. *MedGemma Technical Report.* 2025. arXiv:2507.05201.
+- **[Mo26]** Mohri, Duchi, Hashimoto. *A Bitter Lesson for Data Filtering.* Stanford, 2026. arXiv:2605.19407. (2026-07)
+- **[Na26]** Nait Saada et al. *Removing Noise, not Finding Gold: Quality Filtering for Large-Scale Pretraining.* ICML 2026. arXiv:2510.00866. (2026-07)
+- **[Op25]** OpenAI. *HealthBench: Evaluating Large Language Models Towards Improved Human Health.* 2025. arXiv:2505.08775. (2026-07)
 - **[P22]** Pal et al. *MedMCQA: A Large-scale Multi-Subject Multi-Choice Dataset for Medical domain Question Answering.* CHIL 2022.
 - **[P23]** Park et al. *TRAK: Attributing Model Behavior at Scale.* ICML 2023.
+- **[Te26]** Theimer-Lienhard et al. *Fully Open Meditron: An Auditable Pipeline for Clinical LLMs.* 2026. arXiv:2605.16215. (2026-07)
+- **[Th26]** Thede, Winzeck, Akata, Schwarz. *CapTrack: Multifaceted Evaluation of Forgetting in LLM Post-Training.* 2026. arXiv:2603.06610. (2026-07)
 - **[W23]** Wu et al. *PMC-LLaMA: Towards Building Open-source Language Models for Medicine.* 2023.
+- **[Wa26]** Warner et al. *Medmarks: A Comprehensive Open-Source LLM Benchmark Suite for Medical Tasks.* 2026. arXiv:2605.01417. (2026-07)
+- **[Wu25]** Wu et al. *BRIDGE: Benchmarking Large Language Models for Understanding Real-world Clinical Practice Text.* 2025. arXiv:2504.19467. (2026-07)
 - **[X24a]** Xia et al. *LESS: Selecting Influential Data for Targeted Instruction Tuning.* ICML 2024. arXiv:2402.04333.
 - **[X24b]** Xiong et al. *Benchmarking Retrieval-Augmented Generation for Medicine.* 2024. arXiv:2402.13178. (Source of the `MedRAG/pubmed` corpus.)
 - **[X24c]** Xie et al. *Me-LLaMA: Foundation Large Language Models for Medical Applications.* 2024.
+- **[Ya26]** Yang et al. *Data Mixing Agent: Learning to Re-weight Domains for Continual Pre-training.* ACL 2026. arXiv:2507.15640. (2026-07)
+- **[Yi23]** Yim et al. *ACI-Bench: a Novel Ambient Clinical Intelligence Dataset for Benchmarking Automatic Visit Note Generation.* Scientific Data, 2023. (2026-07)
+- **[Yn26]** Yan et al. *LiveMedBench: A Contamination-Free Medical Benchmark for LLMs with Automated Rubric Evaluation.* 2026. arXiv:2602.10367. (2026-07)
+- **[Zg24]** Zhang et al. *UltraMedical: Building Specialized Generalists in Biomedicine.* NeurIPS 2024 Datasets and Benchmarks Track, Spotlight. arXiv:2406.03949. (2026-07)
+- **[Zh25]** Zhuang et al. *Meta-rater: A Multi-dimensional Data Selection Method for Pre-training Language Models.* ACL 2025 Best Theme Paper. arXiv:2504.14194. (2026-07)
+- **[Zu25]** Zuo et al. *MedXpertQA: Benchmarking Expert-Level Medical Reasoning and Understanding.* ICML 2025. arXiv:2501.18362. (2026-07)

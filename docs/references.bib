@@ -187,3 +187,266 @@
   author  = {Xie, Qianqian and Chen, Qingyu and Chen, Aokun and others},
   year    = {2024}
 }
+
+% --- Added from the 2026-07 deep research pass. See docs/literature_review.md Section 3.6, 5, 6.5,
+% 7.6, 7.7 and 8. Entries whose author list came from a search snippet rather than the paper itself
+% are marked; verify the full list before using in a manuscript.
+
+@article{mohri2026bitter,
+  title   = {A Bitter Lesson for Data Filtering},
+  author  = {Mohri, Christopher and Duchi, John and Hashimoto, Tatsunori},
+  year    = {2026},
+  eprint  = {2605.19407},
+  archivePrefix = {arXiv},
+  note    = {Stanford. Reports unfiltered data beating quality filters, but the crossing point is
+             projected near 1e30 FLOPs against a ~5e26 FLOPs current frontier pretraining budget.}
+}
+
+@inproceedings{naitsaada2026removing,
+  title     = {Removing Noise, not Finding Gold: Quality Filtering for Large-Scale Pretraining},
+  author    = {Nait Saada, Amina and Bethune, Louis and Klein, Michael and Grangier, David and
+               Cuturi, Marco and Ablin, Pierre},
+  booktitle = {Proceedings of the 43rd International Conference on Machine Learning (ICML)},
+  year      = {2026},
+  eprint    = {2510.00866},
+  archivePrefix = {arXiv}
+}
+
+@article{huang2026signal,
+  title   = {Where Does the Signal Live? A Web Data Recipe for Medical Encoder Pretraining},
+  author  = {Huang, Yanis and Sun, Rui and Bouchacourt, Diane and Barascud, Nicolas and Fogel, Sylvain},
+  year    = {2026},
+  eprint  = {2606.22079},
+  archivePrefix = {arXiv},
+  note    = {French medical encoder MLM; medical-term density beats a standard educational-quality
+             filter as a single-axis corpus filter for a dense-terminology domain.}
+}
+
+@article{betr2025,
+  title   = {Language Models Improve When Pretraining Data Matches Target Tasks},
+  author  = {{BETR authors, not individually verified from the search snippet, verify before citing}},
+  year    = {2025},
+  eprint  = {2507.12466},
+  archivePrefix = {arXiv},
+  note    = {Author list unverified. Introduces BETR, a benchmark-similarity corpus selection method.}
+}
+
+@inproceedings{yang2026datamixing,
+  title     = {Data Mixing Agent: Learning to Re-weight Domains for Continual Pre-training},
+  author    = {Yang, Kailai and Liu, Xiao and Ji, Lei and Li, Xin and Liang, Chao and Liu, Chen and
+               Gong, Yeyun and Cheng, Jian and Yang, Nan},
+  booktitle = {Proceedings of the 64th Annual Meeting of the Association for Computational
+               Linguistics (ACL)},
+  year      = {2026},
+  eprint    = {2507.15640},
+  archivePrefix = {arXiv}
+}
+
+@article{he2026stagespecific,
+  title   = {Learning What to Learn: Stage-Specific Data Sets for {SFT}-then-{RL} in Small Language
+             Model Reasoning},
+  author  = {He, Yifan and Zhang, Wei and Wang, Lei and Li, Qing},
+  year    = {2026},
+  eprint  = {2606.04466},
+  archivePrefix = {arXiv},
+  note    = {Directly occupies part of Gap 1: stage-aware data for SFT versus RL, but no CPT stage,
+             single capability, math and logic reasoning only.}
+}
+
+@inproceedings{dang2026hds,
+  title     = {Holistic Data Scheduler for {LLM} Pre-training via Multi-Objective Reinforcement
+               Learning},
+  author    = {Dang, Yue and Ma, Xin and Liao, Wei},
+  booktitle = {Proceedings of the 32nd ACM SIGKDD Conference on Knowledge Discovery and Data
+               Mining (KDD)},
+  pages     = {176--187},
+  year      = {2026},
+  eprint    = {2606.24133},
+  archivePrefix = {arXiv},
+  note      = {Ships under the label multi-objective data selection, but the objectives are internal
+               training signals, not downstream capabilities. Pretraining-stage only.}
+}
+
+@article{baek2026finetuner,
+  title   = {The Finetuner's Fallacy: When to Pretrain with Your Finetuning Data},
+  author  = {Baek, Jinhyuk and Maini, Pratyush and others},
+  year    = {2026},
+  eprint  = {2603.16177},
+  archivePrefix = {arXiv},
+  note    = {DatologyAI. Domains are ChemPile, MusicPile, ProofPile, not medicine. Argues domain data
+             should move earlier in training rather than each stage having its own policy.}
+}
+
+@inproceedings{zhuang2025metarater,
+  title     = {Meta-rater: A Multi-dimensional Data Selection Method for Pre-training Language
+               Models},
+  author    = {Zhuang, Xinlin and others},
+  booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational
+               Linguistics (ACL), Best Theme Paper},
+  year      = {2025},
+  eprint    = {2504.14194},
+  archivePrefix = {arXiv},
+  note      = {From-scratch pretraining only. Never evaluates CPT, SFT or DPO.}
+}
+
+@article{thede2026captrack,
+  title   = {{CapTrack}: Multifaceted Evaluation of Forgetting in {LLM} Post-Training},
+  author  = {Thede, Laura and Winzeck, Silvia and Akata, Zeynep and Schwarz, Jonathan},
+  year    = {2026},
+  eprint  = {2603.06610},
+  archivePrefix = {arXiv},
+  note    = {Reusable per-capability retention framework (CAN / WILL / HOW). Covers instruction
+             fine-tuning and preference optimisation, not continual pretraining.}
+}
+
+@article{warner2026medmarks,
+  title   = {Medmarks: A Comprehensive Open-Source {LLM} Benchmark Suite for Medical Tasks},
+  author  = {Warner, Evan and Grandhi, Ravi and Kieffer, Simon and Ouraq, Amine and
+             Panigrahi, Abhishek and others},
+  year    = {2026},
+  eprint  = {2605.01417},
+  archivePrefix = {arXiv},
+  note    = {30 open benchmarks, non-credentialed, beyond MCQ. Also reports medically adapted models
+             beating their own bases, disconfirming evidence against Jeong et al. on this suite.}
+}
+
+@article{openai2025healthbench,
+  title   = {{HealthBench}: Evaluating Large Language Models Towards Improved Human Health},
+  author  = {{OpenAI}},
+  year    = {2025},
+  eprint  = {2505.08775},
+  archivePrefix = {arXiv},
+  note    = {5{,}000 multi-turn conversations, 48{,}562 physician-written rubric criteria, CC BY 4.0.
+             Open-ended, not multiple choice.}
+}
+
+@article{wu2025bridge,
+  title   = {{BRIDGE}: Benchmarking Large Language Models for Understanding Real-world Clinical
+             Practice Text},
+  author  = {Wu, Jiageng and Gu, Xiaocong and Zhou, Han and Xie, Yuxuan and Snyder, Michael and
+             Jiang, Bingbing and Alsentzer, Emily and Celi, Leo Anthony and Rodman, Adam and
+             Chen, Irene and Romero-Brufau, Santiago and Lin, Simon and Yang, Ming},
+  year    = {2025},
+  eprint  = {2504.19467},
+  archivePrefix = {arXiv},
+  note    = {87 tasks over 59 real clinical text datasets, ICD-10 coding among them. Argues USMLE and
+             PubMed-derived MCQ benchmarks oversimplify clinical practice.}
+}
+
+@article{yim2023acibench,
+  title   = {{ACI-Bench}: a Novel Ambient Clinical Intelligence Dataset for Benchmarking Automatic
+             Visit Note Generation},
+  author  = {Yim, Wen-wai and others},
+  journal = {Scientific Data},
+  year    = {2023},
+  note    = {CC BY 4.0, no credentialing required. 207 dialogue-note pairs total, too small for a
+             powered regression benchmark but usable as a qualitative summarisation probe.}
+}
+
+@article{chen2026medcheck,
+  title   = {Beyond the Leaderboard: Rethinking Medical Benchmarks for Large Language Models},
+  author  = {Chen, Yue and Yu, Zichen and Cheung, Kai and Ding, Ran and Liu, Wei and Ma, Xin and
+             Wang, Feng and Shen, Hao},
+  year    = {2025},
+  eprint  = {2508.04325},
+  archivePrefix = {arXiv},
+  note    = {Lifecycle audit of 56 medical LLM benchmarks against 46 criteria. 49 of 56 do not
+             address contamination; MedQA and MedMCQA named as paradigm cases of convenience-driven
+             design.}
+}
+
+@article{yan2026livemedbench,
+  title   = {{LiveMedBench}: A Contamination-Free Medical Benchmark for {LLM}s with Automated
+             Rubric Evaluation},
+  author  = {Yan, Zhiling and others},
+  year    = {2026},
+  eprint  = {2602.10367},
+  archivePrefix = {arXiv},
+  note    = {Refreshed weekly. MedGemma 27B does not beat general-purpose Gemini 2.5 Flash on this
+             suite (5.9% versus 6.4%).}
+}
+
+@article{dorfner2025biomedical,
+  title   = {Evaluating the Effectiveness of Biomedical Fine-tuning for Large Language Models on
+             Clinical Tasks},
+  author  = {Dorfner, Felix J. and Dada, Amin and Busch, Felix and Makowski, Marcus R. and
+             Han, Tianyu and Truhn, Daniel and Kleesiek, Jens and others},
+  journal = {Journal of the American Medical Informatics Association},
+  volume  = {32},
+  number  = {6},
+  pages   = {1015--1024},
+  year    = {2025},
+  doi     = {10.1093/jamia/ocaf045},
+  note    = {Peer-reviewed version of arXiv:2408.13833. Fair comparison finds biomedical fine-tuning
+             adds little on unseen clinical data.}
+}
+
+@inproceedings{djuhera2026preference,
+  title     = {When Data is the Algorithm: A Systematic Study and Curation of Preference
+               Optimization Datasets},
+  author    = {Djuhera, Armin and Ahmed, Syed Zawad and Kadhe, Swanand Ravindra and
+               Zawad, Syed and Ludwig, Heiko and Boche, Holger},
+  booktitle = {Proceedings of the International Conference on Learning Representations (ICLR)},
+  year      = {2026},
+  eprint    = {2511.10985},
+  archivePrefix = {arXiv},
+  note      = {Names and audits five open DPO corpora (TuluDPO, ORPO, UltraFeedback, HelpSteer,
+               Code-Preference-Pairs); a curated 190k mixture beats the strongest single 280k source
+               dataset. Only 70-80% of pairs agree with a reward-model preference ordering.}
+}
+
+@inproceedings{zuo2025medxpertqa,
+  title     = {{MedXpertQA}: Benchmarking Expert-Level Medical Reasoning and Understanding},
+  author    = {Zuo, Yuxin and Qu, Shang and Li, Yifei and Chen, Zhangren and Zhu, Xinghua and
+               Hua, Ermo and Zhang, Kaiyan and Ding, Ning and Zhou, Bowen},
+  booktitle = {Proceedings of the 42nd International Conference on Machine Learning (ICML)},
+  year      = {2025},
+  eprint    = {2501.18362},
+  archivePrefix = {arXiv}
+}
+
+@inproceedings{luo2025survey,
+  title     = {A Survey on Efficient Large Language Model Training: From Data-centric Perspectives},
+  author    = {Luo, Junyu and Wu, Bohan and Luo, Xiao and Xiao, Yiqiao and Jin, Ming and
+               Tu, Kunpeng and Yin, Da and Wang, Wei and Yuan, Ye and Ju, Wei and Zhang, Ming},
+  booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational
+               Linguistics (ACL)},
+  year      = {2025},
+  eprint    = {2510.25817},
+  archivePrefix = {arXiv},
+  note      = {Wholesale-citable 2025 survey of data-centric efficient LLM training.}
+}
+
+@article{theimerlienhard2026meditron,
+  title   = {Fully Open Meditron: An Auditable Pipeline for Clinical {LLM}s},
+  author  = {Theimer-Lienhard, Malo and El-Amin, Younes and Elhassan, Alaa and Vaidya, Aditi and
+             Cartier-Negadi, Yassine and Sasu, Bernard and Klein, Julia and Hartley, Matthew},
+  year    = {2026},
+  eprint  = {2605.16215},
+  archivePrefix = {arXiv},
+  note    = {A concrete precedent for the auditable-pipeline contribution the proposal promises.}
+}
+
+@article{domingoaldama2026adapt,
+  title   = {To Adapt or not to Adapt: Rethinking the Value of Medical Knowledge-Aware Large
+             Language Models},
+  author  = {Domingo-Aldama, Iker and De La Iglesia, Ines and Urruela, Uxoa and
+             Atutxa, Aitziber and Barrena, Ander},
+  year    = {2026},
+  eprint  = {2604.06854},
+  archivePrefix = {arXiv},
+  note    = {Balancing citation: medical adaptation can pay off specifically for under-served
+             languages, which nuances the Jeong et al. finding rather than overturning it.}
+}
+
+@inproceedings{zhang2024ultramedical,
+  title     = {{UltraMedical}: Building Specialized Generalists in Biomedicine},
+  author    = {Zhang, Kaiyan and Zeng, Sihang and Hua, Ermo and Ding, Ning and Chen, Zhang-Ren and
+               Ma, Zhiyuan and Li, Haoxin and Cui, Ganqu and Qi, Biqing and Zhu, Xuekai and
+               Lv, Xingtai and Hu, Jinfang and Liu, Zhiyuan and Zhou, Bowen},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS), Datasets and
+               Benchmarks Track, Spotlight},
+  year      = {2024},
+  eprint    = {2406.03949},
+  archivePrefix = {arXiv}
+}
