@@ -24,18 +24,18 @@ sections are for their owners to extend. See [contributing.md](contributing.md) 
 
 ## 1. Scope and how to read this
 
-This review supports the proposal's month 1–2 deliverable ("architecture document"). It covers
+This review supports the proposal's month 1-2 deliverable ("architecture document"). It covers
 four things, in descending order of depth:
 
-- **Continual pretraining (CPT)** — the stage the project is starting with, and the one where
+- **Continual pretraining (CPT)**: the stage the project is starting with, and the one where
   corpus selection plausibly matters most.
-- **Data selection** — the methods this project intends to extend to a multi-stage setting.
-- **The four datasets** we have committed to — MedQA, MedMCQA, PubMedQA, and the PubMed corpus.
-- **SFT and preference optimisation** — enough to know what the later stages will need.
+- **Data selection**: the methods this project intends to extend to a multi-stage setting.
+- **The four datasets** we have committed to: MedQA, MedMCQA, PubMedQA, and the PubMed corpus.
+- **SFT and preference optimisation**: enough to know what the later stages will need.
 
 Two conventions. Claims that are load-bearing for a design decision carry a citation. Where a
 number was taken from a secondary source rather than read out of the primary paper, it is marked
-*(secondary)* — those should be checked against the paper before appearing in a manuscript.
+*(secondary)*. Those should be checked against the paper before appearing in a manuscript.
 
 A caution that shapes everything below: **the field's headline claim is contested.** Section 3.5
 covers evidence that medical domain adaptation frequently fails to beat the base model under fair
@@ -51,14 +51,14 @@ hyperparameters:
 | Stage | Objective | Data | What it is supposed to add |
 |---|---|---|---|
 | Continual pretraining (CPT) | Next-token prediction | Raw biomedical text | Domain knowledge, vocabulary, long-tail facts |
-| Supervised fine-tuning (SFT) | Next-token on responses only | Instruction–response pairs | Task format, instruction following |
+| Supervised fine-tuning (SFT) | Next-token on responses only | Instruction-response pairs | Task format, instruction following |
 | Preference optimisation | DPO / RLHF objective | Preference pairs | Helpfulness, safety, calibration |
 
 The important structural point for this project is that **each stage consumes a different kind of
 data and is credited with a different capability**. A corpus that is excellent for CPT (broad,
 diverse, long-tail) is not an instruction dataset, and an instruction dataset that teaches format
 does not teach facts. It follows that a single data-selection policy optimised once cannot be
-right for all three — which is precisely the proposal's thesis.
+right for all three, which is precisely the proposal's thesis.
 
 What the literature actually does, though, is optimise one stage at a time and evaluate on one
 metric, usually downstream accuracy on a single benchmark. Section 8 returns to this.
@@ -79,13 +79,13 @@ established two now-standard moves:
 
 The paper reported gains across four domains including biomedical, and found DAPT and TAPT to be
 complementary. Crucially for us, it also showed that *selecting* task-relevant text from a large
-corpus — a cheap embedding-based retrieval — recovered much of TAPT's benefit. That is a data
+corpus (a cheap embedding-based retrieval) recovered much of TAPT's benefit. That is a data
 selection result, published in 2020, and it is the ancestor of the work in Section 7.
 
 ### 3.2 The recipe question: how to continue pretraining without destroying the model
 
 The practical difficulty in CPT is that naively resuming training on a new distribution degrades
-prior capability — catastrophic forgetting. Ibrahim et al. (2024) [I24] give the clearest recipe
+prior capability: catastrophic forgetting. Ibrahim et al. (2024) [I24] give the clearest recipe
 result: a combination of
 
 1. **learning-rate re-warming**,
@@ -109,17 +109,17 @@ Related practical findings worth carrying into experiments:
 
 The main open-weight lineage, roughly chronologically:
 
-- **BioMedLM** [B24] — 2.7B, trained from scratch on PubMed abstracts and full text rather than
+- **BioMedLM** [B24]: 2.7B, trained from scratch on PubMed abstracts and full text rather than
   adapted. Useful as the "pure biomedical" reference point.
-- **PMC-LLaMA** [W23] — LLaMA continually pretrained on biomedical papers and textbooks, then
+- **PMC-LLaMA** [W23]: LLaMA continually pretrained on biomedical papers and textbooks, then
   medically instruction-tuned. Reported strong benchmark results at much smaller scale than the
   general models of its day; explicitly frames itself as data-centric knowledge injection.
-- **MEDITRON** [C23] — 7B and 70B, CPT on a curated corpus (PubMed Central full text, abstracts,
+- **MEDITRON** [C23]: 7B and 70B, CPT on a curated corpus (PubMed Central full text, abstracts,
   clinical guidelines). Notable for treating corpus construction as the contribution.
-- **BioMistral** [L24] — Mistral 7B further pretrained on PubMed Central open access.
-- **Me-LLaMA** [X24] — LLaMA 2 with continued pretraining plus instruction tuning on a mixed
+- **BioMistral** [L24]: Mistral 7B further pretrained on PubMed Central open access.
+- **Me-LLaMA** [X24]: LLaMA 2 with continued pretraining plus instruction tuning on a mixed
   biomedical and clinical corpus.
-- **MedGemma** [M25] — Gemma 3 derivative (4B multimodal, 27B text and multimodal), pretrained on
+- **MedGemma** [M25]: Gemma 3 derivative (4B multimodal, 27B text and multimodal), pretrained on
   medical text, medical QA, and FHIR-based EHR data, with a SigLIP encoder pretrained on
   de-identified medical images for the multimodal variants. Reported to beat its Gemma base on
   all tested text-only health benchmarks.
@@ -149,7 +149,7 @@ Jeong et al. (2024), *The Limited Impact of Medical Adaptation of Large Language
 Vision-Language Models* [J24], evaluated ten medical LLMs and two medical VLMs against their own
 base models, optimising prompts **separately for each model** and accounting for statistical
 uncertainty. Their finding: on clinical-note QA with 3-shot prompting, the medical models beat
-their bases in only 26.7% of comparisons, tied in 16.7%, and *lost* in 56.7% *(secondary — figures
+their bases in only 26.7% of comparisons, tied in 16.7%, and *lost* in 56.7% *(secondary: figures
 taken from the paper abstract via its arXiv page)*.
 
 Their diagnosis of prior work is methodological: earlier studies did not consistently compare
@@ -178,7 +178,7 @@ project than the optimistic framing: if generic medical CPT gives little, then s
 
 ### 4.1 What SFT does
 
-SFT trains on instruction–response pairs with the loss masked to the response span, so the model
+SFT trains on instruction-response pairs with the loss masked to the response span, so the model
 is not rewarded for reproducing the prompt. Its role is format and instruction-following, not
 primarily knowledge acquisition.
 
@@ -191,8 +191,8 @@ makes chain-of-thought-style SFT possible without generating rationales syntheti
 
 A design question raised in this project's own planning, and worth treating as a research
 question rather than an implementation detail: should the instruction stage be trained with a
-**combined objective** — next-token loss on raw biomedical text *alongside* instruction loss on QA
-pairs — instead of running CPT and SFT strictly in sequence?
+**combined objective** (next-token loss on raw biomedical text *alongside* instruction loss
+on QA pairs) instead of running CPT and SFT strictly in sequence?
 
 The motivating intuition is that sequential SFT erodes the domain knowledge CPT just installed,
 and that mixing keeps it. This is essentially the replay idea from Section 3.2 applied across the
@@ -204,8 +204,8 @@ codebase at `src/medsel/stages/sft.py` so it does not get lost.
 ### 4.3 SFT data selection
 
 This is where most of the recent selection literature actually operates (Section 7). LESS [X24a]
-and 3DS [D25] are both SFT-stage methods. Their headline results are strong — LESS reports that
-5% of the data, selected well, can beat the full dataset — which is the strongest available
+and 3DS [D25] are both SFT-stage methods. Their headline results are strong: LESS reports that
+5% of the data, selected well, can beat the full dataset, which is the strongest available
 evidence that selection is worth doing at all.
 
 ---
@@ -227,7 +227,7 @@ public datasets in scope, it is not. Options, in rough order of cost:
    perturbed answer as rejected. Cheap, but the "rejected" side is artificial and the resulting
    preference signal may be about fluency rather than clinical correctness.
 2. Use MedMCQA explanations similarly, with the correct-option explanation as chosen.
-3. Adopt an existing open medical preference set, if one of adequate quality exists — this needs a
+3. Adopt an existing open medical preference set, if one of adequate quality exists. This needs a
    survey we have not yet done.
 
 Safety and hallucination are the capabilities this stage is normally credited with, and they are
@@ -241,7 +241,7 @@ be stated plainly in any write-up.
 Full field-level schemas, split semantics, and the traps we hit are in
 [datasets.md](datasets.md). This section covers provenance and what each dataset is good for.
 
-### 6.1 MedQA — *owner: Debmalya*
+### 6.1 MedQA *(owner: Debmalya)*
 
 USMLE-style clinical vignettes with four options [J21]. Questions are long (a full patient
 presentation) and require multi-step clinical reasoning rather than fact recall, which makes it
@@ -253,10 +253,10 @@ should be expected near chance (25%) before any adaptation, which is worth stati
 smoke-test number is not mistaken for a failure.
 
 Caveats: the Hub mirror we use ships an empty `subject_name` column, so MedQA offers **no
-per-subject breakdown** — it cannot contribute to per-capability analysis, only to aggregate
+per-subject breakdown**. It cannot contribute to per-capability analysis, only to aggregate
 accuracy.
 
-### 6.2 MedMCQA — *owner: Animesh*
+### 6.2 MedMCQA *(owner: Animesh)*
 
 ~194k questions from Indian medical entrance exams (AIIMS, NEET-PG), spanning 21 subjects and
 ~2.4k topics [P22]. Its size makes it the only one of the three usable as a substantial SFT
@@ -267,26 +267,26 @@ The important structural fact: the published **`test` split withholds gold answe
 Every comparable number in the literature is measured on `validation` (the NEET-PG set), and so is
 ours. Reported open-model SOTA is around 68.3% *(secondary)*.
 
-Quality caveat worth documenting: MedMCQA is known to contain some noisy items — typos, ambiguous
-phrasing, and occasional disputed keys — a consequence of its scraped origin. This is relevant to
+Quality caveat worth documenting: MedMCQA is known to contain some noisy items (typos, ambiguous
+phrasing, and occasional disputed keys), a consequence of its scraped origin. This is relevant to
 us twice over: it is an argument *for* data selection at the SFT stage, and it is a reason not to
 over-interpret small accuracy differences.
 
-### 6.3 PubMedQA — *owner: Arkajyoti*
+### 6.3 PubMedQA *(owner: Arkajyoti)*
 
 Research questions derived from PubMed article titles, answerable yes/no/maybe from the abstract
 [J19]. Three configs:
 
-- `pqa_labeled` — 1,000 expert-annotated items, the evaluation set
-- `pqa_artificial` — ~211k auto-labelled items, usable for SFT
-- `pqa_unlabeled` — ~61k with long answers but **no `final_decision` column at all**
+- `pqa_labeled`: 1,000 expert-annotated items, the evaluation set
+- `pqa_artificial`: ~211k auto-labelled items, usable for SFT
+- `pqa_unlabeled`: ~61k with long answers but **no `final_decision` column at all**
 
 Two things make PubMedQA different from the other two: it is a 3-way decision rather than a 4-way
 MCQ, and it supplies *context* (the abstract), so it measures reading comprehension over a given
 passage rather than parametric knowledge.
 
 **Comparability caveat.** The canonical 500-question test set is defined by a ground-truth file in
-the authors' repository, which the Hub mirror does not carry — `pqa_labeled` arrives as one
+the authors' repository, which the Hub mirror does not carry. `pqa_labeled` arrives as one
 undivided 1,000-row split. Our numbers are therefore internally consistent but should not be
 quoted against published PubMedQA figures without adopting the official split.
 
@@ -295,7 +295,7 @@ abstracts. Any CPT-then-evaluate-on-PubMedQA experiment must exclude the PubMedQ
 CPT corpus, or the result is meaningless. This is a concrete task, not a caveat to note and
 forget.
 
-### 6.4 The PubMed CPT corpus — *owner: Srinjoy*
+### 6.4 The PubMed CPT corpus *(owner: Srinjoy)*
 
 We use `MedRAG/pubmed` [X24b], the corpus assembled for the MedRAG benchmark: 23.9M PubMed
 articles that have both a title and an abstract, pre-chunked into 1,166 JSONL shards.
@@ -306,13 +306,13 @@ Measured properties (verified directly against the Hub, not quoted):
 - ~296 tokens per snippet on average
 - fields: `id`, `title`, `content` (abstract), `contents` (= `title + " " + content`), `PMID`
 
-Choosing this over the NCBI baseline FTP trades some control for a lot of avoided work — the XML
+Choosing this over the NCBI baseline FTP trades some control for a lot of avoided work: the XML
 is already parsed, filtered to articles with usable abstracts, and chunked. The costs of that
 choice, which we should state in any write-up: it is a snapshot (the `pubmed23` naming indicates a
 2023 baseline), it is abstracts-only rather than full text, and its inclusion filter is MedRAG's
 rather than ours.
 
-If full text becomes necessary — plausible for long-context or reasoning-oriented CPT — PubMed
+If full text becomes necessary (plausible for long-context or reasoning-oriented CPT), PubMed
 Central Open Access is the successor corpus, and MEDITRON's corpus construction [C23] is the
 reference for how to do it.
 
@@ -339,7 +339,7 @@ the most helpful.
   **gradient datastore**, and then selects examples by gradient similarity to a handful of few-shot
   examples that embody a target capability. Two results matter for this project:
   - training on a LESS-selected **5%** can outperform training on the full dataset;
-  - selections **transfer** — a small model can pick data for a larger one, and across families.
+  - selections **transfer**: a small model can pick data for a larger one, and across families.
 
   That transfer property is what makes influence-based selection affordable for a student project:
   we can score with a 1B model and train something bigger.
@@ -357,7 +357,7 @@ scale.
 
 ### 7.3 Distribution matching and heuristic quality
 
-- **DSIR** — importance resampling to match a target distribution in a hashed n-gram feature
+- **DSIR**: importance resampling to match a target distribution in a hashed n-gram feature
   space. Very cheap, and the natural baseline for corpus-scale (CPT) selection where per-example
   gradients are unaffordable.
 - **DataComp** [G23] and **DataComp-LM** [L24]. Rather than proposing a method, these fix the
@@ -378,8 +378,8 @@ baseline to beat. It is a two-stage method for medical domain adaptation:
 
 1. **Prompt-driven data selection** filters noise by checking alignment with what the model
    already knows.
-2. **Decomposed difficulty-based selection** scores each example on three metrics — *instruction
-   understanding*, *response confidence*, and *response correctness* — with attention-based
+2. **Decomposed difficulty-based selection** scores each example on three metrics (*instruction
+   understanding*, *response confidence*, and *response correctness*) with attention-based
    importance weighting for calibration.
 
 Reported to beat prior methods by up to 2.97% accuracy in healthcare, with validation in law and
@@ -408,28 +408,28 @@ exactly the gap the proposal targets.
 
 ## 8. Gap analysis
 
-Reading across Sections 3–7, four gaps are consistent:
+Reading across Sections 3-7, four gaps are consistent:
 
-**Gap 1 — Single-stage scope.** Nearly all selection work targets SFT. LESS, GLISTER, GradMatch
+**Gap 1: Single-stage scope.** Nearly all selection work targets SFT. LESS, GLISTER, GradMatch
 and 3DS are all instruction-tuning methods. CPT-stage selection is dominated by cheap heuristics
 (dedup, quality classifiers, distribution matching) because per-example gradient methods do not
 scale to 23.9M documents. Nobody has asked whether the *right* CPT subset depends on what the SFT
 stage will subsequently do.
 
-**Gap 2 — Single-objective optimisation.** Selection is almost universally optimised against
-aggregate downstream accuracy on one benchmark. The proposal's list of clinical capabilities —
-diagnosis, summarisation, information extraction, ICD coding, QA, temporal reasoning — is not
+**Gap 2: Single-objective optimisation.** Selection is almost universally optimised against
+aggregate downstream accuracy on one benchmark. The proposal's list of clinical capabilities
+(diagnosis, summarisation, information extraction, ICD coding, QA, temporal reasoning) is not
 represented in any selection objective we found. Aggregate accuracy can improve while a
 capability collapses, and no current method would notice.
 
-**Gap 3 — Long-tail and rare-event coverage is not a constraint.** Selection methods rank and
+**Gap 3: Long-tail and rare-event coverage is not a constraint.** Selection methods rank and
 truncate. Anything scoring low is dropped, and rare diseases and underrepresented populations
-score low almost by definition — they are rare. Making coverage a *constraint* rather than
+score low almost by definition, because they are rare. Making coverage a *constraint* rather than
 something the ranking might incidentally preserve is a genuine methodological difference, and it
 is why the harness separates scoring from selection and gives `select_stratified` a
 `min_per_group` floor.
 
-**Gap 4 — The baseline may be weaker than reported.** Per Jeong et al. [J24], the premise that
+**Gap 4: The baseline may be weaker than reported.** Per Jeong et al. [J24], the premise that
 medical CPT reliably helps is not well established. Rather than undermining the project, this
 sharpens it: the interesting claim is not "CPT helps" but "*selected* CPT helps where unselected
 CPT does not", and that is a comparison nobody has run.
@@ -447,16 +447,16 @@ Design decisions in this repository that follow directly from the review:
 
 | Decision | Source |
 |---|---|
-| CPT targets **Gemma 3 base**, not MedGemma | §3.3 — adapting an already-adapted model makes gains unattributable |
+| CPT targets **Gemma 3 base**, not MedGemma | §3.3: adapting an already-adapted model makes gains unattributable |
 | An **unselected CPT baseline** config ships alongside any selection experiment | §7.3 DataComp; §3.5 Jeong |
-| Evaluator supports **letter and text scoring**, reports both acc and acc_norm | §3.5 — prompt/scoring artefacts |
+| Evaluator supports **letter and text scoring**, reports both acc and acc_norm | §3.5: prompt/scoring artefacts |
 | Evaluator reports **per-subject accuracy** | §8 Gap 2; MedMCQA is the only per-capability signal (§6.2) |
-| Scoring and selection are **separate modules** | §8 Gap 3 — coverage is a selection constraint, not a score |
-| `select_stratified(min_per_group=…)` | §8 Gap 3 — rare groups must survive aggressive budgets |
-| Baseline scorers are **random and length** | §7 — a method that cannot beat random has shown nothing |
-| Prompt templates are **shared and versioned** | §3.4 — otherwise data effects and format effects confound |
+| Scoring and selection are **separate modules** | §8 Gap 3: coverage is a selection constraint, not a score |
+| `select_stratified(min_per_group=…)` | §8 Gap 3: rare groups must survive aggressive budgets |
+| Baseline scorers are **random and length** | §7: a method that cannot beat random has shown nothing |
+| Prompt templates are **shared and versioned** | §3.4: otherwise data effects and format effects confound |
 | **PMID-level exclusion** required before PubMedQA evaluation | §6.3 contamination |
-| `dedup` on by default in the PubMed loader | §7.3 — dedup is high value per unit compute |
+| `dedup` on by default in the PubMed loader | §7.3: dedup is high value per unit compute |
 
 Concrete near-term work items this review generates, beyond the proposal's plan:
 
@@ -475,21 +475,21 @@ Concrete near-term work items this review generates, beyond the proposal's plan:
 ## 10. Open questions
 
 1. Can gradient-based influence (LESS-style) be made affordable at CPT scale, or must CPT
-   selection stay in the cheap-heuristic regime? The transfer result in [X24a] — small models
-   picking data for large ones — is the most promising lead.
-2. Is CPT selection *conditionally* optimal — that is, does the best CPT subset change depending
+   selection stay in the cheap-heuristic regime? The transfer result in [X24a], where small models
+   pick data for large ones, is the most promising lead.
+2. Is CPT selection *conditionally* optimal? That is, does the best CPT subset change depending
    on the SFT data that follows? If yes, that alone justifies the multi-stage framing.
 3. Does the combined CPT+instruction objective (§4.2) actually retain domain knowledge better than
    sequential CPT→SFT?
 4. What is the right unit of selection for CPT: the document, the packed block, or a topic
    cluster? Our packing implementation currently makes the document the unit.
 5. How should capability coverage be *measured* when we only have MedMCQA subject labels and
-   PubMedQA MeSH terms to work with? Everything else in the proposal's capability list —
-   diagnosis, summarisation, ICD coding, temporal reasoning — has no benchmark in our current set.
+   PubMedQA MeSH terms to work with? Everything else in the proposal's capability list
+   (diagnosis, summarisation, ICD coding, temporal reasoning) has no benchmark in our current set.
 
 Question 5 is the most uncomfortable one. The proposal names six clinical capabilities; our three
 datasets measure roughly one and a half of them. Either the evaluation suite grows, or the
-capability claims narrow. This should be resolved before the month 9–10 validation phase, not
+capability claims narrow. This should be resolved before the month 9-10 validation phase, not
 during it.
 
 ---

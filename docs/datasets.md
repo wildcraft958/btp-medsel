@@ -1,7 +1,7 @@
 # Dataset Reference
 
 Field-level schemas and the traps. Every schema below was read off the Hub, not from a paper or
-a README — where our loader disagrees with a dataset card, this file records what the data
+a README. Where our loader disagrees with a dataset card, this file records what the data
 actually contains.
 
 Provenance and "what is this dataset for" live in
@@ -44,7 +44,7 @@ broken evaluation. All published MedMCQA numbers use `validation` (the NEET-PG s
 
 ### 2. PubMedQA's labelling depends on the config, not the split
 
-`pqa_unlabeled` omits the `final_decision` **column entirely** — it is not null, it is absent. All
+`pqa_unlabeled` omits the `final_decision` **column entirely**. It is not null, it is absent. All
 three configs use the split name `train`, so split-based label logic gets this wrong.
 
 *Enforced:* `PubMedQALoader.has_labels()` keys on `self.config`.
@@ -68,7 +68,7 @@ other by falling back to `train`.
 
 ### 5. `MedRAG/pubmed` stores its text twice
 
-`contents` is exactly `title + " " + content`. It is not a duplicate of `content` alone — an
+`contents` is exactly `title + " " + content`. It is not a duplicate of `content` alone. An
 earlier assumption here was wrong, and reading both roughly doubles memory and disk for no new
 information.
 
@@ -86,7 +86,7 @@ sizes is **70 GB**. Sizing a disk budget from the former needlessly rules the co
 
 ## Raw schemas
 
-### MedQA — `openlifescienceai/medqa`
+### MedQA: `openlifescienceai/medqa`
 
 Everything nests under `data`, with capitalised, space-separated keys.
 
@@ -115,7 +115,7 @@ Everything nests under `data`, with capitalised, space-separated keys.
 **`subject_name` is `""` on every row**, so MedQA contributes nothing to per-capability analysis.
 A blank label is worse than no label, so it is dropped rather than propagated.
 
-### MedMCQA — `openlifescienceai/medmcqa`
+### MedMCQA: `openlifescienceai/medmcqa`
 
 Flat columns, 0-based answer index.
 
@@ -138,12 +138,12 @@ Flat columns, 0-based answer index.
 | `opa`..`opd` | `options` `{A,B,C,D}` | `None` becomes `""`, never the string `"None"` |
 | `cop` | `answer_key` | `0→A`; **`-1` → `None`** |
 | `exp` | `rationale` | **null on many rows**; blank becomes `None` |
-| `subject_name`, `topic_name`, `choice_type` | `labels` | 21 subjects — our only capability signal |
+| `subject_name`, `topic_name`, `choice_type` | `labels` | 21 subjects, our only capability signal |
 
 Quality note: MedMCQA is scraped from exam material and contains some typos, ambiguous items, and
 occasionally disputed keys. Do not over-interpret small accuracy differences.
 
-### PubMedQA — `qiaojin/PubMedQA`
+### PubMedQA: `qiaojin/PubMedQA`
 
 Three configs, each a single `train` split.
 
@@ -170,7 +170,7 @@ Three configs, each a single `train` split.
 | Raw | `QAExample` | Note |
 |---|---|---|
 | `question` | `question` | |
-| — | `options` | fixed `{A: yes, B: no, C: maybe}` |
+| (none) | `options` | fixed `{A: yes, B: no, C: maybe}` |
 | `final_decision` | `answer_key` | absent in `pqa_unlabeled` |
 | `context.contexts` | `contexts` | the source abstract |
 | `long_answer` | `rationale` | |
@@ -182,7 +182,7 @@ authors' repository that the Hub mirror does not carry. `pqa_labeled` arrives as
 1,000-row split, so we slice `train[:500]` deterministically. Our numbers are internally
 consistent but are **not** directly comparable to published PubMedQA results.
 
-### PubMed corpus — `MedRAG/pubmed`
+### PubMed corpus: `MedRAG/pubmed`
 
 1,166 JSONL shards under `chunk/`, 23.9M snippets, ~296 tokens each.
 
@@ -230,5 +230,5 @@ rather than fill the filesystem.
 ## Regenerating test fixtures
 
 `tests/fixtures/*.jsonl` are real Hub rows so the test suite runs offline. If a dataset changes
-upstream, regenerate them and re-read the assertions in `tests/test_loaders.py` — several encode
+upstream, regenerate them and re-read the assertions in `tests/test_loaders.py`. Several encode
 specific values (`cop = -1`, the absence of `final_decision`) that are the point of the fixture.

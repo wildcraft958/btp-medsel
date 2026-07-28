@@ -12,7 +12,7 @@
 
 All four loaders are already implemented and tested, so nobody is blocked waiting on anyone else.
 Owning an area means extending it, verifying it against the source, and writing its literature
-review section — not writing it from scratch.
+review section, not writing it from scratch.
 
 ## Setup
 
@@ -36,8 +36,8 @@ wheels you cannot use.
 uv pip install torch --index-url https://download.pytorch.org/whl/cpu
 ```
 
-That index is deliberately *not* in `pyproject.toml` — most of us will use GPUs, and pinning CPU
-builds for everyone would be worse.
+That index is deliberately *not* in `pyproject.toml`, because most of us will use GPUs, and
+pinning CPU builds for everyone would be worse.
 
 ## Before you push
 
@@ -48,7 +48,7 @@ uv run pytest
 uv run medsel train --config configs/experiment/smoke_cpu.yaml   # a few minutes on CPU
 ```
 
-The smoke run exercises the whole CPT path — shard fetch, filtering, packing, training,
+The smoke run exercises the whole CPT path: shard fetch, filtering, packing, training,
 checkpointing. It exists to fail loudly when someone breaks the pipeline. Its loss curve means
 nothing; do not read it.
 
@@ -94,7 +94,7 @@ open('tests/fixtures/mynewset_train.jsonl','w').writelines(
 "
 ```
 
-Bump `normalizer_version` whenever `normalize` changes shape — the parquet cache keys on it and
+Bump `normalizer_version` whenever `normalize` changes shape. The parquet cache keys on it and
 will rebuild rather than serve stale records.
 
 ## Adding a selection method
@@ -126,6 +126,10 @@ split raises rather than scoring; that is the standard to hold.
 **Say when a number is uncertain.** The literature review marks figures taken from secondary
 sources. Do the same rather than laundering a search result into a citation.
 
+**No em dashes or en dashes.** Anywhere: prose, comments, docstrings, commit messages. Use a
+comma, colon, full stop or parentheses, and a plain hyphen in ranges (`month 1-2`).
+`tests/test_style.py` enforces this, so a stray dash fails the suite rather than the review.
+
 **Commit messages explain why.** The diff already shows what changed.
 
 **Never commit data.** `data/` and `runs/` are gitignored. Corpora are regenerated from configs,
@@ -136,7 +140,7 @@ which is what makes runs reproducible.
 - MedMCQA `test` has no labels (`cop = -1`). Use `validation`.
 - MedQA's validation split is called `dev`.
 - PubMedQA labelling depends on **config**, not split.
-- PubMed contaminates PubMedQA — the PMID exclusion filter is **not yet built**. Do not report
+- PubMed contaminates PubMedQA, and the PMID exclusion filter is **not yet built**. Do not report
   PubMedQA numbers from a CPT'd model until it is.
 - `transformers` 5.x renamed `torch_dtype` → `dtype` and `Trainer(tokenizer=)` →
   `processing_class=`.

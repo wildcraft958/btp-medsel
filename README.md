@@ -2,7 +2,7 @@
 
 **Multi-stage, multi-target data selection harness for medical foundation models.**
 
-BTP project. Medical LLMs are trained in stages — continual pretraining (CPT) → supervised
+BTP project. Medical LLMs are trained in stages: continual pretraining (CPT) → supervised
 fine-tuning (SFT) → preference optimisation (DPO/RLHF). Existing data-selection methods optimise a
 single stage against a single objective. This harness learns *stage-specific* selection policies
 while preserving multiple clinical capabilities across the whole pipeline.
@@ -14,7 +14,7 @@ Current focus: **CPT**.
 ```bash
 git clone git@github.com:wildcraft958/btp-medsel.git && cd btp-medsel
 uv sync --extra dev                  # core + test deps
-uv run pytest                        # 259 tests, fully offline
+uv run pytest                        # 311 tests, fully offline
 uv run medsel info                   # hardware, loaders, stages
 
 uv run medsel data list
@@ -32,7 +32,7 @@ uv run medsel train --config configs/experiment/smoke_cpu.yaml    # whole CPT pa
 uv run medsel eval --model runs/smoke-cpu --tasks medmcqa --limit 100
 ```
 
-Everything long-running shows a `tqdm` progress bar — dataset normalisation, PubMed shard
+Everything long-running shows a `tqdm` progress bar: dataset normalisation, PubMed shard
 download, token packing, caching, and evaluation.
 
 ## Datasets
@@ -54,7 +54,7 @@ for ex in get_loader("medmcqa").load("validation", limit=100):
     print(ex.question, ex.options, ex.answer_key)
 ```
 
-Raw schemas differ substantially between the three QA sets — see `docs/datasets.md` for the field
+Raw schemas differ substantially between the three QA sets. See `docs/datasets.md` for the field
 maps and the known traps (notably: **MedMCQA's `test` split has no labels**, so evaluation uses
 `validation`).
 
@@ -99,10 +99,10 @@ See `docs/contributing.md`.
 | MCQ evaluator with per-subject breakdown | done |
 | Selection interface + baseline scorers | done |
 | Literature review + docs | done |
-| SFT stage | stub — see `src/medsel/stages/sft.py` |
-| Preference optimisation | stub — blocked on choosing a dataset |
+| SFT stage | stub, see `src/medsel/stages/sft.py` |
+| Preference optimisation | stub, blocked on choosing a dataset |
 | Influence-based scorers (LESS, 3DS, TRAK) | not started |
-| **PubMed→PubMedQA contamination filter** | **not built — see caveat below** |
+| **PubMed→PubMedQA contamination filter** | **not built, see caveat below** |
 
 ## Known caveats
 
@@ -117,7 +117,7 @@ See `docs/contributing.md`.
 
 ## Notes on compute
 
-`data/` and `runs/` are gitignored — regenerate locally, never commit corpora. The full
+`data/` and `runs/` are gitignored: regenerate locally, never commit corpora. The full
 `MedRAG/pubmed` corpus is **70 GB** across 1166 shards (~60 MB each), so the CPT loader streams,
 takes a configurable shard budget, and runs a free-space check sized from real remote file sizes
 before downloading anything. `shard_offset` lets collaborators split the corpus without overlap.
