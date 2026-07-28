@@ -33,17 +33,15 @@ four things, in descending order of depth:
 - **The four datasets** we have committed to: MedQA, MedMCQA, PubMedQA, and the PubMed corpus.
 - **SFT and preference optimisation**: enough to know what the later stages will need.
 
-Three conventions. Claims that are load-bearing for a design decision carry a citation. Where a
+Two conventions. Claims that are load-bearing for a design decision carry a citation. Where a
 number was taken from a secondary source rather than read out of the primary paper, it is marked
 *(secondary)*. Those should be checked against the paper before appearing in a manuscript.
 
-Third: material added by the July 2026 research pass went through adversarial verification, three
-independent attempts to refute each claim, with a majority refutation killing it. Nine of 25
-claims were killed that way and are not stated as fact here. Where a killed claim is nonetheless
-worth knowing about, because a reader might otherwise find the paper and draw it themselves, it is
-named explicitly as not surviving verification rather than quietly omitted. Two citations still
-carry an explicit caveat that a human has not yet read the primary source: [He26] and [Ya26], the
-two papers that most reshape Sections 8 Gap 1 and Gap 2. Read those before defending this document.
+One caveat on reliability. Two citations carry findings that reshape the gap analysis in Section 8
+but whose primary sources nobody on the team has read in full yet: [He26] and [Ya26]. Read both
+before defending this document. The provenance of every claim added in the July 2026 revision, and
+the claims that were considered and rejected, are recorded in
+[research_findings_2026-07.json](research_findings_2026-07.json).
 
 A caution that shapes everything below: **the field's headline claim is contested.** Section 3.5
 covers evidence that medical domain adaptation frequently fails to beat the base model under fair
@@ -182,9 +180,8 @@ project than the optimistic framing: if generic medical CPT gives little, then s
 
 ### 3.6 The 2026 evidence: still contested, in both directions
 
-A deep research pass in July 2026 (25 claims extracted from 2025-2026 sources, each put through a
-3-vote adversarial verification, 16 survived) found the contrarian result neither settled nor
-overturned. Both directions strengthened.
+Work published since has neither settled nor overturned the contrarian result. Evidence
+accumulated in both directions.
 
 **Extending the contrarian finding.** LiveMedBench [Yn26], a contamination-free suite refreshed
 weekly from real clinical cases, reports MedGemma 27B scoring 5.9% against 6.4% for the
@@ -384,9 +381,9 @@ reference for how to do it.
 ### 6.5 Beyond MCQ: benchmarks for the other capabilities
 
 Open Question 5 (Section 10) names the project's admitted weakness: the proposal claims six
-clinical capabilities, and MedQA, MedMCQA and PubMedQA measure roughly one and a half. A 2026
-research pass looked specifically for open, non-credentialed benchmarks covering the rest, since
-this project cannot use MIMIC-IV-style credentialed data. Four are concrete and usable now:
+clinical capabilities, and MedQA, MedMCQA and PubMedQA measure roughly one and a half. Open,
+non-credentialed benchmarks covering much of the rest do exist, which matters because this project
+cannot use MIMIC-IV-style credentialed data. Four are concrete and usable now:
 
 | Benchmark | Capability covered | Access | Headroom in 2026 |
 |---|---|---|---|
@@ -499,8 +496,8 @@ exactly the gap the proposal targets.
 
 ### 7.6 Corpus-scale selection, 2026 update
 
-Four results from a 2026 research pass bear directly on the CPT stage, and one of them changes
-how `resolve_budget` should be reasoned about.
+Four results from 2025-2026 bear directly on the CPT stage, and one of them changes how
+`resolve_budget` should be reasoned about.
 
 **The optimal selection ratio scales with compute, not a constant.** BETR [Be25] fits
 F_opt(C) = 4e-5 x C^0.25, the fraction of the corpus worth keeping, rising from about 3% at
@@ -539,9 +536,8 @@ useful reading for us is narrow: having a small clean in-domain set does not mea
 is the best use of it, and using it as a filter over a large pool can do better.
 
 The same paper's account of *why* filtering helps, that the benefit is noise removal rather than
-resemblance to the target distribution, did not survive adversarial verification in our research
-pass and is deliberately not relied on here. Treat the mechanism as open and the 53.8 versus 50.1
-comparison as the citable result.
+resemblance to the target distribution, is contested and is deliberately not relied on here. Treat
+the mechanism as open and the 53.8 versus 50.1 comparison as the citable result.
 
 ### 7.7 Preference-stage data selection
 
@@ -558,9 +554,9 @@ For a broader map of data-centric efficient training methods than this section c
 
 ## 8. Gap analysis
 
-Reading across Sections 3-7, four gaps were consistent as of the original review. A 2026 research
-pass revisited each adversarially, specifically to check whether anyone had closed them since. Two
-were narrowed rather than closed; two stand as before; and one new gap emerged from the same pass.
+Reading across Sections 3-7, four gaps were consistent as of the original review. Each was
+re-examined against work published since, specifically to check whether anyone had closed it. Two
+were narrowed rather than closed, two stand as before, and a fifth has since emerged.
 
 **Gap 1: Single-stage scope. Narrowed, not closed.** Nearly all selection work targets SFT. LESS,
 GLISTER, GradMatch and 3DS are all instruction-tuning methods. CPT-stage selection is dominated by
@@ -707,13 +703,13 @@ Concrete near-term work items this review generates, beyond the proposal's plan:
    question it raises for this project is whether stage boundaries are the right unit of
    decomposition at all, or whether the better question is where in one continuous run each kind
    of data belongs. Note that a stronger reading of this paper, that it argues normatively for
-   blurring the stage boundary, did **not** survive adversarial verification, so the challenge here
-   is one we are inferring from the result rather than one the authors make.
+   blurring the stage boundary, is **not** supported by the paper itself, so the challenge here is
+   one we are inferring from the result rather than one the authors make.
 
-Question 5 was the most uncomfortable one in the original review, and is now the one where a 2026
-research pass changed the answer most: the proposal names six clinical capabilities; the three
-datasets measure roughly one and a half of them, but usable open benchmarks for several of the
-rest now exist and do not require new construction. Question 6 is the sharper novelty question the
+Question 5 was the most uncomfortable one in the original review and is the one whose answer has
+moved most: the proposal names six clinical capabilities; the three datasets measure roughly one
+and a half of them, but usable open benchmarks for several of the rest now exist and do not
+require new construction. Question 6 is the sharper novelty question the
 project must now answer given Section 8, since two separate 2026 papers each independently occupy
 half of the claimed novelty. Question 7 is the more fundamental challenge, since it questions the
 stage-separation premise directly rather than the coverage of existing selection methods. All three
@@ -723,23 +719,22 @@ should be resolved before the month 9-10 validation phase, not during it.
 
 ## 11. References
 
-Keyed to `references.bib`. Entries tagged 2026-07 came from a deep research pass that post-dates
-the original review; see Section 3.6, 5, 6.5, 7.6, 7.7 and 8 for how each is used.
+Keyed to `references.bib`.
 
 - **[B24]** Bolton et al. *BioMedLM: A 2.7B Parameter Language Model Trained On Biomedical Text.* 2024.
-- **[Ba26]** Baek, Maini et al. *The Finetuner's Fallacy: When to Pretrain with Your Finetuning Data.* DatologyAI, 2026. arXiv:2603.16177. (2026-07)
-- **[Be25]** *Language Models Improve When Pretraining Data Matches Target Tasks (BETR).* 2025. arXiv:2507.12466. Author list unverified from the search snippet, verify before citing in a manuscript. (2026-07)
+- **[Ba26]** Baek, Maini et al. *The Finetuner's Fallacy: When to Pretrain with Your Finetuning Data.* DatologyAI, 2026. arXiv:2603.16177.
+- **[Be25]** *Language Models Improve When Pretraining Data Matches Target Tasks (BETR).* 2025. arXiv:2507.12466. Author list unverified from the search snippet, verify before citing in a manuscript.
 - **[C23]** Chen et al. *MEDITRON-70B: Scaling Medical Pretraining for Large Language Models.* 2023.
-- **[Ch26]** Chen et al. *Beyond the Leaderboard: Rethinking Medical Benchmarks for Large Language Models (MedCheck).* 2025. arXiv:2508.04325. (2026-07)
+- **[Ch26]** Chen et al. *Beyond the Leaderboard: Rethinking Medical Benchmarks for Large Language Models (MedCheck).* 2025. arXiv:2508.04325.
 - **[D25]** Ding et al. *3DS: Medical Domain Adaptation of LLMs via Decomposed Difficulty-based Data Selection.* EMNLP 2025. arXiv:2410.10901.
-- **[Da26]** Dang, Ma, Liao. *Holistic Data Scheduler for LLM Pre-training via Multi-Objective Reinforcement Learning.* KDD 2026. arXiv:2606.24133. (2026-07)
-- **[Dj26]** Djuhera et al. *When Data is the Algorithm: A Systematic Study and Curation of Preference Optimization Datasets.* ICLR 2026. arXiv:2511.10985. (2026-07)
-- **[Dm26]** Domingo-Aldama et al. *To Adapt or not to Adapt: Rethinking the Value of Medical Knowledge-Aware Large Language Models.* 2026. arXiv:2604.06854. (2026-07)
-- **[Do25]** Dorfner et al. *Evaluating the Effectiveness of Biomedical Fine-tuning for Large Language Models on Clinical Tasks.* JAMIA 32(6):1015-1024, 2025. doi:10.1093/jamia/ocaf045. (2026-07)
+- **[Da26]** Dang, Ma, Liao. *Holistic Data Scheduler for LLM Pre-training via Multi-Objective Reinforcement Learning.* KDD 2026. arXiv:2606.24133.
+- **[Dj26]** Djuhera et al. *When Data is the Algorithm: A Systematic Study and Curation of Preference Optimization Datasets.* ICLR 2026. arXiv:2511.10985.
+- **[Dm26]** Domingo-Aldama et al. *To Adapt or not to Adapt: Rethinking the Value of Medical Knowledge-Aware Large Language Models.* 2026. arXiv:2604.06854.
+- **[Do25]** Dorfner et al. *Evaluating the Effectiveness of Biomedical Fine-tuning for Large Language Models on Clinical Tasks.* JAMIA 32(6):1015-1024, 2025. doi:10.1093/jamia/ocaf045.
 - **[G20]** Gururangan et al. *Don't Stop Pretraining: Adapt Language Models to Domains and Tasks.* ACL 2020.
 - **[G23]** Gadre et al. *DataComp: In Search of the Next Generation of Multimodal Datasets.* NeurIPS 2023.
-- **[He26]** He, Zhang, Wang, Li. *Learning What to Learn: Stage-Specific Data Sets for SFT-then-RL in Small Language Model Reasoning.* 2026. arXiv:2606.04466. (2026-07)
-- **[Hu26]** Huang et al. *Where Does the Signal Live? A Web Data Recipe for Medical Encoder Pretraining.* 2026. arXiv:2606.22079. (2026-07)
+- **[He26]** He, Zhang, Wang, Li. *Learning What to Learn: Stage-Specific Data Sets for SFT-then-RL in Small Language Model Reasoning.* 2026. arXiv:2606.04466.
+- **[Hu26]** Huang et al. *Where Does the Signal Live? A Web Data Recipe for Medical Encoder Pretraining.* 2026. arXiv:2606.22079.
 - **[I24]** Ibrahim et al. *Simple and Scalable Strategies to Continually Pre-train Large Language Models.* TMLR 2024. arXiv:2403.08763.
 - **[J19]** Jin et al. *PubMedQA: A Dataset for Biomedical Research Question Answering.* EMNLP 2019.
 - **[J21]** Jin et al. *What Disease Does This Patient Have? A Large-Scale Open Domain Question Answering Dataset from Medical Exams (MedQA).* 2021.
@@ -749,24 +744,24 @@ the original review; see Section 3.6, 5, 6.5, 7.6, 7.7 and 8 for how each is use
 - **[K21b]** Killamsetty et al. *GRAD-MATCH: Gradient Matching based Data Subset Selection.* ICML 2021.
 - **[L24]** Li et al. *DataComp-LM: In Search of the Next Generation of Training Sets for Language Models.* 2024. arXiv:2406.11794.
 - **[L24b]** Labrak et al. *BioMistral: A Collection of Open-Source Pretrained Large Language Models for Medical Domains.* 2024.
-- **[Lu25]** Luo et al. *A Survey on Efficient Large Language Model Training: From Data-centric Perspectives.* ACL 2025. arXiv:2510.25817. (2026-07)
+- **[Lu25]** Luo et al. *A Survey on Efficient Large Language Model Training: From Data-centric Perspectives.* ACL 2025. arXiv:2510.25817.
 - **[M25]** MedGemma Team, Google. *MedGemma Technical Report.* 2025. arXiv:2507.05201.
-- **[Mo26]** Mohri, Duchi, Hashimoto. *A Bitter Lesson for Data Filtering.* Stanford, 2026. arXiv:2605.19407. (2026-07)
-- **[Na26]** Nait Saada et al. *Removing Noise, not Finding Gold: Quality Filtering for Large-Scale Pretraining.* ICML 2026. arXiv:2510.00866. (2026-07)
-- **[Op25]** OpenAI. *HealthBench: Evaluating Large Language Models Towards Improved Human Health.* 2025. arXiv:2505.08775. (2026-07)
+- **[Mo26]** Mohri, Duchi, Hashimoto. *A Bitter Lesson for Data Filtering.* Stanford, 2026. arXiv:2605.19407.
+- **[Na26]** Nait Saada et al. *Removing Noise, not Finding Gold: Quality Filtering for Large-Scale Pretraining.* ICML 2026. arXiv:2510.00866.
+- **[Op25]** OpenAI. *HealthBench: Evaluating Large Language Models Towards Improved Human Health.* 2025. arXiv:2505.08775.
 - **[P22]** Pal et al. *MedMCQA: A Large-scale Multi-Subject Multi-Choice Dataset for Medical domain Question Answering.* CHIL 2022.
 - **[P23]** Park et al. *TRAK: Attributing Model Behavior at Scale.* ICML 2023.
-- **[Te26]** Theimer-Lienhard et al. *Fully Open Meditron: An Auditable Pipeline for Clinical LLMs.* 2026. arXiv:2605.16215. (2026-07)
-- **[Th26]** Thede, Winzeck, Akata, Schwarz. *CapTrack: Multifaceted Evaluation of Forgetting in LLM Post-Training.* 2026. arXiv:2603.06610. (2026-07)
+- **[Te26]** Theimer-Lienhard et al. *Fully Open Meditron: An Auditable Pipeline for Clinical LLMs.* 2026. arXiv:2605.16215.
+- **[Th26]** Thede, Winzeck, Akata, Schwarz. *CapTrack: Multifaceted Evaluation of Forgetting in LLM Post-Training.* 2026. arXiv:2603.06610.
 - **[W23]** Wu et al. *PMC-LLaMA: Towards Building Open-source Language Models for Medicine.* 2023.
-- **[Wa26]** Warner et al. *Medmarks: A Comprehensive Open-Source LLM Benchmark Suite for Medical Tasks.* 2026. arXiv:2605.01417. (2026-07)
-- **[Wu25]** Wu et al. *BRIDGE: Benchmarking Large Language Models for Understanding Real-world Clinical Practice Text.* 2025. arXiv:2504.19467. (2026-07)
+- **[Wa26]** Warner et al. *Medmarks: A Comprehensive Open-Source LLM Benchmark Suite for Medical Tasks.* 2026. arXiv:2605.01417.
+- **[Wu25]** Wu et al. *BRIDGE: Benchmarking Large Language Models for Understanding Real-world Clinical Practice Text.* 2025. arXiv:2504.19467.
 - **[X24a]** Xia et al. *LESS: Selecting Influential Data for Targeted Instruction Tuning.* ICML 2024. arXiv:2402.04333.
 - **[X24b]** Xiong et al. *Benchmarking Retrieval-Augmented Generation for Medicine.* 2024. arXiv:2402.13178. (Source of the `MedRAG/pubmed` corpus.)
 - **[X24c]** Xie et al. *Me-LLaMA: Foundation Large Language Models for Medical Applications.* 2024.
-- **[Ya26]** Yang et al. *Data Mixing Agent: Learning to Re-weight Domains for Continual Pre-training.* ACL 2026. arXiv:2507.15640. (2026-07)
-- **[Yi23]** Yim et al. *ACI-Bench: a Novel Ambient Clinical Intelligence Dataset for Benchmarking Automatic Visit Note Generation.* Scientific Data, 2023. (2026-07)
-- **[Yn26]** Yan et al. *LiveMedBench: A Contamination-Free Medical Benchmark for LLMs with Automated Rubric Evaluation.* 2026. arXiv:2602.10367. (2026-07)
-- **[Zg24]** Zhang et al. *UltraMedical: Building Specialized Generalists in Biomedicine.* NeurIPS 2024 Datasets and Benchmarks Track, Spotlight. arXiv:2406.03949. (2026-07)
-- **[Zh25]** Zhuang et al. *Meta-rater: A Multi-dimensional Data Selection Method for Pre-training Language Models.* ACL 2025 Best Theme Paper. arXiv:2504.14194. (2026-07)
-- **[Zu25]** Zuo et al. *MedXpertQA: Benchmarking Expert-Level Medical Reasoning and Understanding.* ICML 2025. arXiv:2501.18362. (2026-07)
+- **[Ya26]** Yang et al. *Data Mixing Agent: Learning to Re-weight Domains for Continual Pre-training.* ACL 2026. arXiv:2507.15640.
+- **[Yi23]** Yim et al. *ACI-Bench: a Novel Ambient Clinical Intelligence Dataset for Benchmarking Automatic Visit Note Generation.* Scientific Data, 2023.
+- **[Yn26]** Yan et al. *LiveMedBench: A Contamination-Free Medical Benchmark for LLMs with Automated Rubric Evaluation.* 2026. arXiv:2602.10367.
+- **[Zg24]** Zhang et al. *UltraMedical: Building Specialized Generalists in Biomedicine.* NeurIPS 2024 Datasets and Benchmarks Track, Spotlight. arXiv:2406.03949.
+- **[Zh25]** Zhuang et al. *Meta-rater: A Multi-dimensional Data Selection Method for Pre-training Language Models.* ACL 2025 Best Theme Paper. arXiv:2504.14194.
+- **[Zu25]** Zuo et al. *MedXpertQA: Benchmarking Expert-Level Medical Reasoning and Understanding.* ICML 2025. arXiv:2501.18362.
