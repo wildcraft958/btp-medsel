@@ -33,9 +33,17 @@ four things, in descending order of depth:
 - **The four datasets** we have committed to: MedQA, MedMCQA, PubMedQA, and the PubMed corpus.
 - **SFT and preference optimisation**: enough to know what the later stages will need.
 
-Two conventions. Claims that are load-bearing for a design decision carry a citation. Where a
+Three conventions. Claims that are load-bearing for a design decision carry a citation. Where a
 number was taken from a secondary source rather than read out of the primary paper, it is marked
 *(secondary)*. Those should be checked against the paper before appearing in a manuscript.
+
+Third: material added by the July 2026 research pass went through adversarial verification, three
+independent attempts to refute each claim, with a majority refutation killing it. Nine of 25
+claims were killed that way and are not stated as fact here. Where a killed claim is nonetheless
+worth knowing about, because a reader might otherwise find the paper and draw it themselves, it is
+named explicitly as not surviving verification rather than quietly omitted. Two citations still
+carry an explicit caveat that a human has not yet read the primary source: [He26] and [Ya26], the
+two papers that most reshape Sections 8 Gap 1 and Gap 2. Read those before defending this document.
 
 A caution that shapes everything below: **the field's headline claim is contested.** Section 3.5
 covers evidence that medical domain adaptation frequently fails to beat the base model under fair
@@ -524,11 +532,16 @@ pretraining run, and they state plainly that "when compute is a bottleneck, we e
 still be important." Below a model-size threshold the crossing does not occur at all. This
 project's compute budget sits nowhere near the regime where the result applies.
 
-One mechanism-level result changes what *not* to use as a selection signal: Nait Saada et al.
-[Na26] find that quality filtering's benefit does not come from selecting documents that resemble
-a high-quality reference distribution, which weakens the case for scoring CPT documents by
-similarity to a small in-domain seed set as a standalone signal, and argues for combining it with a
-direct quality or noise-removal criterion such as the medical-term density result above.
+**A filtered corpus can beat the clean corpus it was filtered toward.** Nait Saada et al. [Na26]
+report a classifier-filtered web corpus scoring 53.8% against 50.1% for a model trained directly
+on the unlimited high-quality reference set under identical conditions (350M parameters). The
+useful reading for us is narrow: having a small clean in-domain set does not mean training on it
+is the best use of it, and using it as a filter over a large pool can do better.
+
+The same paper's account of *why* filtering helps, that the benefit is noise removal rather than
+resemblance to the target distribution, did not survive adversarial verification in our research
+pass and is deliberately not relied on here. Treat the mechanism as open and the 53.8 versus 50.1
+comparison as the citable result.
 
 ### 7.7 Preference-stage data selection
 
@@ -686,12 +699,16 @@ Concrete near-term work items this review generates, beyond the proposal's plan:
    the combination is separable into independent per-stage and per-capability effects, the
    project's contribution is the engineering of the combination rather than a new empirical
    finding, and that distinction should be decided before, not after, running experiments.
-7. Baek et al. [Ba26] argue domain data belongs as early in training as possible, which questions
-   whether CPT, SFT and DPO should be treated as needing separate policies at all, rather than one
-   policy that places domain data optimally across a blurred stage boundary. Does this apply to
-   medical CPT specifically, where the domain shift (general web text to biomedical abstracts) is
-   larger than the chemistry, music and proof domains the paper tested? This is a direct challenge
-   to the project's stage-separation premise and deserves an explicit answer, not a citation past.
+7. Baek et al. [Ba26] report that moving the small domain dataset conventionally reserved for
+   finetuning into the pretraining mixture ("specialized pretraining") cuts the pretraining tokens
+   needed to reach a given domain performance by up to 1.75x, on ChemPile, MusicPile and ProofPile
+   *(secondary: figure taken from the abstract, and none of those domains is medicine)*. Does the
+   same hold when the domain shift is general web text to biomedical abstracts? If it does, the
+   question it raises for this project is whether stage boundaries are the right unit of
+   decomposition at all, or whether the better question is where in one continuous run each kind
+   of data belongs. Note that a stronger reading of this paper, that it argues normatively for
+   blurring the stage boundary, did **not** survive adversarial verification, so the challenge here
+   is one we are inferring from the result rather than one the authors make.
 
 Question 5 was the most uncomfortable one in the original review, and is now the one where a 2026
 research pass changed the answer most: the proposal names six clinical capabilities; the three

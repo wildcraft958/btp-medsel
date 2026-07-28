@@ -57,6 +57,12 @@ def select_stratified(
     entirely at aggressive budgets.
 
     Returns indices in ascending order, since a stratified subset has no meaningful global rank.
+
+    Raises:
+        ValueError: If the budget is too small to give every group ``min_per_group`` records.
+            Silently returning fewer would break the guarantee this argument exists to provide,
+            and a capability-retention experiment would then be measuring something other than
+            what it claims to.
     """
     if len(scores) != len(groups):
         raise ValueError(f"got {len(scores)} scores but {len(groups)} group labels")
@@ -68,6 +74,14 @@ def select_stratified(
     members: dict[str, list[int]] = defaultdict(list)
     for index, group in enumerate(groups):
         members[group].append(index)
+
+    if min_per_group:
+        floor = min_per_group * len(members)
+        if floor > total:
+            raise ValueError(
+                f"min_per_group={min_per_group} across {len(members)} group(s) needs {floor} "
+                f"records but the budget resolves to {total}. Raise the budget or lower the floor."
+            )
 
     for indices in members.values():
         indices.sort(key=lambda i: (-scores[i], i))

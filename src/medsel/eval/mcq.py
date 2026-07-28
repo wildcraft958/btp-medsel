@@ -88,6 +88,15 @@ def _sequence_logprob(
     import torch
 
     prompt_ids = tokenizer.encode(prompt, add_special_tokens=True)
+    if not prompt_ids:
+        # Scoring below reads the logits at position start-1, so an empty prompt would index -1
+        # and silently sum an empty slice to 0.0 for every option, making the first option win
+        # every time. Fail instead of reporting that as an accuracy.
+        raise ValueError(
+            "prompt tokenised to zero tokens; continuation log-probabilities cannot be scored "
+            "without at least one preceding token"
+        )
+
     sequences, cont_lengths = [], []
     for continuation in continuations:
         cont_ids = tokenizer.encode(continuation, add_special_tokens=False)

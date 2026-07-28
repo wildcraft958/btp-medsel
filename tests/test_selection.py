@@ -188,3 +188,33 @@ class TestSelectStratified:
 
     def test_zero_budget_selects_nothing(self):
         assert select_stratified([1.0, 2.0], ["a", "b"], 0) == []
+
+
+class TestStratifiedFloorIsHonestAboutFailure:
+    """The floor exists to guarantee representation. Silently returning fewer than promised
+    would make a capability-retention experiment measure something other than what it claims."""
+
+    def test_impossible_floor_raises_rather_than_under_delivering(self):
+        scores = [1.0] * 15
+        groups = ["a"] * 5 + ["b"] * 5 + ["c"] * 5
+        with pytest.raises(ValueError, match="needs 15 records"):
+            select_stratified(scores, groups, 4, min_per_group=5)
+
+    def test_message_names_both_sides_of_the_conflict(self):
+        scores = [1.0] * 6
+        groups = ["a"] * 3 + ["b"] * 3
+        with pytest.raises(ValueError, match="min_per_group=3"):
+            select_stratified(scores, groups, 2, min_per_group=3)
+
+    def test_exactly_satisfiable_floor_is_allowed(self):
+        scores = [1.0] * 6
+        groups = ["a"] * 3 + ["b"] * 3
+        chosen = select_stratified(scores, groups, 4, min_per_group=2)
+        assert len(chosen) == 4
+        assert len({groups[i] for i in chosen}) == 2
+
+    def test_zero_budget_still_returns_empty_without_raising(self):
+        # A zero budget is a caller saying "select nothing", not a conflict with the floor.
+        scores = [1.0] * 4
+        groups = ["a", "a", "b", "b"]
+        assert select_stratified(scores, groups, 0, min_per_group=2) == []

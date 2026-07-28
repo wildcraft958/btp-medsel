@@ -100,7 +100,7 @@ See `docs/contributing.md`.
 | Selection interface + baseline scorers | done |
 | Literature review + docs | done |
 | SFT stage | done, verified end to end on CPU |
-| Preference optimisation | stub, blocked on choosing a dataset |
+| Preference optimisation | stub, blocked on constructing medical preference pairs |
 | Influence-based scorers (LESS, 3DS, TRAK) | not started |
 | PubMed→PubMedQA contamination filter | done, opt-in via `exclude_pmids` |
 
