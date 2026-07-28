@@ -1,0 +1,24 @@
+# Gemma 3 1B base with LoRA adapters instead of a full finetune.
+#
+# Same base as gemma3_1b.yaml and the same reasoning for choosing a non-medical base. The
+# difference is only how much of the model moves: LoRA trains a small number of adapter
+# parameters, so it fits a smaller GPU and produces checkpoints of megabytes rather than
+# gigabytes, which matters given the disk budget on this project.
+#
+# The tradeoff to state in any write-up: a LoRA CPT run and a full-finetune CPT run are not the
+# same experiment. LoRA constrains how much the model can absorb from the corpus, so a null
+# result under LoRA does not establish that full CPT would also have been null. Use this for
+# iteration and the full config for the result you intend to report.
+#
+# Gated: run `hf auth login` and accept the licence at huggingface.co/google/gemma-3-1b-pt first.
+name_or_path: google/gemma-3-1b-pt
+dtype: auto
+gradient_checkpointing: true
+
+use_lora: true
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+# Left null so PEFT picks the attention projections appropriate to the architecture. Set an
+# explicit list only if you have a reason to deviate, and record that reason in the experiment.
+lora_target_modules: null

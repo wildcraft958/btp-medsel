@@ -1,0 +1,17 @@
+# PubMed CPT corpus (MedRAG/pubmed), 23.9M abstracts in 1,166 JSONL shards.
+#
+# Owner: Srinjoy. Schema and traps: docs/datasets.md.
+#
+# The full corpus is 70 GB, so the loader always takes a shard budget and runs a free-space check
+# sized from the real remote file sizes before downloading anything. `shard_offset` lets the four
+# of us split the corpus without overlap; `shard_dir` reads an already-fetched copy on a shared
+# machine so nobody redownloads it.
+#
+# Defaults here are the modest slice suitable for development. Raise `num_shards` for a real run.
+source: pubmed
+split: train
+loader:
+  num_shards: 8         # ~480 MB, ~160k documents
+  shard_offset: 0
+  min_chars: 200
+  dedup: true

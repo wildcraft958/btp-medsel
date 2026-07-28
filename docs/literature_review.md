@@ -116,8 +116,8 @@ The main open-weight lineage, roughly chronologically:
   general models of its day; explicitly frames itself as data-centric knowledge injection.
 - **MEDITRON** [C23]: 7B and 70B, CPT on a curated corpus (PubMed Central full text, abstracts,
   clinical guidelines). Notable for treating corpus construction as the contribution.
-- **BioMistral** [L24]: Mistral 7B further pretrained on PubMed Central open access.
-- **Me-LLaMA** [X24]: LLaMA 2 with continued pretraining plus instruction tuning on a mixed
+- **BioMistral** [L24b]: Mistral 7B further pretrained on PubMed Central open access.
+- **Me-LLaMA** [X24c]: LLaMA 2 with continued pretraining plus instruction tuning on a mixed
   biomedical and clinical corpus.
 - **MedGemma** [M25]: Gemma 3 derivative (4B multimodal, 27B text and multimodal), pretrained on
   medical text, medical QA, and FHIR-based EHR data, with a SigLIP encoder pretrained on

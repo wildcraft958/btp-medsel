@@ -1,0 +1,8 @@
+# MedQA, USMLE-style clinical vignettes with four options.
+#
+# Owner: Debmalya. Schema and traps: docs/datasets.md.
+#
+# Note the split name: MedQA calls its validation split `dev`, not `validation`. Code that
+# assumes the MedMCQA name falls back to `train` silently, so the loader raises instead.
+source: medqa
+split: test

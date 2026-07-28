@@ -1,0 +1,12 @@
+# MedMCQA, ~194k questions from Indian medical entrance exams across 21 subjects.
+#
+# Owner: Animesh. Schema and traps: docs/datasets.md.
+#
+# Evaluation uses `validation` (the NEET-PG set), never `test`. The published `test` split ships
+# `cop = -1` on every row, so scoring against it yields a meaningless ~0% rather than an error.
+# The loader marks `test` unlabeled and the evaluator raises if asked for it.
+#
+# This is the only dataset in the project carrying per-subject labels, so it is the sole source of
+# the capability breakdown the proposal's capability-retention metric depends on.
+source: medmcqa
+split: validation

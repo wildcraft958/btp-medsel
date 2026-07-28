@@ -1,0 +1,19 @@
+# PubMedQA, yes/no/maybe research questions answerable from an abstract.
+#
+# Owner: Arkajyoti. Schema and traps: docs/datasets.md.
+#
+# Labelling depends on the CONFIG, not the split: all three configs use the split name `train`,
+# and `pqa_unlabeled` omits the `final_decision` column entirely rather than nulling it.
+#
+# Comparability caveat: the canonical 500-question test set is defined by a ground-truth file the
+# Hub mirror does not carry, so `pqa_labeled` arrives as one undivided 1,000-row split and we
+# slice deterministically. Our numbers are internally consistent but are not directly comparable
+# to published PubMedQA figures.
+#
+# Contamination caveat: PubMedQA is built from PubMed abstracts and our CPT corpus is PubMed
+# abstracts. Use the PMID exclusion filter on the PubMed loader before reporting any PubMedQA
+# number from a CPT'd model.
+source: pubmedqa
+split: train[:500]
+loader:
+  config: pqa_labeled
