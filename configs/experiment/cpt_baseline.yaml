@@ -19,6 +19,11 @@ data:
     num_shards: 32        # ~2 GB, ~640k documents
     min_chars: 200
     dedup: true
+    # On for the baseline because PubMedQA is one of the three benchmarks this run is scored on,
+    # and it is built from these abstracts. Leaving it off would let the control condition train
+    # on its own evaluation set, which would flatter the baseline and make every later selection
+    # experiment look worse by comparison.
+    exclude_pmids: pubmedqa
 
 train:
   output_dir: runs/cpt-baseline-nosel

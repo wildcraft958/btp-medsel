@@ -140,8 +140,9 @@ which is what makes runs reproducible.
 - MedMCQA `test` has no labels (`cop = -1`). Use `validation`.
 - MedQA's validation split is called `dev`.
 - PubMedQA labelling depends on **config**, not split.
-- PubMed contaminates PubMedQA, and the PMID exclusion filter is **not yet built**. Do not report
-  PubMedQA numbers from a CPT'd model until it is.
+- PubMed contaminates PubMedQA. The PMID exclusion filter exists but is **opt-in**: set
+  `exclude_pmids: pubmedqa` in your CPT experiment's `loader:` block, or any PubMedQA number from
+  the resulting model measures nothing.
 - `transformers` 5.x renamed `torch_dtype` → `dtype` and `Trainer(tokenizer=)` →
   `processing_class=`.
 - Gemma weights are licence-gated: `hf auth login` and accept the licence before using

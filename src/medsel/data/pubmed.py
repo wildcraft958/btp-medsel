@@ -14,13 +14,14 @@ preceded by a free-space check sized from the actual remote file sizes.
 from __future__ import annotations
 
 import json
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from pathlib import Path
 from typing import Any, ClassVar
 
 from tqdm.auto import tqdm
 
 from medsel.data.base import BaseLoader
+from medsel.data.contamination import fingerprint, resolve_exclusions
 from medsel.registry import register_loader
 from medsel.schema import CorpusDoc
 from medsel.utils.diskguard import human_bytes, require_free
@@ -64,6 +65,7 @@ class PubMedCorpusLoader(BaseLoader):
         min_chars: int = 200,
         dedup: bool = True,
         shard_dir: str | Path | None = None,
+        exclude_pmids: str | Path | Iterable[int | str] | None = None,
         **kwargs: Any,
     ) -> None:
         """
@@ -76,6 +78,10 @@ class PubMedCorpusLoader(BaseLoader):
             dedup: Drop repeat PMIDs. Holds one int per seen document in memory.
             shard_dir: Read shards from this local directory instead of downloading, for shared
                 lab machines where one person has already fetched the corpus.
+            exclude_pmids: Documents to keep out of the corpus. Pass ``"pubmedqa"`` before any
+                run whose model will later be scored on PubMedQA, since that benchmark is built
+                from these same abstracts. Also accepts a path to a JSON list of ints or an
+                iterable of ints. See :mod:`medsel.data.contamination`.
         """
         super().__init__(**kwargs)
         if not 1 <= num_shards <= N_SHARDS:
@@ -88,12 +94,16 @@ class PubMedCorpusLoader(BaseLoader):
         self.min_chars = min_chars
         self.dedup = dedup
         self.shard_dir = Path(shard_dir) if shard_dir else None
+        self.exclude_pmids = resolve_exclusions(exclude_pmids)
 
     @property
     def cache_key(self) -> str:
+        # The exclusion fingerprint is part of the key on purpose: a parquet built without the
+        # contamination filter must never be served to a run that asked for it.
         return (
             f"{self.name}-s{self.shard_offset}+{self.num_shards}"
-            f"-min{self.min_chars}-dedup{int(self.dedup)}-v{self.normalizer_version}"
+            f"-min{self.min_chars}-dedup{int(self.dedup)}"
+            f"-excl{fingerprint(self.exclude_pmids)}-v{self.normalizer_version}"
         )
 
     def shard_names(self) -> list[str]:
@@ -171,6 +181,7 @@ class PubMedCorpusLoader(BaseLoader):
         kept = 0
         skipped_short = 0
         skipped_dupe = 0
+        skipped_contam = 0
 
         with tqdm(
             total=limit, desc=f"{self.name}:{split}", unit="doc", disable=not progress, leave=False
@@ -179,13 +190,19 @@ class PubMedCorpusLoader(BaseLoader):
                 if limit is not None and kept >= limit:
                     break
 
-                if self.dedup:
-                    pmid = row.get("PMID")
-                    if isinstance(pmid, int):
-                        if pmid in seen:
-                            skipped_dupe += 1
-                            continue
-                        seen.add(pmid)
+                pmid = row.get("PMID")
+
+                # Contamination first: a document that must not be trained on should not be
+                # counted as a duplicate or a short abstract either.
+                if self.exclude_pmids and isinstance(pmid, int) and pmid in self.exclude_pmids:
+                    skipped_contam += 1
+                    continue
+
+                if self.dedup and isinstance(pmid, int):
+                    if pmid in seen:
+                        skipped_dupe += 1
+                        continue
+                    seen.add(pmid)
 
                 text = str(row.get("content") or "").strip()
                 if len(text) < self.min_chars:
@@ -196,7 +213,7 @@ class PubMedCorpusLoader(BaseLoader):
                 kept += 1
                 bar.update(1)
 
-            bar.set_postfix(short=skipped_short, dupe=skipped_dupe)
+            bar.set_postfix(short=skipped_short, dupe=skipped_dupe, contam=skipped_contam)
 
     def stats(
         self, split: str = "train", limit: int | None = None, **kwargs: Any
@@ -213,6 +230,7 @@ class PubMedCorpusLoader(BaseLoader):
             "split": split,
             "hf_id": self.hf_id,
             "shards": f"{self.shard_offset + 1}..{self.shard_offset + self.num_shards}",
+            "n_excluded_pmids": len(self.exclude_pmids),
             "n_documents": n,
             "n_with_title": with_title,
             "mean_chars": round(total_chars / n, 1) if n else 0.0,

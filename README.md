@@ -102,13 +102,14 @@ See `docs/contributing.md`.
 | SFT stage | stub, see `src/medsel/stages/sft.py` |
 | Preference optimisation | stub, blocked on choosing a dataset |
 | Influence-based scorers (LESS, 3DS, TRAK) | not started |
-| **PubMed→PubMedQA contamination filter** | **not built, see caveat below** |
+| PubMed→PubMedQA contamination filter | done, opt-in via `exclude_pmids` |
 
 ## Known caveats
 
 - **PubMedQA contamination.** Our CPT corpus is PubMed abstracts and PubMedQA is built from PubMed
-  abstracts. A PMID exclusion filter does not exist yet, so PubMedQA numbers from a CPT'd model are
-  not yet trustworthy.
+  abstracts. The PMID exclusion filter now exists but is opt-in: set `exclude_pmids: pubmedqa` in
+  your experiment's `loader:` block. `cpt_baseline.yaml` already does. Without it, a PubMedQA
+  number from a CPT'd model is not a measurement.
 - **PubMedQA comparability.** The canonical 500-question test set is defined by a file the Hub
   mirror doesn't carry, so our PubMedQA numbers are internally consistent but not directly
   comparable to published figures.

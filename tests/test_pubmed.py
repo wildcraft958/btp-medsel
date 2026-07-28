@@ -162,12 +162,69 @@ class TestLocalShardDir:
         assert len(list(loader.load(progress=False))) == 1
 
 
+class TestContaminationFilter:
+    """PubMedQA is built from these same abstracts, so a CPT corpus feeding a PubMedQA
+    evaluation has to exclude its PMIDs or the resulting number measures nothing."""
+
+    def test_excluded_pmids_never_reach_the_output(self, local_loader):
+        loader = local_loader(min_chars=0, exclude_pmids=[22, 24])
+        pmids = {doc.meta["PMID"] for doc in loader.load(progress=False)}
+        assert pmids == {21, 23, 25}
+
+    def test_no_filtering_by_default(self, local_loader):
+        loader = local_loader(min_chars=0)
+        assert len(list(loader.load(progress=False))) == len(raw_rows())
+
+    def test_excluding_everything_yields_nothing(self, local_loader):
+        loader = local_loader(min_chars=0, exclude_pmids=[r["PMID"] for r in raw_rows()])
+        assert list(loader.load(progress=False)) == []
+
+    def test_exclusion_is_read_from_a_json_file(self, local_loader, tmp_path):
+        path = tmp_path / "pmids.json"
+        path.write_text(json.dumps([21, 25]))
+        loader = local_loader(min_chars=0, exclude_pmids=path)
+        pmids = {doc.meta["PMID"] for doc in loader.load(progress=False)}
+        assert pmids == {22, 23, 24}
+
+    def test_exclusion_takes_precedence_over_dedup(self, tmp_path, monkeypatch):
+        # A contaminated document must not be "kept" by arriving first and seeding the dedup set.
+        row = raw_rows()[1]
+        shard = tmp_path / "dupes.jsonl"
+        shard.write_text(json.dumps(row) + "\n" + json.dumps(row) + "\n")
+        loader = PubMedCorpusLoader(num_shards=1, min_chars=0, exclude_pmids=[row["PMID"]])
+        monkeypatch.setattr(loader, "download_shards", lambda progress=True: [shard])
+        assert list(loader.load(progress=False)) == []
+
+    def test_cache_key_separates_filtered_from_unfiltered(self):
+        # The important one: a parquet built without the filter must never be served to a run
+        # that asked for it.
+        plain = PubMedCorpusLoader(num_shards=1).cache_key
+        filtered = PubMedCorpusLoader(num_shards=1, exclude_pmids=[21]).cache_key
+        assert plain != filtered
+        assert "excl-none" not in filtered
+
+    def test_cache_key_separates_different_exclusion_sets(self):
+        a = PubMedCorpusLoader(num_shards=1, exclude_pmids=[21]).cache_key
+        b = PubMedCorpusLoader(num_shards=1, exclude_pmids=[22]).cache_key
+        assert a != b
+
+    def test_cache_key_is_stable_across_ordering(self):
+        a = PubMedCorpusLoader(num_shards=1, exclude_pmids=[21, 22]).cache_key
+        b = PubMedCorpusLoader(num_shards=1, exclude_pmids=[22, 21]).cache_key
+        assert a == b
+
+
 class TestStats:
     def test_reports_document_count_and_shard_range(self, local_loader):
         stats = local_loader(min_chars=0).stats(progress=False)
         assert stats["n_documents"] == len(raw_rows())
         assert stats["shards"] == "1..8"
         assert stats["mean_chars"] > 0
+
+    def test_reports_how_many_pmids_are_excluded(self, local_loader):
+        stats = local_loader(min_chars=0, exclude_pmids=[22, 24]).stats(progress=False)
+        assert stats["n_excluded_pmids"] == 2
+        assert stats["n_documents"] == len(raw_rows()) - 2
 
 
 class TestRegistryWiring:

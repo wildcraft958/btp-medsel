@@ -55,9 +55,24 @@ PubMedQA is constructed from PubMed abstracts, and our CPT corpus is PubMed abst
 pretraining on PubMed and then evaluating on PubMedQA can mean evaluating on text the model was
 just trained on.
 
-*Not yet enforced.* This needs a PMID exclusion list built from `pqa_labeled` and wired into the
-PubMed loader as a filter. **Until it exists, treat any PubMedQA number from a CPT'd model as
-unreliable.** Tracked in [literature_review.md §9](literature_review.md#9-implications-for-our-harness).
+*Enforced, opt-in:* `medsel.data.contamination` builds the PMID exclusion list and
+`PubMedCorpusLoader(exclude_pmids=...)` filters against it. Both sides key on an integer PMID
+(PubMedQA calls it `pubid`, the corpus calls it `PMID`), checked against the actual data.
+
+```yaml
+loader:
+  exclude_pmids: pubmedqa       # the 1,000 pqa_labeled evaluation PMIDs
+  # or: pubmedqa:pqa_labeled+pqa_artificial
+  # or: a path to a JSON list of ints
+```
+
+The exclusion set is part of `cache_key`, so a parquet built without the filter can never be
+served to a run that asked for it. `stats()` reports `n_excluded_pmids`, and the load progress bar
+carries a `contam=` count of documents dropped.
+
+**It is opt-in, not automatic**, because building the list needs a network fetch that would break
+offline runs. `configs/experiment/cpt_baseline.yaml` sets it. If you write a new CPT experiment
+whose model will be scored on PubMedQA, you must set it too, or that number measures nothing.
 
 ### 4. MedQA calls its validation split `dev`
 
