@@ -14,7 +14,7 @@ Current focus: **CPT**.
 ```bash
 git clone git@github.com:wildcraft958/btp-medsel.git && cd btp-medsel
 uv sync --extra dev                  # core + test deps
-uv run pytest                        # 311 tests, fully offline
+uv run pytest                        # fully offline, no network or GPU needed
 uv run medsel info                   # hardware, loaders, stages
 
 uv run medsel data list
@@ -83,6 +83,7 @@ See `docs/contributing.md`.
 
 | Doc | What's in it |
 |---|---|
+| [docs/status.md](docs/status.md) | **Start here for review.** What is done, what is open, and what is easy to get wrong |
 | [docs/literature_review.md](docs/literature_review.md) | CPT, SFT, alignment, the four datasets, data-selection methods, gap analysis |
 | [docs/datasets.md](docs/datasets.md) | Field-level schemas and the traps that produce plausible-but-wrong numbers |
 | [docs/architecture.md](docs/architecture.md) | What the pieces are, why they're separate, where new work attaches |

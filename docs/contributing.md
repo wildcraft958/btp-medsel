@@ -136,6 +136,12 @@ comma, colon, full stop or parentheses, and a plain hyphen in ranges (`month 1-2
 **Never commit data.** `data/` and `runs/` are gitignored. Corpora are regenerated from configs,
 which is what makes runs reproducible.
 
+## Picking up work
+
+[status.md](status.md) lists the open items with enough context to start on one, and records which
+parts of the review are still awaiting a human read. Check it before starting something new, so two
+people do not pick the same item.
+
 ## Gotchas worth knowing before you start
 
 - MedMCQA `test` has no labels (`cop = -1`). Use `validation`.
