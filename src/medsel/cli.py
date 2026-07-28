@@ -217,8 +217,7 @@ def build_parser() -> argparse.ArgumentParser:
         default="letter",
         choices=["letter", "text"],
         help=(
-            "score the option letter (published convention) "
-            "or its wording (kinder to base models)"
+            "score the option letter (published convention) or its wording (kinder to base models)"
         ),
     )
     evaluation.add_argument("--dtype", default="auto", help="auto | bf16 | fp16 | fp32")
