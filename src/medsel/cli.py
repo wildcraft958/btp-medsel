@@ -128,6 +128,23 @@ def cmd_train(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_eval(args: argparse.Namespace) -> int:
+    from medsel.eval.runner import run_evaluation
+
+    payload = run_evaluation(
+        args.model,
+        tasks=args.tasks,
+        split=args.split,
+        limit=args.limit,
+        mode=args.mode,
+        dtype=args.dtype,
+        seed=args.seed,
+        output=args.output,
+    )
+    _emit(payload)
+    return 0
+
+
 def cmd_info(args: argparse.Namespace) -> int:
     from medsel.registry import available_loaders
     from medsel.stages import available_stages
@@ -183,6 +200,31 @@ def build_parser() -> argparse.ArgumentParser:
     train.add_argument("--limit", type=int, help="override data.limit")
     train.add_argument("--max-steps", type=int, help="override train.max_steps")
     train.set_defaults(func=cmd_train)
+
+    evaluation = sub.add_parser("eval", help="score a checkpoint on the QA benchmarks")
+    evaluation.add_argument("--model", required=True, help="HF id or local checkpoint path")
+    evaluation.add_argument(
+        "--tasks",
+        nargs="+",
+        default=["medmcqa"],
+        metavar="TASK",
+        help="loader names to evaluate, e.g. medqa medmcqa pubmedqa",
+    )
+    evaluation.add_argument("--split", help="defaults to each task's labelled split")
+    evaluation.add_argument("--limit", type=int, help="score only the first N examples")
+    evaluation.add_argument(
+        "--mode",
+        default="letter",
+        choices=["letter", "text"],
+        help=(
+            "score the option letter (published convention) "
+            "or its wording (kinder to base models)"
+        ),
+    )
+    evaluation.add_argument("--dtype", default="auto", help="auto | bf16 | fp16 | fp32")
+    evaluation.add_argument("--seed", type=int, default=42)
+    evaluation.add_argument("--output", help="write the report JSON here")
+    evaluation.set_defaults(func=cmd_eval)
 
     return parser
 
