@@ -87,6 +87,10 @@ See `docs/contributing.md`.
 | [docs/datasets.md](docs/datasets.md) | Field-level schemas and the traps that produce plausible-but-wrong numbers |
 | [docs/architecture.md](docs/architecture.md) | What the pieces are, why they're separate, where new work attaches |
 | [docs/contributing.md](docs/contributing.md) | Setup, ownership, how to add a loader or scorer |
+| [docs/medsel_literature_review_2026-07.pdf](docs/medsel_literature_review_2026-07.pdf) | The review plus the raw research findings, as one shareable 23-page PDF |
+
+The PDF is the version to hand to someone who is not cloning the repo. Rebuild it after editing
+the review with `uv pip install markdown && uv run python scripts/build_pdf.py` (needs Chrome).
 
 ## Status
 

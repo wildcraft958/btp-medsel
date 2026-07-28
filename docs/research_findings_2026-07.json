@@ -1,0 +1,206 @@
+{
+ "survived": [
+  {
+   "claim": "The no-filter-wins result is gated behind a compute threshold that no realistic academic project can reach: two independently fitted compute scaling laws (R-squared above 0.99) predict that unfiltered 240T-token DCLM-Pool only overtakes RefinedWeb at roughly 1e+30 FLOPs, versus a current frontier pretraining estimate of about 5e+26 FLOPs. The authors explicitly concede filtering remains important when compute is the bottleneck, which means this paper does NOT license abandoning selection on a small or single-GPU budget.",
+   "url": "https://arxiv.org/abs/2605.19407",
+   "tier": "primary",
+   "quote": "The compute required for raw Common Crawl to outperform our tested filters is large, up to around 1e30 FLOPs with our projections in Figure 6. When compute is a bottleneck, we expect filtering to still be important.",
+   "n_refuted": 0,
+   "n_votes": 3
+  },
+  {
+   "claim": "At matched compute (20B pretraining tokens per configuration, French medical encoder MLM), a domain-targeted medical-term density filter beats the standard educational-quality classifier as a single-axis filter, and intersecting the two beats both single filters and both curated medical corpora. Body numbers (Table 1, Min-Max / Win Probability aggregates over 7 DrBenchmark tasks): unfiltered FineWeb-2-Medical 45.02 / 45.45; educational quality >= 4 gives 59.16 / 40.26; medical-term density >= 0.1 gives 78.27 / 66.23; the intersection Edu >= 4 AND Med-term >= 0.1 gives 81.25 / 68.83, described in the text as beating external baselines by +29 WP points. Direct evidence that a cheap corpus-scale quality filter beats a strong unfiltered baseline, and that a generic quality classifier is the wrong signal for a dense-terminology domain. Caveat: encoder MLM in French, not decoder CPT in English, and the comparison is to an unfiltered baseline, not to a random subsample of equal size.",
+   "url": "https://arxiv.org/abs/2606.22079",
+   "tier": "primary",
+   "quote": "Among single-axis filters, medical-term density is strongest, subdomain second, educational quality weakest. For decoder LLMs, educational quality is a dominant filter signal; for encoder MLM in a dense-terminology domain, signals targeting domain-token concentration carry more weight. [...] The intersection of educational quality and medical-term density is the strongest filter: it outperforms medical-term density alone and beats external baselines by +29 WP points.",
+   "n_refuted": 0,
+   "n_votes": 3
+  },
+  {
+   "claim": "Selecting data against one target benchmark suite measurably degrades performance on held-out tasks: BETR Target-Core is best on the Core suite it targeted but drops to third place on the held-out Noncore tasks. This is the single most useful result in the paper for the project's multi-target premise, and it cuts both ways. It empirically confirms that a selection policy optimised for one capability target trades away others (supporting Gap 2, single-objective optimisation, being a real problem), but it also means BETR already partially occupies the multi-target space, since the paper explicitly evaluates a diverse-target variant that 'matches or exceeds baselines' on disjoint benchmarks. The project cannot claim multi-target selection is unexplored at pretraining scale; it must claim the finer point that BETR still collapses its targets into one aggregate similarity score rather than preserving named capabilities separately.",
+   "url": "https://arxiv.org/abs/2507.12466",
+   "tier": "primary",
+   "quote": "BETR Target-Core achieves the best Core performance but falls to third place on held-out Noncore tasks.",
+   "n_refuted": 0,
+   "n_votes": 3
+  },
+  {
+   "claim": "A learned, model-based domain reweighting policy (Data Mixing Agent, trained with offline RL / Conservative Q-Learning on sampled data mixing trajectories) beats the static regression-based mixing baseline RegMix by 3.02% average across 12 benchmarks (8 general + 4 math) during continual pretraining of LLaMA-3B-DCLM-100B, and beats the base model by 8.88%. Verified in the paper body (Section 4.2 and Appendix), not only the abstract. This is direct 2026 evidence that corpus-scale mixture optimisation for CPT still yields measurable gains over strong non-random baselines, and it post-dates every mixing citation currently in the review.",
+   "url": "https://arxiv.org/abs/2507.15640",
+   "tier": "primary",
+   "quote": "Overall, DataAgentRL achieves 47.03% on average, surpassing RegMix by 3.02%, DBL by 3.53%, and the base model by 8.88%. DataAgentRL also outperforms DataAgentSFT by a large margin of 2.08%.",
+   "n_refuted": 0,
+   "n_votes": 3
+  },
+  {
+   "claim": "DISCONFIRMING for the multi-target novelty claim (Gap 2): this ACL 2026 paper explicitly optimises balanced performance across multiple fields/capabilities simultaneously rather than aggregate accuracy on one benchmark, and reports variance across fields as an evaluation metric (all reweighting methods cut performance variance by over 200 versus the base model; the agent is best on variance). The niche is only partially occupied though, because the multiple objectives are coarse DOMAINS (general vs math, general vs code) inside a SINGLE stage (CPT only), with no SFT or DPO stage and no clinical capability decomposition. Gap 2 is narrowed, not closed; Gap 1 (stage-awareness across CPT/SFT/DPO) is untouched by this work.",
+   "url": "https://arxiv.org/abs/2507.15640",
+   "tier": "primary",
+   "quote": "All domain reweighting methods significantly reduce performance variance by over 200 compared to the base model. Data mixing agent further achieves the best results in variance, further demonstrating its advantage in stable performance across fields. ... Overall, DataAgentRL can coordinate the source and target field data to improve performance on multiple target capabilities.",
+   "n_refuted": 0,
+   "n_votes": 3
+  },
+  {
+   "claim": "Explicitly stage-aware data selection for post-training was published on arXiv on 3 June 2026 (He, Zhang, Wang, Li, arXiv:2606.04466, cs.CL), which partially occupies the project's Gap 1 novelty niche: the paper organises a single training pool into distinct per-stage sets for SFT versus RL, and its own related-work framing asserts that this had not been systematically done before.",
+   "url": "https://arxiv.org/abs/2606.04466",
+   "tier": "primary",
+   "quote": "Post-training Small Language Models (SLMs) for reasoning typically follows an SFT-then-RL pipeline, yet existing work rarely considers what data should be learned at each stage.",
+   "n_refuted": 0,
+   "n_votes": 3
+  },
+  {
+   "claim": "The paper does not close Gap 2 (multi-objective or multi-capability selection) and does not touch continual pretraining. Its pipeline is SFT-then-RL only, its models are Qwen2.5-0.5B-Instruct and Llama3.2-1B-Instruct, and its five benchmarks (GSM8K-Platinum, MAWPS, SVAMP, MATH500, LogiQA) all measure a single capability, mathematical and logical reasoning, scored as aggregate accuracy. No CPT stage, no medical domain, and no multiple preserved capabilities appear anywhere in the work.",
+   "url": "https://arxiv.org/abs/2606.04466",
+   "tier": "primary",
+   "quote": "Our results highlight the importance of coordinating data difficulty across SFT and RL for effective SLM reasoning post-training.",
+   "n_refuted": 0,
+   "n_votes": 3
+  },
+  {
+   "claim": "The paper states the same load-bearing premise as the project under study, that different training stages want different data because they are credited with different learning roles, and instantiates it concretely as a difficulty split: medium-difficulty (correctness rate roughly 0.25 to 0.75) samples plus Bridge-rewritten hard samples go to SFT, while only non-all-zero-reward samples go to RL. (The 0.25 to 0.75 threshold and the per-stage set composition come from the paper body read via automated fetch of the arXiv HTML, not from the abstract, so verify against the PDF before citing.)",
+   "url": "https://arxiv.org/abs/2606.04466",
+   "tier": "primary",
+   "quote": "We argue that data strategy should be aligned with the distinct roles of SFT and RL: SFT is better suited for acquiring not-yet-mastered reasoning skills, while RL is better suited for consolidating skills that the model can already partially access.",
+   "n_refuted": 0,
+   "n_votes": 3
+  },
+  {
+   "claim": "The KDD 2026 paper \"Holistic Data Scheduler\" (Dang, Ma, Liao; arXiv:2606.24133) already publishes something branded \"multi-objective\" data selection, but its three objectives are internal training signals (data quality score, inter-domain loss influence, model weight norms) rather than multiple downstream capabilities, so it does NOT close the project's Gap 2 as the project defines it (preserving several distinct clinical capabilities instead of one aggregate metric). A reviewer will nonetheless cite it as nearest prior art on the phrase \"multi-objective data selection\", so the review must distinguish multi-objective REWARD from multi-capability TARGET explicitly.",
+   "url": "https://arxiv.org/abs/2606.24133",
+   "tier": "primary",
+   "quote": "At the core of HDS lies a novel multi-objective, holistic reward function that integrates three critical perspectives: a data-driven reward for quality, a loss-driven reward capturing inter-domain influence, and a model-driven reward based on weight norms.",
+   "n_refuted": 0,
+   "n_votes": 3
+  },
+  {
+   "claim": "HDS is scoped entirely to the pre-training stage, with no supervised fine-tuning or preference-optimisation stage and no cross-stage policy transfer, so this paper leaves Gap 1 (stage-specific selection policies across CPT, SFT, and DPO) open as of June 2026. It is also from-scratch pre-training on The Pile, not domain-adaptive continual pretraining, so it does not address whether an online mixing policy transfers to CPT of an already-pretrained base model such as Gemma 3.",
+   "url": "https://arxiv.org/abs/2606.24133",
+   "tier": "primary",
+   "quote": "The composition of training data, governed by the diversity of sources and their mixing strategy, is a cornerstone of Large Language Model (LLM) pre-training. Online Data Mixing (ODM), the technique of adaptively adjusting data mixtures during training, has emerged as a promising direction to improve efficiency.",
+   "n_refuted": 0,
+   "n_votes": 3
+  },
+  {
+   "claim": "Moving the small domain dataset that is conventionally reserved for finetuning into the pretraining mixture (\"specialized pretraining\", SPT) cuts the pretraining tokens required to reach a fixed domain performance level by as much as 1.75x, measured across ChemPile, MusicPile and ProofPile. NOTE: figure taken from the abstract, not verified against the paper body; the domains tested are chemistry, music and formal proofs, NOT medicine, so transfer to a medical CPT corpus is untested.",
+   "url": "https://arxiv.org/abs/2603.16177",
+   "tier": "primary",
+   "quote": "Across three specialized domains (ChemPile, MusicPile, and ProofPile), SPT improves domain performance and preserves general capabilities after finetuning compared to standard pretraining. In our experiments, SPT reduces the pretraining tokens needed to reach a given domain performance by up to 1.75x.",
+   "n_refuted": 0,
+   "n_votes": 3
+  },
+  {
+   "claim": "Meta-rater is scoped exclusively to a single training stage, from-scratch pre-training. The paper never evaluates continual pre-training, supervised fine-tuning, or preference optimisation, and never asks whether the best pre-training subset depends on downstream SFT data. It therefore does NOT close Gap 1 (single-stage scope): a 2025 ACL Best Theme Paper on multi-dimensional selection still treats selection as a one-shot, one-stage decision. Verified from the title, abstract, and a body fetch that found no discussion of SFT, DPO, instruction tuning, continual pre-training, or domain adaptation.",
+   "url": "https://arxiv.org/abs/2504.14194",
+   "tier": "primary",
+   "quote": "offering a scalable paradigm for enhancing pre-training efficiency and model capability",
+   "n_refuted": 0,
+   "n_votes": 3
+  },
+  {
+   "claim": "Classifier-based Quality Filtering (CQF) applied to a raw web corpus can beat training directly on the high-quality reference set itself, even when that high-quality set is large enough not to be the binding constraint. The paper reports 53.8% for the CQF-filtered model versus 50.1% for the model trained on the unlimited high-quality set under identical training conditions (350M parameter models; the fetched context attributes this comparison to OpenOrca as the HQ set evaluated on ARC-Easy, and that dataset/benchmark attribution is lower confidence than the two numbers themselves, which are quoted from the paper body). This complicates any selection policy whose objective is 'retrieve corpus documents that look like the target domain data', which is the operating assumption behind DSIR-style distribution matching and behind naive medical-similarity scoring for CPT.",
+   "url": "https://arxiv.org/abs/2510.00866",
+   "tier": "primary",
+   "quote": "We compare it to a model trained directly on D_HQ under the exact same training conditions. Empirically, we observe that the model trained on the unlimited HQ set achieves an accuracy of 50.1%, while the model trained on the CQF-filtered dataset achieves 53.8%.",
+   "n_refuted": 0,
+   "n_votes": 2
+  },
+  {
+   "claim": "The optimal selection ratio is not a constant but a function of training compute: the paper fits F_opt(C) = 4 x 10^-5 x C^0.25, meaning the optimal fraction of the corpus kept rises from about 3 percent at 1e20 FLOPs to about 30 percent at 1e23 FLOPs. Larger models require LESS aggressive filtering. This is falsifiable and directly load-bearing for a CPT-stage selection policy: a selection ratio tuned at one compute budget is provably wrong at another, so any single fixed keep-rate reported as 'the' policy is a scale-specific artefact. It also implies a small-compute project should filter far more aggressively than published large-scale recipes suggest. (Numbers from the arXiv HTML v1 body, not the abstract.)",
+   "url": "https://arxiv.org/abs/2507.12466",
+   "tier": "primary",
+   "quote": "Optimal filtering rate depends strongly on scale ... Fopt(C)=4x10-5 x C0.25 ... from 3% at 10^20 FLOPs to 30% at 10^23 FLOPs.",
+   "n_refuted": 0,
+   "n_votes": 3
+  },
+  {
+   "claim": "BETR, a cheap corpus-scale selection method that ranks documents by embedding similarity to benchmark training examples and then distils that ranking into a fastText classifier, beats DCLM-Baseline (a strong quality-classifier plus dedup baseline) by a 2.1x compute multiplier and beats unfiltered data by 4.7x, improving 9 of 10 tasks at all scales. This is direct evidence that data selection at pretraining scale does beat a dedup-plus-quality-filter baseline, not just random. Evidence base is over 500 models from 1e19 to 1e22 FLOPs with fitted scaling laws. NOTE (version discrepancy, flag in review): the arXiv HTML v1 body reports 1.8x over DCLM-Baseline on DCLM-RefinedWeb and 2.5x over DCLM-Baseline on Nemotron-CC, so the 2.1x headline appears to be a later-version or pooled figure. Cite the corpus-specific body numbers, not just the abstract.",
+   "url": "https://arxiv.org/abs/2507.12466",
+   "tier": "primary",
+   "quote": "we propose benchmark-targeted ranking (BETR), a simple method that selects pretraining documents based on similarity to benchmark training examples. BETR embeds benchmark examples and a sample of pretraining documents in a shared space, scores this sample by similarity to benchmarks, then trains a lightweight classifier to predict these scores for the full corpus. We compare data selection methods by training over 500 models spanning 10^19 to 10^22 FLOPs and fitting scaling laws to them. From this, we find that simply aligning pretraining data to evaluation benchmarks using BETR achieves a 2.1x compute multiplier over DCLM-Baseline (4.7x over unfiltered data) and improves performance on 9 out of 10 tasks across all scales.",
+   "n_refuted": 1,
+   "n_votes": 3
+  },
+  {
+   "claim": "Below a model-size threshold the crossing point never occurs at all: the 15M model was trained to 100B total tokens and the unfiltered pool still never overtook four of the five filters, and for the 80M model the crossing point disappears entirely once the pool grows to 10B tokens. The number of epochs needed for no-filter to win also grows super-linearly with pool size at fixed 1B model size (roughly 1 epoch at 670M tokens, roughly 3 at 2B tokens, roughly 10 at 10B tokens), so the effect gets harder to reach as pools grow.",
+   "url": "https://arxiv.org/abs/2605.19407",
+   "tier": "primary",
+   "quote": "On the leftmost plot with the 80M model, we can clearly see that crossing points cease to exist, even across our evaluated pool sizes: while there is a crossing point for the smallest 670M-token pool, there is no longer a crossing point on the largest 10B-token pool as indicated by the dark orange marker.",
+   "n_refuted": 1,
+   "n_votes": 3
+  }
+ ],
+ "killed": [
+  {
+   "claim": "On a 670M-token Common Crawl pool, a 1B-parameter model trained on the UNFILTERED pool reaches a lower average validation loss (3.37 avg NLL over C4, Cosmopedia, FineWeb-Edu) than all five filtered variants tested, including RefinedWeb (3.93) and DCLM-Baseline (5.29), which retain 13% and 2.1% of the pool respectively. This is a direct corpus-scale result that selection does NOT beat the no-selection baseline once model size and step count are large enough. (Loss values for CC and RefinedWeb are stated in prose and repeated as figure annotations; the DCLM-Baseline value is read from a figure annotation only, so treat it as figure-derived.)",
+   "url": "https://arxiv.org/abs/2605.19407",
+   "tier": "primary",
+   "quote": "Overall, the pool (CC) reaches the best loss of 3.37 on the 1B model, and its loss has not visibly plateaued from scaling model size. Outperforming the filtered datasets requires both a sufficiently large model and a sufficiently large training step count.",
+   "n_refuted": 3,
+   "n_votes": 3
+  },
+  {
+   "claim": "The mechanism by which quality filtering helps is removal of low-quality documents, not selection of documents that resemble the high-quality target set. The authors state that the retained data are not retained because they look like the HQ set, and that CQF does not simply select the documents most likely to have come from the HQ distribution. If this generalises, then gains attributed to sophisticated corpus-scale selection are largely reproducible by a noise-removal baseline (dedup plus a generic quality filter), which is exactly the baseline a CPT-stage selection method has to beat to justify itself.",
+   "url": "https://arxiv.org/abs/2510.00866",
+   "tier": "primary",
+   "quote": "CQF works by filtering out the low-quality data (red), not because the retained data (green) resemble the HQ set",
+   "n_refuted": 2,
+   "n_votes": 2
+  },
+  {
+   "claim": "Downstream benchmark accuracy and language-modelling loss on the high-quality set diverge under quality filtering: CQF improves downstream task performance while not necessarily improving loss/perplexity on the high-quality set. This is direct evidence against using perplexity or loss on a target set as the selection signal or as the validation metric for a corpus-scale CPT selection policy.",
+   "url": "https://arxiv.org/abs/2510.00866",
+   "tier": "primary",
+   "quote": "We show that while CQF improves downstream task performance, it does not necessarily enhance language modeling on the high-quality set.",
+   "n_refuted": 3,
+   "n_votes": 3
+  },
+  {
+   "claim": "Unfiltered general web data is already competitive with manually curated medical pretraining corpora, which weakens the case that hand-curated domain corpora carry special value. Table 1 body numbers: unfiltered FineWeb-2-Medical scores 45.02 Min-Max / 45.45 WP versus NACHOS (the DrBERT corpus) at 45.57 / 40.26 and TransCorpus-bio-fr (translated PubMed, the TransBERT-bio-fr corpus) at 38.41 / 32.47. The released FineMed corpus is 21.1M documents and 19.2B words versus NACHOS at 2.4M documents and 1.3B words (Table 4).",
+   "url": "https://arxiv.org/abs/2606.22079",
+   "tier": "primary",
+   "quote": "FW2-Med ranks alongside NACHOS and above TransCorpus-bio-fr: web data is competitive with curated medical corpora. Web sources span wider registers, formats, and topics than narrowly sourced curated corpora, and FineWeb-2 inherits modern text-quality curation.",
+   "n_refuted": 3,
+   "n_votes": 3
+  },
+  {
+   "claim": "A medically adapted LLM performs far worse than a generic model of similar size when used to generate medical pretraining data, and rephraser quality does not track parameter count. Table 2 body numbers at the 100k scale: MedGemma-27B scores 22.22 Min-Max / 23.81 WP versus generic Gemma-4-26B-A4B at 81.67 / 71.43, and the smaller Qwen3.5-35B-A3B (97.56 / 95.24) beats the larger Qwen3.5-122B-A10B (89.30 / 73.81). This is an independent 2026 data point that medical domain adaptation is not automatically an improvement over the general model, consistent in direction with Jeong et al. (arXiv:2411.08870), though measured in a data-generation role rather than on downstream medical QA.",
+   "url": "https://arxiv.org/abs/2606.22079",
+   "tier": "primary",
+   "quote": "Rephraser quality is not predicted by model scale or medical tuning. At 100k, the smaller Qwen3.5-35B-A3B outperforms its larger Qwen sibling, consistent with Niklaus et al. (2026)'s rephraser-scale observations. Medically-tuned MedGemma-27B lands far below generic Gemma-4-26B-A4B at similar parameter count, and GPT-OSS-120B collapses.",
+   "n_refuted": 3,
+   "n_votes": 3
+  },
+  {
+   "claim": "Naive continual pretraining on target-field data alone raises target-domain performance by 22.77% average across four target models but drops general-benchmark performance by 11.96% average, quantifying catastrophic forgetting in CPT. Mixture-based reweighting recovers 11.99% of that source-domain loss at a cost of only 0.57% on the target domain. Numbers are from the paper body (Appendix E results discussion). This is a concrete capability-retention measurement of exactly the kind angle 4 asks for, and it sets a numeric expectation for what a medical CPT run should be checked against.",
+   "url": "https://arxiv.org/abs/2507.15640",
+   "tier": "primary",
+   "quote": "the average math reasoning performance increases by an average of 22.77% on the four target models ... However, the performance on general benchmarks drops by an average of 11.96%, showing a significant degradation in the source-field model capability. ... While data mixing agent bears an average of 0.57% gap to naive training in the target domain, it outperforms naive training by an average of 11.99% in the source domain, showing a significant mitigation of the catastrophic forgetting problem.",
+   "n_refuted": 2,
+   "n_votes": 3
+  },
+  {
+   "claim": "The paper explicitly characterises the published state of the art in online data mixing as of mid-2026 as single-perspective optimisation, which corroborates the project's Gap 2 premise (that existing selection is optimised against one objective) coming from an independent, non-medical group. This is useful as a citable third-party statement of the gap, but it also shows the gap is now being actively contested rather than untouched.",
+   "url": "https://arxiv.org/abs/2606.24133",
+   "tier": "primary",
+   "quote": "However, existing methods are constrained by their reliance on a singular optimization perspective, which fundamentally overlooks the need for complex LLM pre-training to consider the dynamic data composition from multiple dimensions.",
+   "n_refuted": 3,
+   "n_votes": 3
+  },
+  {
+   "claim": "The paper's normative conclusion is that domain data should be pushed as early in training as possible, which is a direct challenge to the project's framing that CPT, SFT and DPO consume categorically different data requiring separate per-stage selection policies. It argues the stage boundary should be blurred rather than that each stage needs its own optimised policy. This is prior art occupying part of the cross-stage data-allocation niche, and it is disconfirming for the strong version of Gap 1.",
+   "url": "https://arxiv.org/abs/2603.16177",
+   "tier": "primary",
+   "quote": "Our observations reveal the finetuner's fallacy: while finetuning may appear to be the cheapest path to domain adaptation, introducing specialized domain data during pretraining stretches its utility. ... To get the most out of domain data, incorporate it as early in training as possible.",
+   "n_refuted": 3,
+   "n_votes": 3
+  },
+  {
+   "claim": "Under domain shift away from web text, parameter scale can be traded for correct stage placement of domain data: a 1B-parameter SPT model beats a 3B-parameter standard-pretrained model on domains underrepresented in the pretraining corpus. NOTE: abstract-sourced figure; no confidence interval, benchmark name or evaluation protocol is given on the abstract page.",
+   "url": "https://arxiv.org/abs/2603.16177",
+   "tier": "primary",
+   "quote": "These gains grow when the target domain is underrepresented in the pretraining corpus: on domains far from web text, a 1B SPT model outperforms a 3B standard pretrained model.",
+   "n_refuted": 3,
+   "n_votes": 3
+  }
+ ]
+}

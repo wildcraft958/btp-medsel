@@ -37,6 +37,11 @@ dev = [
     "pytest>=8.0",
     "ruff>=0.6",
 ]
+# Only needed to rebuild docs/medsel_literature_review_2026-07.pdf via scripts/build_pdf.py.
+# The PDF-to-HTML step shells out to headless Chrome, which is not a Python dependency.
+docs = [
+    "markdown>=3.5",
+]
 
 [project.scripts]
 medsel = "medsel.cli:main"
