@@ -12,7 +12,13 @@ from __future__ import annotations
 
 from typing import Any
 
-__all__ = ["pick_device", "supports_bf16", "resolve_dtype", "describe_device"]
+__all__ = [
+    "pick_device",
+    "supports_bf16",
+    "resolve_dtype",
+    "autocast_flags",
+    "describe_device",
+]
 
 _DTYPE_ALIASES = {
     "bf16": "bfloat16",
@@ -81,6 +87,19 @@ def resolve_dtype(requested: str = "auto", device: str | None = None) -> Any:
             f"unknown dtype {requested!r}; use one of: auto, {', '.join(sorted(_DTYPE_ALIASES))}"
         )
     return getattr(torch, _DTYPE_ALIASES[key])
+
+
+def autocast_flags(requested: str = "auto", device: str | None = None) -> tuple[bool, bool]:
+    """The ``(bf16, fp16)`` pair a Trainer should run with, agreeing with :func:`resolve_dtype`.
+
+    Lives here rather than in each stage so that only one place knows which GPU generations have
+    tensor cores. A stage deciding for itself is how fp16 ends up enabled on a card where
+    :func:`resolve_dtype` already concluded that fp32 is the faster option.
+    """
+    import torch
+
+    dtype = resolve_dtype(requested, device)
+    return dtype == torch.bfloat16, dtype == torch.float16
 
 
 def describe_device() -> dict[str, Any]:

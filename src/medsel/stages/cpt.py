@@ -16,7 +16,7 @@ from medsel.data.packing import pack_to_dataset
 from medsel.registry import get_loader
 from medsel.schema import CorpusDoc
 from medsel.stages.base import Stage, StageResult
-from medsel.utils.device import pick_device, resolve_dtype, supports_bf16
+from medsel.utils.device import autocast_flags, pick_device, resolve_dtype
 from medsel.utils.seed import set_seed
 
 __all__ = ["CPTStage"]
@@ -108,7 +108,7 @@ class CPTStage(Stage):
         model = self.model()
 
         device = pick_device()
-        use_bf16 = device == "cuda" and supports_bf16(device)
+        use_bf16, use_fp16 = autocast_flags(cfg.model.dtype, device)
 
         args = TrainingArguments(
             output_dir=str(self.output_dir),
@@ -117,7 +117,9 @@ class CPTStage(Stage):
             learning_rate=cfg.train.learning_rate,
             num_train_epochs=cfg.train.num_train_epochs,
             max_steps=cfg.train.max_steps,
-            warmup_ratio=cfg.train.warmup_ratio,
+            # A float here is a ratio of total steps. transformers 5.15 removed the separate
+            # warmup_ratio argument, and get_warmup_steps ignored it even before that.
+            warmup_steps=cfg.train.warmup_ratio,
             weight_decay=cfg.train.weight_decay,
             lr_scheduler_type=cfg.train.lr_scheduler_type,
             logging_steps=cfg.train.logging_steps,
@@ -126,9 +128,8 @@ class CPTStage(Stage):
             seed=cfg.train.seed,
             report_to=cfg.train.report_to,
             gradient_checkpointing=cfg.model.gradient_checkpointing,
-            # Mixed precision only where it is actually a win; fp16 on CPU is slow and unstable.
             bf16=use_bf16,
-            fp16=device == "cuda" and not use_bf16,
+            fp16=use_fp16,
             use_cpu=device == "cpu",
         )
 

@@ -3,7 +3,7 @@ import types
 
 import pytest
 
-from medsel.utils.device import pick_device, resolve_dtype, supports_bf16
+from medsel.utils.device import autocast_flags, pick_device, resolve_dtype, supports_bf16
 
 
 def fake_torch(capability=(8, 0), *, cuda=True, bf16_flag=True):
@@ -84,3 +84,21 @@ class TestPickDevice:
     def test_falls_back_to_cpu(self, gpu):
         gpu((8, 0), cuda=False)
         assert pick_device() == "cpu"
+
+
+class TestAutocastFlags:
+    @pytest.mark.parametrize(
+        ("capability", "expected"),
+        [((6, 1), (False, False)), ((7, 5), (False, True)), ((8, 0), (True, False))],
+    )
+    def test_follows_resolve_dtype(self, gpu, capability, expected):
+        gpu(capability)
+        assert autocast_flags("auto", "cuda") == expected
+
+    def test_never_enables_half_precision_on_cpu(self, gpu):
+        gpu((8, 0), cuda=False)
+        assert autocast_flags("auto", "cpu") == (False, False)
+
+    def test_explicit_fp32_disables_both(self, gpu):
+        gpu((8, 0))
+        assert autocast_flags("fp32", "cuda") == (False, False)
