@@ -1,0 +1,905 @@
+{
+ "run": "verification audit, adversarial 3-vote",
+ "dates": {
+  "search": "2026-07-28",
+  "verificationCompleted": "2026-08-18"
+ },
+ "protocol": {
+  "votesPerClaim": 3,
+  "refutationsToKill": 2,
+  "voterInstruction": "refute if possible; default to refuted when uncertain"
+ },
+ "stats": {
+  "sourcesFetched": 26,
+  "claimsExtracted": 130,
+  "claimsAdjudicated": 45,
+  "confirmed": 22,
+  "refuted": 23
+ },
+ "note": "Every paper was confirmed to exist and every number checked against the paper body or PDF. All refutations concern interpretation, not fabrication. Evidence fields are truncated to 1200 characters; full verifier transcripts are not committed.",
+ "sources": [
+  {
+   "url": "https://arxiv.org/abs/2409.02725",
+   "title": "Pre-training data selection for biomedical domain adaptation using journal impact metrics (Lai-king, Paroubek; BioNLP Workshop at ACL 2024; arXiv:2409.02725)",
+   "quality": "primary",
+   "publishDate": "2024-09-04 (arXiv v1; published in Proceedings of the 23rd Workshop on Biomedical Natural Language Processing, BioNLP at ACL 2024, pages 363-369)",
+   "angle": "corpus-scale selection, mixing, and the random baseline",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2602.10367",
+   "title": "LiveMedBench: A Contamination-Free Medical Benchmark for LLMs with Automated Rubric Evaluation (Yan et al.; arXiv:2602.10367, 2026)",
+   "quality": "primary",
+   "publishDate": "2026-02-10",
+   "angle": "is medical adaptation worth it, plus benchmark saturation and contamination",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2510.00866",
+   "title": "Removing Noise, not Finding Gold: Quality Filtering for Large-Scale Pretraining (Nait Saada, Bethune, Klein, Grangier, Cuturi, Ablin; ICML 2026; arXiv:2510.00866)",
+   "quality": "primary",
+   "publishDate": "2025-10-01 (arXiv v1); last revised 2026-06-24 (v4); ICML 2026",
+   "angle": "corpus-scale selection, mixing, and the random baseline",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://openreview.net/forum?id=guUUlHPXRw",
+   "title": "Modelling Optimal Trade-Off Between Continued Pre-Training and Supervised Fine-Tuning for LLM Domain Adaptation (OpenReview, id guUUlHPXRw)",
+   "quality": "secondary",
+   "publishDate": "Reported as October 2025 by the search index (OpenReview submission, id guUUlHPXRw); venue and author list could not be verified because the forum page is behind a CAPTCHA",
+   "angle": "stage-aware and multi-objective selection prior-art check (Gap 1 and Gap 2)",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2508.01908",
+   "title": "Revisiting Replay and Gradient Alignment for Continual Pre-Training of Large Language Models (Abbes, Subbaraj, Riemer, Islah, Therien, Tabaru, Kingetsu, Chandar, Rish; arXiv:2508.01908, 2025)",
+   "quality": "primary",
+   "publishDate": "2025-08-03",
+   "angle": "forgetting metrics and open medical benchmarks beyond MCQ",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2605.19407",
+   "title": "A Bitter Lesson for Data Filtering (Mohri, Duchi, Hashimoto; Stanford; arXiv:2605.19407, May 2026)",
+   "quality": "primary",
+   "publishDate": "2026-05-19",
+   "angle": "corpus-scale selection, mixing, and the random baseline",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2508.04325",
+   "title": "Beyond the Leaderboard: Rethinking Medical Benchmarks for Large Language Models (MedCheck) (Chen, Yu, Cheung, Ding, Liu, Ma, Wang, Shen; arXiv:2508.04325v2, v2 dated April 2026)",
+   "quality": "primary",
+   "publishDate": "2025-08-06 (v1); 2026-04-29 (v2, the version cited here)",
+   "angle": "is medical adaptation worth it, plus benchmark saturation and contamination",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2408.13833",
+   "title": "Biomedical Large Language Models Seem not to be Superior to Generalist Models on Unseen Medical Data (Dorfner, Dada, Busch, Makowski, Han, Truhn, Kleesiek, Sushil, Lammert, Adams, Bressem; arXiv:2408.13833, 2024; CLUE benchmark)",
+   "quality": "primary",
+   "publishDate": "arXiv v1 submitted 2024-08-25 (arXiv:2408.13833). Peer-reviewed version published 2025-04-07 as Dorfner et al., \"Evaluating the effectiveness of biomedical fine-tuning for large language models on clinical tasks\", Journal of the American Medical Informatics Association 32(6):1015-1024, June 2025, doi 10.1093/jamia/ocaf045. Cite the JAMIA version, it is peer reviewed and dated 2025.",
+   "angle": "is medical adaptation worth it, plus benchmark saturation and contamination",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2505.08775",
+   "title": "HealthBench: Evaluating Large Language Models Towards Improved Human Health (OpenAI; arXiv:2505.08775, May 2025)",
+   "quality": "primary",
+   "publishDate": "2025-05-13",
+   "angle": "forgetting metrics and open medical benchmarks beyond MCQ",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2504.14194",
+   "title": "Meta-rater: A Multi-dimensional Data Selection Method for Pre-training Language Models (Zhuang et al., ACL 2025 Best Theme Paper; arXiv:2504.14194)",
+   "quality": "primary",
+   "publishDate": "2025-04-19 (arXiv v1; v4 dated 2025-08-06). Published version: ACL 2025 (63rd Annual Meeting of the ACL), Vienna, pages 10856 to 10896, ACL 2025 Best Theme Paper.",
+   "angle": "stage-aware and multi-objective selection prior-art check (Gap 1 and Gap 2)",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.22079",
+   "title": "Where Does the Signal Live? A Web Data Recipe for Medical Encoder Pretraining (Huang, Sun, Bouchacourt, Barascud, Fogel; arXiv:2606.22079, June 2026)",
+   "quality": "primary",
+   "publishDate": "2026-06-20",
+   "angle": "corpus-scale selection, mixing, and the random baseline",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2512.24503",
+   "title": "Can Small Training Runs Reliably Guide Data Curation? Rethinking Proxy-Model Practice (Wang, Wu, Lyu, Zou, Song, Jia, Mittal; ICLR 2026; arXiv:2512.24503, submitted 30 Dec 2025)",
+   "quality": "primary",
+   "publishDate": "2025-12-30 (v1); v2 posted 2026-04-12; accepted to ICLR 2026",
+   "angle": "open sweep: preference data, auditable valuation, cost, and surveys",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2605.01417",
+   "title": "Medmarks: A Comprehensive Open-Source LLM Benchmark Suite for Medical Tasks (Warner, Grandhi, Kieffer, Ouraq, Panigrahi et al.; arXiv:2605.01417, May 2026)",
+   "quality": "primary",
+   "publishDate": "2026-05-02",
+   "angle": "forgetting metrics and open medical benchmarks beyond MCQ",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2507.12466",
+   "title": "Language Models Improve When Pretraining Data Matches Target Tasks (BETR; arXiv:2507.12466, July 2025)",
+   "quality": "primary",
+   "publishDate": "2025-07-16",
+   "angle": "corpus-scale selection, mixing, and the random baseline",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2604.06854",
+   "title": "To Adapt or not to Adapt, Rethinking the Value of Medical Knowledge-Aware Large Language Models (Domingo-Aldama, De La Iglesia, Urruela, Atutxa, Barrena; arXiv:2604.06854, 2026)",
+   "quality": "primary",
+   "publishDate": "2026-04-08",
+   "angle": "is medical adaptation worth it, plus benchmark saturation and contamination",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2504.19467",
+   "title": "BRIDGE: Benchmarking Large Language Models for Understanding Real-world Clinical Practice Text (Wu, Gu, Zhou, Xie, Snyder, Jiang, Alsentzer, Celi, Rodman, Chen, Romero-Brufau, Lin, Yang; arXiv:2504.19467, April 2025)",
+   "quality": "primary",
+   "publishDate": "2025-04-28 (arXiv v1); latest revision v4 dated 2026-03-29",
+   "angle": "forgetting metrics and open medical benchmarks beyond MCQ",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2507.15640",
+   "title": "Data Mixing Agent: Learning to Re-weight Domains for Continual Pre-training (Yang, Liu, Ji, Li, Liang, Liu, Gong, Cheng, Yang; ACL 2026 main; arXiv:2507.15640, July 2025, revised April 2026)",
+   "quality": "primary",
+   "publishDate": "2025-07-21 (v1 arXiv submission); revised 2026-04-12 (v2); accepted to ACL 2026 main conference",
+   "angle": "corpus-scale selection, mixing, and the random baseline",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2602.14696",
+   "title": "A Critical Look at Targeted Instruction Selection: Disentangling What Matters (and What Doesn't) (Nayak, Rodriguez-Diaz, Hulkund, Beery, Alvarez-Melis; ICML 2026; arXiv:2602.14696, Feb 2026, revised Jun 2026)",
+   "quality": "primary",
+   "publishDate": "2026-02-16 (v1); revised 2026-06-18 (v2); ICML 2026",
+   "angle": "open sweep: preference data, auditable valuation, cost, and surveys",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2603.06610",
+   "title": "CapTrack: Multifaceted Evaluation of Forgetting in LLM Post-Training (Thede, Winzeck, Akata, Schwarz; arXiv:2603.06610, 2026)",
+   "quality": "primary",
+   "publishDate": "2026-02-19 (v1); revised 2026-05-22 (v2)",
+   "angle": "forgetting metrics and open medical benchmarks beyond MCQ",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2511.10985",
+   "title": "When Data is the Algorithm: A Systematic Study and Curation of Preference Optimization Datasets (Djuhera, Ahmed, Kadhe, Zawad, Ludwig, Boche; ICLR 2026; arXiv:2511.10985, Nov 2025, revised Mar 2026)",
+   "quality": "primary",
+   "publishDate": "2025-11-14 (arXiv v1); revised 2026-03-01 (v2); published at ICLR 2026",
+   "angle": "open sweep: preference data, auditable valuation, cost, and surveys",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2603.16177",
+   "title": "The Finetuner's Fallacy: When to Pretrain with Your Finetuning Data (Baek, Maini et al., DatologyAI; arXiv:2603.16177, March 2026)",
+   "quality": "primary",
+   "publishDate": "2026-03-17 (v1); revised 2026-03-21 (v2)",
+   "angle": "stage-aware and multi-objective selection prior-art check (Gap 1 and Gap 2)",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://www.nature.com/articles/s41597-023-02487-3",
+   "title": "ACI-Bench: a Novel Ambient Clinical Intelligence Dataset for Benchmarking Automatic Visit Note Generation (Yim et al.; Scientific Data, 2023; also arXiv:2306.02022)",
+   "quality": "primary",
+   "publishDate": "2023-09-06",
+   "angle": "forgetting metrics and open medical benchmarks beyond MCQ",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2602.12414",
+   "title": "propella-1: Multi-Property Document Annotation for LLM Data Curation at Scale (Idahl, Droste, Pluester, Harries; arXiv:2602.12414, Feb 2026)",
+   "quality": "primary",
+   "publishDate": "2026-02-12 (v1), revised 2026-02-19 (v2)",
+   "angle": "open sweep: preference data, auditable valuation, cost, and surveys",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.24133",
+   "title": "Holistic Data Scheduler for LLM Pre-training via Multi-Objective Reinforcement Learning (Dang, Ma, Liao; KDD 2026; arXiv:2606.24133)",
+   "quality": "primary",
+   "publishDate": "2026-06-23 (arXiv v1; journal reference: Proceedings of the 32nd ACM SIGKDD Conference on Knowledge Discovery and Data Mining, KDD 2026, Vol. 1, pp. 176-187)",
+   "angle": "stage-aware and multi-objective selection prior-art check (Gap 1 and Gap 2)",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/pdf/2603.26164",
+   "title": "DataFlex: A Unified Framework for Data-Centric Dynamic Training of Large Language Models (arXiv:2603.26164, 2026)",
+   "quality": "primary",
+   "publishDate": "2026-03-27",
+   "angle": "stage-aware and multi-objective selection prior-art check (Gap 1 and Gap 2)",
+   "claimsExtracted": 5
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.04466",
+   "title": "Learning What to Learn: Stage-Specific Data Sets for SFT-then-RL in Small Language Model Reasoning (He, Zhang, Wang, Li; arXiv:2606.04466, 2026)",
+   "quality": "primary",
+   "publishDate": "2026-06-03",
+   "angle": "stage-aware and multi-objective selection prior-art check (Gap 1 and Gap 2)",
+   "claimsExtracted": 5
+  }
+ ],
+ "claims": [
+  {
+   "claim": "Downstream benchmark accuracy and language-modelling loss on the high-quality set diverge under quality filtering: CQF improves downstream task performance while not necessarily improving loss/perplexity on the high-quality set. This is direct evidence against using perplexity or loss on a target set as the selection signal or as the validation metric for a corpus-scale CPT selection policy.",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2510.00866",
+   "title": "Removing Noise, not Finding Gold: Quality Filtering for Large-Scale Pretraining (Nait Saada, Bethune, Klein, Grangier, Cuturi, Ablin; ICML 2026; arXiv:2510.00866)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-10-01 (arXiv v1); last revised 2026-06-24 (v4); ICML 2026",
+   "quote": "",
+   "refutationEvidence": [
+    "SENTENCE 1 SURVIVES, SENTENCE 2 (the load-bearing one) DOES NOT.\n\nThe source is real and primary: Nait Saada, Bethune, Klein, Grangier, Cuturi, Ablin, arXiv:2510.00866. Note a citation hazard: the arXiv abs page now carries the v2 title \"Removing Noise, not Finding Gold: Quality Filtering for Large-Scale Pretraining\", while HuggingFace, ResearchGate and the author's own copy carry the v1 title \"The Data-Quality Illusion: Rethinking Classifier-Based Quality Filtering for LLM Pretraining\". CQF = Classifier-based Quality Filtering. The supporting quote is verbatim from the abstract, and Figure 2 backs it (top row: ARC-Easy accuracy rises as k falls; bottom row: \"non-increasing relationship between downstream performance and loss on the HQ set\"; with OpenOrca at k=1%, downstream is about 68% while HQ-set loss is WORSE than at k=100%). So the descriptive half of the claim is fine.\n\nThe inferential half (\"direct evidence against using perplexity or loss on a target set as the selection signal or as the validation metric for a corpus-scale CPT selection policy\") fails on five counts.\n\n1. IT INVERTS THE PAPER'S OWN MECHANISM. The paper blames the HQ set, not the metric. Section 4.2: \"CQF c [...truncated]",
+    "SOURCE CHECKS OUT, INFERENCE DOES NOT. arXiv:2510.00866 is real and primary: \"Removing Noise, not Finding Gold: Quality Filtering for Large-Scale Pretraining\", Nait Saada, Bethune, Klein, Grangier, Cuturi, Ablin, v4 revised 24 June 2026. The supporting quote is verbatim from the abstract. Citation hygiene note: HuggingFace and ResearchGate still index the superseded title \"The Data-Quality Illusion: Rethinking Classifier-Based Quality Filtering for LLM Pretraining\", so the review must cite the current v4 title.\n\nThe claim splits into two sentences. Sentence 1 (CQF improves downstream while not necessarily improving HQ-set loss) is accurately supported. Sentence 2, the load-bearing inference (\"direct evidence against using perplexity or loss on a target set as the selection signal or as the validation metric for a corpus-scale CPT selection policy\"), fails on four independent grounds.\n\n(1) THE PAPER DOES NOT TEST WHAT THE CLAIM SAYS IT REFUTES. Reading the paper body: it does not evaluate any standalone perplexity-based or loss-based selection method. It analyses CQF, a binary classifier trained to separate pretraining data from a small HQ set, and compares against importance sampli [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "A learned, model-based domain reweighting policy (Data Mixing Agent, trained with offline RL / Conservative Q-Learning on sampled data mixing trajectories) beats the static regression-based mixing baseline RegMix by 3.02% average across 12 benchmarks (8 general + 4 math) during continual pretraining of LLaMA-3B-DCLM-100B, and beats the base model by 8.88%. Verified in the paper body (Section 4.2 and Appendix), not only the abstract. This is direct 2026 evidence that corpus-scale mixture optimisation for CPT still yields measurable gains over strong non-random baselines, and it post-dates every mixing citation currently in the review.",
+   "verdict": "confirmed",
+   "vote": "3-0",
+   "source": "https://arxiv.org/abs/2507.15640",
+   "title": "Data Mixing Agent: Learning to Re-weight Domains for Continual Pre-training (Yang, Liu, Ji, Li, Liang, Liu, Gong, Cheng, Yang; ACL 2026 main; arXiv:2507.15640, July 2025, revised April 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-07-21 (v1 arXiv submission); revised 2026-04-12 (v2); accepted to ACL 2026 main conference",
+   "quote": "Overall, DataAgentRL achieves 47.03% on average, surpassing RegMix by 3.02%, DBL by 3.53%, and the base model by 8.88%. DataAgentRL also outperforms DataAgentSFT by a large margin of 2.08%.",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "CLAIM SUPPORTED. Paper: \"Data Mixing Agent: Learning to Re-weight Domains for Continual Pre-training\", Yang, Liu, Ji, Li, Liang, Liu, Gong, Cheng, Yang (Manchester, Microsoft Research, Imperial, UCLA). arXiv:2507.15640, v1 21 Jul 2025, v2 12 Apr 2026. Published ACL 2026 Main, aclanthology.org/2026.acl-long.427/.\n\nQUOTE VERIFIED IN BODY, NOT ONLY ABSTRACT. I downloaded the PDF and ran pdftotext. The supporting quote appears verbatim in Section 4.2 \"Evaluation Results on Math Reasoning\" (extracted text lines 374-377, repeated in appendix at lines 1192-1196): \"Overall, DataAgentRL achieves 47.03% on average, surpassing RegMix by 3.02%, DBL by 3.53%, and the base model by 8.88%. DataAgentRL also outperforms DataAgentSFT by a large margin of 2.08%, proving reinforcement learning with CQL as a crucial step for effective heuristics compared to the inductive biases in the SFT stage.\"\n\nARITHMETIC INDEPENDENTLY RECONSTRUCTED FROM TABLE 1a (not taken on trust). Table 1a row values for LLaMA-DCLM: Base Model Avg 38.15, RegMix Avg 44.01, DBL 43.50, DataAgentSFT 44.95, DataAgentRL 47.03. Checks: 47.03 minus 44.01 equals 3.02 (RegMix). 47.03 minus 38.15 equals 8.88 (base). 47.03 minus 43.50 equal [...truncated]"
+   ]
+  },
+  {
+   "claim": "The paper explicitly characterises the published state of the art in online data mixing as of mid-2026 as single-perspective optimisation, which corroborates the project's Gap 2 premise (that existing selection is optimised against one objective) coming from an independent, non-medical group. This is useful as a citable third-party statement of the gap, but it also shows the gap is now being actively contested rather than untouched.",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2606.24133",
+   "title": "Holistic Data Scheduler for LLM Pre-training via Multi-Objective Reinforcement Learning (Dang, Ma, Liao; KDD 2026; arXiv:2606.24133)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-06-23 (arXiv v1; journal reference: Proceedings of the 32nd ACM SIGKDD Conference on Knowledge Discovery and Data Mining, KDD 2026, Vol. 1, pp. 176-187)",
+   "quote": "However, existing methods are constrained by their reliance on a singular optimization perspective, which fundamentally overlooks the need for complex LLM pre-training to consider the dynamic data composition from multiple dimensions.",
+   "refutationEvidence": [
+    "SOURCE IS REAL, QUOTE IS VERBATIM, INFERENCE IS NOT. arXiv:2606.24133 is \"Holistic Data Scheduler for LLM Pre-training via Multi-Objective Reinforcement Learning\", Chenhao Dang, Jing Ma, Mingjie Liao, submitted 23 June 2026, v1 preprint, no venue. The supporting sentence appears exactly as quoted in the abstract. Checklist items 4 (outdated) and 5 (marketing) therefore pass. The claim fails on item 1 (overreach/misread) and item 3 (source strength for the claim's strength).\n\n1. EQUIVOCATION ON THE WORD \"OBJECTIVE\", the load-bearing defect. I read the paper body. HDS's \"multiple dimensions\" resolve to three reward terms, not three objectives: r_align (inter-domain influence via gradient inner products across domains), r_diversity (scheduled lexical diversity, rewarding lower-MTLD simpler texts early and complex texts later), and r_stability (penalty on L2-norm parameter change). These are three signal sources feeding one scalar reward. They are not multiple downstream capabilities. HDS's terminal targets are unweighted average validation perplexity across The Pile's 22 domains plus aggregate benchmark accuracy (7.2% on MMLU 0-shot, with COPA, LogiQA, PIQA, WinoGrande as extras). Tha [...truncated]",
+    "SOURCE IS REAL AND HIGH QUALITY, BUT THE INFERENCE IS AN OVERREACH.\n\nVerification performed: arXiv abs page, arXiv API record (export.arxiv.org/api/query?id_list=2606.24133), and the full PDF body parsed with pdftotext (705 lines, saved at /tmp/claude-1000/-home-bakasur-BTP/299f837e-76ed-4244-9f3f-a2606d1a08ec/scratchpad/hds.txt).\n\nWHAT CHECKS OUT (so these are not grounds for refutation):\nPaper: \"Holistic Data Scheduler for LLM Pre-training via Multi-Objective Reinforcement Learning\", Chenhao Dang, Jing Ma, Mingjie Liao. arXiv:2606.24133, submitted 2026-06-23, cs.LG/cs.CL. Journal ref field says KDD 2026 (Proceedings of the 32nd ACM SIGKDD, Vol. 1, pp. 176-187), running head confirms \"KDD '26, August 09-13, 2026, Jeju Island, Republic of Korea\". So it is primary, peer reviewed, five weeks old, not a blog or press release. Checklist items 3, 4 and 5 pass. The supporting quote is VERBATIM in the abstract, word for word, and is restated in the Introduction (dashes normalised to commas here per the output rule): \"existing dynamic strategies still suffer from a narrow focus. They tend to optimize domain weights from a single perspective, such as data quality, training loss, or inter-do [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "Moving the small domain dataset that is conventionally reserved for finetuning into the pretraining mixture (\"specialized pretraining\", SPT) cuts the pretraining tokens required to reach a fixed domain performance level by as much as 1.75x, measured across ChemPile, MusicPile and ProofPile. NOTE: figure taken from the abstract, not verified against the paper body; the domains tested are chemistry, music and formal proofs, NOT medicine, so transfer to a medical CPT corpus is untested.",
+   "verdict": "confirmed",
+   "vote": "3-0",
+   "source": "https://arxiv.org/abs/2603.16177",
+   "title": "The Finetuner's Fallacy: When to Pretrain with Your Finetuning Data (Baek, Maini et al., DatologyAI; arXiv:2603.16177, March 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-03-17 (v1); revised 2026-03-21 (v2)",
+   "quote": "Across three specialized domains (ChemPile, MusicPile, and ProofPile), SPT improves domain performance and preserves general capabilities after finetuning compared to standard pretraining. In our experiments, SPT reduces the pretraining tokens needed to reach a given domain performance by up to 1.75x.",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "VERIFIED AGAINST PRIMARY SOURCE. arXiv:2603.16177 resolves to a real paper: \"The Finetuner's Fallacy: When to Pretrain with Your Finetuning Data\", submitted 17 Mar 2026 (v1), revised 21 Mar 2026 (v2), 34 authors including Christina Baek, Pratyush Maini, Ari Morcos, Matthew Leavitt, Aditi Raghunathan and J. Zico Kolter (CMU plus DatologyAI).\n\n1. QUOTE ACCURACY: the supporting quote is verbatim from the abstract. I retrieved the full abstract, which contains, word for word: \"Across three specialized domains (ChemPile, MusicPile, and ProofPile), SPT improves domain performance and preserves general capabilities after finetuning compared to standard pretraining. In our experiments, SPT reduces the pretraining tokens needed to reach a given domain performance by up to 1.75x.\" No fabrication, no splice.\n\n2. DEFINITION CHECK: the claim's gloss of SPT is accurate. Abstract: \"specialized pretraining (SPT), where a small domain dataset, typically reserved for finetuning, is repeated starting from pretraining as a fraction of the total tokens.\" One pedantic imprecision: the claim says \"moving\" the finetuning data into pretraining, whereas the paper repeats it from pretraining onward and still [...truncated]"
+   ]
+  },
+  {
+   "claim": "BETR, a cheap corpus-scale selection method that ranks documents by embedding similarity to benchmark training examples and then distils that ranking into a fastText classifier, beats DCLM-Baseline (a strong quality-classifier plus dedup baseline) by a 2.1x compute multiplier and beats unfiltered data by 4.7x, improving 9 of 10 tasks at all scales. This is direct evidence that data selection at pretraining scale does beat a dedup-plus-quality-filter baseline, not just random. Evidence base is over 500 models from 1e19 to 1e22 FLOPs with fitted scaling laws. NOTE (version discrepancy, flag in review): the arXiv HTML v1 body reports 1.8x over DCLM-Baseline on DCLM-RefinedWeb and 2.5x over DCLM-Baseline on Nemotron-CC, so the 2.1x headline appears to be a later-version or pooled figure. Cite the corpus-specific body numbers, not just the abstract.",
+   "verdict": "confirmed",
+   "vote": "2-1",
+   "source": "https://arxiv.org/abs/2507.12466",
+   "title": "Language Models Improve When Pretraining Data Matches Target Tasks (BETR; arXiv:2507.12466, July 2025)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-07-16",
+   "quote": "we propose benchmark-targeted ranking (BETR), a simple method that selects pretraining documents based on similarity to benchmark training examples. BETR embeds benchmark examples and a sample of pretraining documents in a shared space, scores this sample by similarity to benchmarks, then trains a lightweight classifier to predict these scores for the full corpus. We compare data selection methods by training over 500 models spanning 10^19 to 10^22 FLOPs and fitting scaling laws to them. From this, we find that simply aligning pretraining data to evaluation benchmarks using BETR achieves a 2.1x compute multiplier over DCLM-Baseline (4.7x over unfiltered data) and improves performance on 9 out of 10 tasks across all scales.",
+   "refutationEvidence": [
+    "VERDICT: the numbers are real, the INTERPRETATION is an overreach that the paper's own body contradicts. Refuting the load-bearing sentence, not the arithmetic.\n\nWHAT CHECKS OUT (verified against primary source, arXiv:2507.12466, \"Language Models Improve When Pretraining Data Matches Target Tasks\", Mizrahi, Larsen, Allardice, Petryk, Gorokhov, Li, Fang, Gardner, Gunter, Dehghan, Apple, submitted 16 Jul 2025, 44 pages):\n1. Abstract quote is verbatim accurate: \"2.1x compute multiplier over DCLM-Baseline (4.7x over unfiltered data)\", \"over 500 models spanning 10^19 to 10^22 FLOPs\", \"9 out of 10 tasks across all scales\". Confirmed word for word on the abs page.\n2. The claim's flagged version discrepancy is real. Body: \"BETR achieves a 1.8x compute multiplier over DCLM-Baseline (i.e., requires only 55% of the compute to match DCLM-Baseline performance) and 4.7x over unfiltered data (21% of compute)\" on DCLM-RefinedWeb, and \"On Nemotron-CC, the improvements are even larger: 2.5x over DCLM-Baseline, 2.8x over Nemotron-CC HQ, and 4.7x over no filtering.\"\n\nREFUTATION 1 (primary, fatal to the interpretive sentence). The claim says this is \"direct evidence that data selection at pretraining s [...truncated]"
+   ],
+   "confirmationEvidence": [
+    "VERIFIED against the primary source, with three qualifications that must be carried into the review.\n\n1. Source and provenance check. arXiv:2507.12466, \"Language Models Improve When Pretraining Data Matches Target Tasks\", Mizrahi, Larsen, Allardice, Petryk, Gorokhov, Li, Fang, Gardner, Gunter, Dehghan (Apple Machine Learning Research), submitted 16 July 2025. Preprint, no peer reviewed venue found. Author list includes Jeffrey Li, Alex Fang and Josh Gardner, who are DataComp-LM co-authors, so the DCLM-Baseline comparison is run by people who built that baseline. Source quality is adequate for the claim's strength.\n\n2. Every headline number in the claim reproduces exactly. Abstract verbatim: \"achieves a 2.1x compute multiplier over DCLM-Baseline (4.7x over unfiltered data) and improves performance on 9 out of 10 tasks across all scales\" and \"training over 500 models spanning 10^19 to 10^22 FLOPs and fitting scaling laws to them\". Body confirms the mechanism the claim describes: embedding model is Arctic-Embed L 2.0 (GTE Large v1.5 for ablations), distilled into a \"FastText classifier to predict whether documents are in the top 10% or bottom 90%\". Body also pins the 9 of 10: \"BETR Ta [...truncated]"
+   ]
+  },
+  {
+   "claim": "At matched compute (20B pretraining tokens per configuration, French medical encoder MLM), a domain-targeted medical-term density filter beats the standard educational-quality classifier as a single-axis filter, and intersecting the two beats both single filters and both curated medical corpora. Body numbers (Table 1, Min-Max / Win Probability aggregates over 7 DrBenchmark tasks): unfiltered FineWeb-2-Medical 45.02 / 45.45; educational quality >= 4 gives 59.16 / 40.26; medical-term density >= 0.1 gives 78.27 / 66.23; the intersection Edu >= 4 AND Med-term >= 0.1 gives 81.25 / 68.83, described in the text as beating external baselines by +29 WP points. Direct evidence that a cheap corpus-scale quality filter beats a strong unfiltered baseline, and that a generic quality classifier is the wrong signal for a dense-terminology domain. Caveat: encoder MLM in French, not decoder CPT in English, and the comparison is to an unfiltered baseline, not to a random subsample of equal size.",
+   "verdict": "confirmed",
+   "vote": "3-0",
+   "source": "https://arxiv.org/abs/2606.22079",
+   "title": "Where Does the Signal Live? A Web Data Recipe for Medical Encoder Pretraining (Huang, Sun, Bouchacourt, Barascud, Fogel; arXiv:2606.22079, June 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-06-20",
+   "quote": "Among single-axis filters, medical-term density is strongest, subdomain second, educational quality weakest. For decoder LLMs, educational quality is a dominant filter signal; for encoder MLM in a dense-terminology domain, signals targeting domain-token concentration carry more weight. [...] The intersection of educational quality and medical-term density is the strongest filter: it outperforms medical-term density alone and beats external baselines by +29 WP points.",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "VERDICT: not refuted. Every load-bearing number verified verbatim against the primary source. (canary: bakasur)\n\n1. SOURCE EXISTS AND MATCHES. arXiv:2606.22079 resolves to \"Where Does the Signal Live? A Web Data Recipe for Medical Encoder Pretraining\", Huang, Sun, Bouchacourt, Barascud, Fogel (Doctolib), submitted 20 June 2026, cs.CL/cs.LG. It releases FineMed (French medical corpus) and DoctoBERT, evaluated on DrBenchmark plus a proprietary clinical NER set. Artifacts are public (huggingface.co/doctolib-lab/doctobert-fr-base). So this is a real primary source, not a fabricated ID.\n\n2. TABLE 1 NUMBERS MATCH EXACTLY (two independent fetches of /abs, /html and /html/v1 returned identical values): FW2-Med unfiltered 45.02 +/- 15.47 Min-Max, 45.45 +/- 3.76 WP; Edu >= 4 59.16 +/- 10.10, 40.26 +/- 6.04; Med-term >= 0.1 78.27 +/- 6.21, 66.23 +/- 4.82; Edu >= 4 AND Med-term >= 0.1 81.25 +/- 4.02, 68.83 +/- 5.39. All four pairs in the claim are correct to the digit. Paper text confirms \"we pretrain for 20B tokens per configuration\" and a 7-task DrBenchmark subset.\n\n3. INTERNAL CONSISTENCY CHECK PASSES (strong anti-fabrication evidence). Every Win Probability in the table is an exact integer [...truncated]"
+   ]
+  },
+  {
+   "claim": "Naive continual pretraining on target-field data alone raises target-domain performance by 22.77% average across four target models but drops general-benchmark performance by 11.96% average, quantifying catastrophic forgetting in CPT. Mixture-based reweighting recovers 11.99% of that source-domain loss at a cost of only 0.57% on the target domain. Numbers are from the paper body (Appendix E results discussion). This is a concrete capability-retention measurement of exactly the kind angle 4 asks for, and it sets a numeric expectation for what a medical CPT run should be checked against.",
+   "verdict": "refuted",
+   "vote": "1-2",
+   "source": "https://arxiv.org/abs/2507.15640",
+   "title": "Data Mixing Agent: Learning to Re-weight Domains for Continual Pre-training (Yang, Liu, Ji, Li, Liang, Liu, Gong, Cheng, Yang; ACL 2026 main; arXiv:2507.15640, July 2025, revised April 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-07-21 (v1 arXiv submission); revised 2026-04-12 (v2); accepted to ACL 2026 main conference",
+   "quote": "the average math reasoning performance increases by an average of 22.77% on the four target models ... However, the performance on general benchmarks drops by an average of 11.96%, showing a significant degradation in the source-field model capability. ... While data mixing agent bears an average of 0.57% gap to naive training in the target domain, it outperforms naive training by an average of 11.99% in the source domain, showing a significant mitigation of the catastrophic forgetting problem.",
+   "refutationEvidence": [
+    "VERIFIED PARTS. I downloaded arXiv:2507.15640v2 (HTML, 12 Apr 2026) and grepped it. The supporting quote is verbatim and sits in Appendix E.1 \"Full Results and Analysis on Math Reasoning\", so the \"paper body, Appendix E\" attribution is correct. Paper: \"Data Mixing Agent: Learning to Re-weight Domains for Continual Pre-training\", Kailai Yang, Xiao Liu, Lei Ji, Hao Li, Xiao Liang, Zhiwei Liu, Yeyun Gong, Peng Cheng, Mao Yang (Manchester, Microsoft Research, Imperial, UCLA), ACL 2026 main. I recomputed the averages from the paper's own Table 3(a) and 3(b) and 22.77 and 11.96 reconcile to the second decimal across the four target models. Source quality is fine (primary, peer accepted, current). So the first sentence of the claim is sound.\n\nREFUTATION 1: THE 0.57 AND 11.99 FIGURES ARE AVERAGED OVER A DIFFERENT MODEL SET THAN 22.77 AND 11.96, AND THE CLAIM HIDES THE SWITCH. Recomputing DataAgent RL minus Naive Training from Tables 3(a) and 3(b): over the three self-pretrained LLaMA-3B models (six settings) the math gap is exactly -0.57 and the general gain is exactly +11.99. Over all four target models (eight settings) it is -1.49 on target and +11.08 on source. Pythia-1.4B alone is -4.2 [...truncated]",
+    "Paper is real and primary: \"Data Mixing Agent: Learning to Re-weight Domains for Continual Pre-training\", Yang, Liu, Ji, Li, Liang, Liu, Gong, Cheng, Yang, arXiv:2507.15640, ACL 2026 main (aclanthology.org/2026.acl-long.427/). I pulled the PDF and extracted the text. The supporting quote is verbatim and lives in Appendix E.1 \"Full Results and Analysis on Math Reasoning\", not the paper body as the claim states.\n\nThe two anchor numbers check out. Recomputing from Table 3a: math avg gain of naive CPT over base is DCLM 32.80-8.85, FWE 32.53-8.20, Nemo 32.10-9.07, Pythia-1.4B 25.33-5.58, mean 22.765, matching 22.77. General avg drop is 52.8-41.37, 52.37-41.50, 52.80-40.74, 47.41-33.92, mean 11.962, matching 11.96. Note these are absolute percentage POINTS on benchmark averages, not relative percent (relative math gain is about 257%).\n\nThree defects kill the claim as written.\n\n1. Misread of the quote. The paper says the agent \"outperforms naive training by an average of 11.99% in the source domain\". The claim renders this as \"recovers 11.99% OF that source-domain loss\". Those are different by roughly 8x. Since the loss was 11.96 points and the recovery is 11.99 points, the agent recovers [...truncated]"
+   ],
+   "confirmationEvidence": [
+    "VERIFIED AGAINST PRIMARY SOURCE, WITH TWO REQUIRED CORRECTIONS.\n\nMethod: WebFetch's summarizer twice reported the numbers ABSENT from the paper (a false negative from truncation). I therefore downloaded the raw HTML myself (curl https://arxiv.org/html/2507.15640, 577,525 bytes), stripped tags, and grepped. All four numbers appear EXACTLY ONCE each, in a single contiguous passage, verbatim as quoted.\n\n1. QUOTE ACCURACY: CONFIRMED WORD FOR WORD. Recovered text: \"Naive training significantly improves target model performance on the target field but leads to drastic collapse on the capabilities of the source field. Compared to the base model, the average math reasoning performance increases by an average of 22.77% on the four target models ... However, the performance on general benchmarks drops by an average of 11.96%, showing a significant degradation in the source-field model capability. These results further highlight the existence of catastrophic forgetting problems in continual pre-training scenarios ... While data mixing agent bears an average of 0.57% gap to naive training in the target domain, it outperforms naive training by an average of 11.99% in the source domain, showing  [...truncated]"
+   ]
+  },
+  {
+   "claim": "DISCONFIRMING for the multi-target novelty claim (Gap 2): this ACL 2026 paper explicitly optimises balanced performance across multiple fields/capabilities simultaneously rather than aggregate accuracy on one benchmark, and reports variance across fields as an evaluation metric (all reweighting methods cut performance variance by over 200 versus the base model; the agent is best on variance). The niche is only partially occupied though, because the multiple objectives are coarse DOMAINS (general vs math, general vs code) inside a SINGLE stage (CPT only), with no SFT or DPO stage and no clinical capability decomposition. Gap 2 is narrowed, not closed; Gap 1 (stage-awareness across CPT/SFT/DPO) is untouched by this work.",
+   "verdict": "confirmed",
+   "vote": "3-0",
+   "source": "https://arxiv.org/abs/2507.15640",
+   "title": "Data Mixing Agent: Learning to Re-weight Domains for Continual Pre-training (Yang, Liu, Ji, Li, Liang, Liu, Gong, Cheng, Yang; ACL 2026 main; arXiv:2507.15640, July 2025, revised April 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-07-21 (v1 arXiv submission); revised 2026-04-12 (v2); accepted to ACL 2026 main conference",
+   "quote": "All domain reweighting methods significantly reduce performance variance by over 200 compared to the base model. Data mixing agent further achieves the best results in variance, further demonstrating its advantage in stable performance across fields. ... Overall, DataAgentRL can coordinate the source and target field data to improve performance on multiple target capabilities.",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "VERIFIED AGAINST PRIMARY SOURCE. I downloaded the arXiv PDF (9.9 MB, 27 pages) and extracted full text with pdftotext rather than relying on the summarizer, which had falsely reported the quote absent.\n\n1. QUOTE IS VERBATIM, NOT PARAPHRASED. Both quoted sentences appear word for word in the paper body. Section 5.1 (Main Results): \"DataAgentRL also outperforms DataAgentSFT by a large margin of 2.08%, proving reinforcement learning with CQL as a crucial step for effective heuristics compared to the inductive biases in the SFT stage. All domain reweighting methods significantly reduce performance variance by over 200 compared to the base model. Data mixing agent further achieves the best results in variance, further demonstrating its advantage in stable performance across fields.\" The second quote also verbatim: \"Overall, DataAgentRL can coordinate the source and target field data to improve performance on multiple target capabilities.\"\n\n2. THE NUMBERS RECONCILE. Table 1 has an explicit \"Var.\" column, caption: \"'Avg.' and 'Var.' denote the average and variance of each method on all benchmarks.\" Table 1a (2D space, LLaMA-DCLM): Base Model Var 780.62; RegMix 559.83 (reduction 220.79); D [...truncated]"
+   ]
+  },
+  {
+   "claim": "The paper states the same load-bearing premise as the project under study, that different training stages want different data because they are credited with different learning roles, and instantiates it concretely as a difficulty split: medium-difficulty (correctness rate roughly 0.25 to 0.75) samples plus Bridge-rewritten hard samples go to SFT, while only non-all-zero-reward samples go to RL. (The 0.25 to 0.75 threshold and the per-stage set composition come from the paper body read via automated fetch of the arXiv HTML, not from the abstract, so verify against the PDF before citing.)",
+   "verdict": "confirmed",
+   "vote": "3-0",
+   "source": "https://arxiv.org/abs/2606.04466",
+   "title": "Learning What to Learn: Stage-Specific Data Sets for SFT-then-RL in Small Language Model Reasoning (He, Zhang, Wang, Li; arXiv:2606.04466, 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-06-03",
+   "quote": "We argue that data strategy should be aligned with the distinct roles of SFT and RL: SFT is better suited for acquiring not-yet-mastered reasoning skills, while RL is better suited for consolidating skills that the model can already partially access.",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "CLAIM SURVIVES. Verified against the PDF body, not just the HTML, which discharges the claim's own caveat.\n\nSOURCE IDENTITY CONFIRMED. arXiv:2606.04466v1 [cs.CL], stamped \"3 Jun 2026\" in the PDF margin. Title: \"Learning What to Learn: Stage-Specific Data Sets for SFT-then-RL in Small Language Model Reasoning\". Authors: Chongyang He (Tsinghua), Rui Zhang (NUS), Zixun Wang (DiDi), Xin Li (UESTC). Contact hecy25@mails.tsinghua.edu.cn. Note the claim's brief lists the author as \"Zixuan Wang\"; the PDF says \"Zixun Wang\". Fix that before citing.\n\nMETHOD USED. I downloaded the PDF via WebFetch, then ran pdftotext -layout locally and grepped the extracted body text. So the quotes below are from the paper body, not the abstract and not an HTML rendering.\n\nVERBATIM FROM PDF BODY, difficulty thresholds (Section 3, partitioning): \"into three model-specific difficulty groups: Dsimple contains samples with rho(qj) in [0.75, 1], Dmedium contains samples with rho(qj) in [0.25, 0.75), and Dhard contains samples with rho(qj) in [0, 0.25).\" The claim's \"roughly 0.25 to 0.75\" is correct; the exact interval is half-open [0.25, 0.75).\n\nVERBATIM FROM PDF BODY, per-stage set composition: \"The Acquisition S [...truncated]"
+   ]
+  },
+  {
+   "claim": "The paper's normative conclusion is that domain data should be pushed as early in training as possible, which is a direct challenge to the project's framing that CPT, SFT and DPO consume categorically different data requiring separate per-stage selection policies. It argues the stage boundary should be blurred rather than that each stage needs its own optimised policy. This is prior art occupying part of the cross-stage data-allocation niche, and it is disconfirming for the strong version of Gap 1.",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2603.16177",
+   "title": "The Finetuner's Fallacy: When to Pretrain with Your Finetuning Data (Baek, Maini et al., DatologyAI; arXiv:2603.16177, March 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-03-17 (v1); revised 2026-03-21 (v2)",
+   "quote": "Our observations reveal the finetuner's fallacy: while finetuning may appear to be the cheapest path to domain adaptation, introducing specialized domain data during pretraining stretches its utility. ... To get the most out of domain data, incorporate it as early in training as possible.",
+   "refutationEvidence": [
+    "The paper is real and the quote is verbatim, but the load-bearing interpretation is an overreach that the paper's own body contradicts on four counts.\n\n1. The paper contains ZERO data selection. It varies only a whole-corpus mixture fraction delta and repetition count: \"We pretrain models with a small fraction (delta) of domain-specific tokens mixed into general web data, then finetune on the domain dataset\" (Fig. 2 caption). No per-example scoring, filtering, or importance weighting anywhere. Gap 1 as stated in the brief is about data SELECTION being single-stage in scope. A mixing-ratio and repetition paper cannot be \"prior art occupying the cross-stage data-allocation niche\" in the selection sense, and cannot disconfirm a selection-scope gap. Nearest neighbours it cites for mixing (Ye et al. 2024, Goyal et al. 2024 data mixing laws, Que et al. 2024 domain CPT mixture-ratio law, Appendix A.2) are also mixture laws, not selection.\n\n2. The paper never studies DPO, RLHF, or any preference stage. Its pipeline is strictly pretraining then finetuning. \"DPO\" appears exactly once in the whole PDF, in an Appendix A.4 industry anecdote about Character.AI, not as an experiment. So calling i [...truncated]",
+    "Source verified as real and current, but the claim overreaches its own quote on two load-bearing points.\n\nVERIFIED: arXiv:2603.16177 resolves to \"The Finetuner's Fallacy: When to Pretrain with Your Finetuning Data\", Christina Baek, Ricardo Pio Monti, David Schwab, Amro Abbas plus ~30 co-authors, submitted 17 March 2026, revised 21 March 2026. The supporting quote is verbatim abstract text, including \"To get the most out of domain data, incorporate it as early in training as possible.\" So claim sentence 1 (normative conclusion = push domain data early) is supported, primary-sourced, and four months old, well inside the 2025-onward window. Not marketing, not a press release, not forum speculation.\n\nREFUTATION 1, scope overreach on data type. The abstract defines SPT as repeating \"a small domain dataset, typically reserved for finetuning\" starting from pretraining, evaluated on ChemPile, MusicPile and ProofPile. Those are raw domain corpora, not SFT instruction pairs and not DPO preference pairs. The paper never addresses preference optimisation at all. The project's premise is that CPT, SFT and DPO consume categorically different data TYPES. The paper's result is about WHEN to spend  [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "The no-filter-wins result is gated behind a compute threshold that no realistic academic project can reach: two independently fitted compute scaling laws (R-squared above 0.99) predict that unfiltered 240T-token DCLM-Pool only overtakes RefinedWeb at roughly 1e+30 FLOPs, versus a current frontier pretraining estimate of about 5e+26 FLOPs. The authors explicitly concede filtering remains important when compute is the bottleneck, which means this paper does NOT license abandoning selection on a small or single-GPU budget.",
+   "verdict": "confirmed",
+   "vote": "3-0",
+   "source": "https://arxiv.org/abs/2605.19407",
+   "title": "A Bitter Lesson for Data Filtering (Mohri, Duchi, Hashimoto; Stanford; arXiv:2605.19407, May 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-05-19",
+   "quote": "",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "Every load-bearing element of the claim was verified verbatim against the primary source, arXiv:2605.19407, \"A Bitter Lesson for Data Filtering\" (Christopher Mohri, John Duchi, Tatsunori Hashimoto, Stanford, arXiv May 2026).\n\nVERIFIED ELEMENT BY ELEMENT:\n1. R-squared above 0.99, two fits: paper states \"compute scaling laws are highly linear (Figure 6), with R2 above 0.99\" and \"both give similar predictions, near 1e+30 FLOPs for the crossing point.\" The word \"both\" confirms two separately fitted laws converging on the same crossover. Accurate.\n2. 240T tokens, RefinedWeb comparator, 1e30 crossover: \"we find that the 240 trillion token Common Crawl pool from DCLM-Pool may become optimal as soon as 1e+30 FLOPs\", compared against the RefinedWeb filter (not DCLM-Baseline). Accurate, and the claim correctly names RefinedWeb as the specific comparator rather than generalising to all filters.\n3. Frontier estimate 5e26: paper states \"best current estimates of frontier pretraining compute near 5e+26\". Verbatim match.\n4. The concession: Section 8 (Discussion) states \"The compute required for raw Common Crawl to outperform our tested filters is large, up to around 1e30 FLOPs\" and \"When compute  [...truncated]"
+   ]
+  },
+  {
+   "claim": "HDS is scoped entirely to the pre-training stage, with no supervised fine-tuning or preference-optimisation stage and no cross-stage policy transfer, so this paper leaves Gap 1 (stage-specific selection policies across CPT, SFT, and DPO) open as of June 2026. It is also from-scratch pre-training on The Pile, not domain-adaptive continual pretraining, so it does not address whether an online mixing policy transfers to CPT of an already-pretrained base model such as Gemma 3.",
+   "verdict": "confirmed",
+   "vote": "3-0",
+   "source": "https://arxiv.org/abs/2606.24133",
+   "title": "Holistic Data Scheduler for LLM Pre-training via Multi-Objective Reinforcement Learning (Dang, Ma, Liao; KDD 2026; arXiv:2606.24133)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-06-23 (arXiv v1; journal reference: Proceedings of the 32nd ACM SIGKDD Conference on Knowledge Discovery and Data Mining, KDD 2026, Vol. 1, pp. 176-187)",
+   "quote": "The composition of training data, governed by the diversity of sources and their mixing strategy, is a cornerstone of Large Language Model (LLM) pre-training. Online Data Mixing (ODM), the technique of adaptively adjusting data mixtures during training, has emerged as a promising direction to improve efficiency.",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "VERIFIED against the primary source. Paper is real: \"Holistic Data Scheduler for LLM Pre-training via Multi-Objective Reinforcement Learning\", Chenhao Dang, Jing Ma, Mingjie Liao, arXiv:2606.24133, submitted 23-24 June 2026, published at KDD '26 (Aug 09-13, 2026, Jeju Island), DOI 10.1145/3770854.3780325. I fetched the PDF, ran pdftotext, and grepped the extracted body text (1294 lines) rather than relying on a summarizer.\n\nFULL-TEXT TERM COUNTS (case-insensitive, whole paper including appendix): \"fine-tun\" 0, \"finetun\" 0, \"instruction\" 0, \"SFT\" 0, \"DPO\" 0, \"RLHF\" 0, \"preference\" 0, \"post-training\" 0, \"continual\" 0, \"continued\" 0, \"domain-adaptive\" 0, \"medical\" 0. \"alignment\" appears 17 times but every occurrence is gradient alignment (e.g. line 88 \"mechanism based on 'gradient alignment'\", line 304 \"through a gradient alignment reward\", section C.2 \"Alignment Reward\"), never RLHF-style alignment. This confirms sentence 1 of the claim: no SFT stage, no preference-optimisation stage, no cross-stage policy transfer experiment.\n\nFROM-SCRATCH PRE-TRAINING ON THE PILE, verbatim from the Dataset and LLM Training section: \"We use The Pile [10], a large-scale, diverse, and open-source data [...truncated]"
+   ]
+  },
+  {
+   "claim": "On a 670M-token Common Crawl pool, a 1B-parameter model trained on the UNFILTERED pool reaches a lower average validation loss (3.37 avg NLL over C4, Cosmopedia, FineWeb-Edu) than all five filtered variants tested, including RefinedWeb (3.93) and DCLM-Baseline (5.29), which retain 13% and 2.1% of the pool respectively. This is a direct corpus-scale result that selection does NOT beat the no-selection baseline once model size and step count are large enough. (Loss values for CC and RefinedWeb are stated in prose and repeated as figure annotations; the DCLM-Baseline value is read from a figure annotation only, so treat it as figure-derived.)",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2605.19407",
+   "title": "A Bitter Lesson for Data Filtering (Mohri, Duchi, Hashimoto; Stanford; arXiv:2605.19407, May 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-05-19",
+   "quote": "",
+   "refutationEvidence": [
+    "Paper verified real and primary: \"A Bitter Lesson for Data Filtering\", Christopher Mohri, John Duchi, Tatsunori Hashimoto (Stanford), arXiv:2605.19407, submitted 19 May 2026. I fetched both https://arxiv.org/html/2605.19407v1 and the PDF, and extracted the text layer.\n\nWHAT IS CONFIRMED (all numbers correct):\n1. Pool size: Section 3, \"We focus on our smallest CC pool size (about 670 million tokens) ... and curate five filtered versions of this pool\". Section 2.1: \"our randomly sampled subsets range from about 670 million to 10 billion tokens\".\n2. Metric: Figure 1 y-axis is literally \"Avg NLL (C4, Cosmo, FineWeb)\". Section 2.1 confirms the three validation sets (C4 English, FineWeb-Edu, Cosmopedia).\n3. Figure 1, rightmost (1B model) panel annotations, extracted verbatim from the PDF text layer: \"CC: 3.37 / SW: 3.46 / RP: 3.58 / EN: 3.59 / RW: 3.93 / D-B: 5.29\". CC is lowest of all six, so \"beats all five filtered variants\" holds at 1B.\n4. Retention: \"RefinedWeb ... 13% of the data is left\"; \"DCLM-Baseline ... 2.1% of the original pool data is left\". Also English 28.2%, Repetition 45.3%, Stop word 50.4%.\n5. Prose quote is accurate and in the body at Section 3.\n\nWHY I STILL VOTE REFUT [...truncated]",
+    "VERDICT: the numbers are real, but the claim's load-bearing interpretation (\"a direct corpus-scale result that selection does NOT beat the no-selection baseline\") is refuted by the paper's own stated regime and its own scaling projection. Two specific defects.\n\nWHAT CHECKS OUT (so the parent does not throw the citation away):\nPaper is real and primary: \"A Bitter Lesson for Data Filtering\", Christopher Mohri, John Duchi, Tatsunori Hashimoto (Stanford), arXiv:2605.19407, 19 May 2026. Setup verified: 670M GPT-NeoX token subset of DCLM-Pool Common Crawl, models 15M/80M/330M/1B/7B, validation loss averaged over English C4, FineWeb-Edu, Cosmopedia, five filters compared. Retention rates verified: English 28.2%, repetition 45.3%, stop word 50.4%, RefinedWeb 13%, DCLM-Baseline 2.1%. The supporting quote is verbatim accurate. Values 3.37 / 3.93 / 5.29 are corroborated via alphaXiv's rendering of Figure 1.\n\nDEFECT 1, PROVENANCE STATEMENT IS FALSE. The claim asserts \"Loss values for CC and RefinedWeb are stated in prose and repeated as figure annotations.\" That is wrong for RefinedWeb. Only 3.37 appears in prose. Four independent retrievals (arXiv HTML v1 twice, the PDF, and themoonlight.io's [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "Explicitly stage-aware data selection for post-training was published on arXiv on 3 June 2026 (He, Zhang, Wang, Li, arXiv:2606.04466, cs.CL), which partially occupies the project's Gap 1 novelty niche: the paper organises a single training pool into distinct per-stage sets for SFT versus RL, and its own related-work framing asserts that this had not been systematically done before.",
+   "verdict": "confirmed",
+   "vote": "3-0",
+   "source": "https://arxiv.org/abs/2606.04466",
+   "title": "Learning What to Learn: Stage-Specific Data Sets for SFT-then-RL in Small Language Model Reasoning (He, Zhang, Wang, Li; arXiv:2606.04466, 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-06-03",
+   "quote": "Post-training Small Language Models (SLMs) for reasoning typically follows an SFT-then-RL pipeline, yet existing work rarely considers what data should be learned at each stage.",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "Every falsifiable element of the claim was independently verified against the primary source, and two separate retrievals (arxiv.org/abs/2606.04466 and arxiv.org/html/2606.04466, plus an independent WebSearch hit on the arXiv listing) return identical metadata.\n\nBIBLIOGRAPHIC FACTS, ALL CONFIRMED. Title: \"Learning What to Learn: Stage-Specific Data Sets for SFT-then-RL in Small Language Model Reasoning\". Authors: Chongyang He, Rui Zhang, Zixuan Wang, Xin Li (matches \"He, Zhang, Wang, Li\"). Submitted 3 June 2026. Category cs.CL. 25 pages, 12 figures. The ID is not spoofed or hallucinated.\n\nMECHANISM CLAIM, CONFIRMED AND PRECISELY WORDED. The claim says the paper \"organises a single training pool into distinct per-stage sets for SFT versus RL\". Abstract verbatim: \"we propose a difficulty-aware SFT-then-RL framework that organizes training data into stage-specific sets.\" The pool is genuinely single: GSM8K train split only, 7,473 problems, partitioned into Simple/Medium/Hard by model-specific correctness rate and routed to SFT versus RL. Note the claim deliberately says \"organises into per-stage sets\" rather than \"selects a subset\", which is the correct wording: the method partitions  [...truncated]"
+   ]
+  },
+  {
+   "claim": "The KDD 2026 paper \"Holistic Data Scheduler\" (Dang, Ma, Liao; arXiv:2606.24133) already publishes something branded \"multi-objective\" data selection, but its three objectives are internal training signals (data quality score, inter-domain loss influence, model weight norms) rather than multiple downstream capabilities, so it does NOT close the project's Gap 2 as the project defines it (preserving several distinct clinical capabilities instead of one aggregate metric). A reviewer will nonetheless cite it as nearest prior art on the phrase \"multi-objective data selection\", so the review must distinguish multi-objective REWARD from multi-capability TARGET explicitly.",
+   "verdict": "confirmed",
+   "vote": "3-0",
+   "source": "https://arxiv.org/abs/2606.24133",
+   "title": "Holistic Data Scheduler for LLM Pre-training via Multi-Objective Reinforcement Learning (Dang, Ma, Liao; KDD 2026; arXiv:2606.24133)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-06-23 (arXiv v1; journal reference: Proceedings of the 32nd ACM SIGKDD Conference on Knowledge Discovery and Data Mining, KDD 2026, Vol. 1, pp. 176-187)",
+   "quote": "At the core of HDS lies a novel multi-objective, holistic reward function that integrates three critical perspectives: a data-driven reward for quality, a loss-driven reward capturing inter-domain influence, and a model-driven reward based on weight norms.",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "VERIFIED AGAINST PRIMARY SOURCE, TWICE (abstract page and full HTML body).\n\n1. The paper exists and the metadata in the claim is correct. arXiv:2606.24133, \"Holistic Data Scheduler for LLM Pre-training via Multi-Objective Reinforcement Learning\", Chenhao Dang, Jing Ma, Mingjie Liao, submitted 23 June 2026, published at KDD '26 (32nd ACM SIGKDD, 9-13 August 2026, Jeju Island). The claim's author surnames (Dang, Ma, Liao) and venue (KDD 2026) both check out. Nothing here is fabricated.\n\n2. The supporting quote is verbatim from the abstract, not paraphrased: \"At the core of HDS lies a novel multi-objective, holistic reward function that integrates three critical perspectives: a data-driven reward for quality, a loss-driven reward capturing inter-domain influence, and a model-driven reward based on weight norms.\"\n\n3. The claim's core assertion (three objectives are internal training signals, not downstream capabilities) is confirmed by the paper body, which is stronger evidence than the abstract alone. The three reward terms are: r_align, the inner product of a domain batch gradient with the aggregated gradients of all other domains; r_diversity, a scheduled MTLD (Measure of Textual Le [...truncated]"
+   ]
+  },
+  {
+   "claim": "At 1B parameters in a data-scarce, high-compute regime, completely unfiltered Common Crawl reaches a better pretraining loss (3.37) than all five filtered variants tested (English filter, repetition filter, stop word filter, RefinedWeb, DCLM-Baseline), so quality filtering is net harmful once training is long enough. This is direct disconfirming evidence for the premise that corpus-scale selection beats a no-selection baseline. (Loss figure from the paper HTML body as retrieved, not from the abstract.)",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2605.19407",
+   "title": "A Bitter Lesson for Data Filtering (Mohri, Duchi, Hashimoto; Stanford; arXiv:2605.19407, May 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-05-19",
+   "quote": "The pool (CC) reaches the best loss of 3.37 on the 1B model",
+   "refutationEvidence": [
+    "REFUTED as an overreach on two counts, though the underlying paper is real, primary, and current.\n\nWHAT CHECKS OUT. The paper exists: \"A Bitter Lesson for Data Filtering\", Christopher Mohri, John Duchi, Tatsunori Hashimoto, arXiv:2605.19407, submitted 19 May 2026. The quote is verbatim in the HTML body: \"Overall, the pool (CC) reaches the best loss of 3.37 on the 1B model, and its loss has not visibly plateaued from scaling model size.\" The five filters named are correct (English, repetition, stop word, RefinedWeb, DCLM-Baseline), and the paper does report that at 330M parameters and above with enough training steps, unfiltered CC achieves lower NLL than all filtered versions.\n\nOVERREACH 1: the quote does not support the comparison it is cited for. On fetching the surrounding paragraph, \"best loss\" denotes CC's own minimum across training step counts at 1B, not the best among the six datasets compared. The per-filter loss values at 1B are not stated in the main text, only plotted in Figure 1. So the sentence \"reaches a better pretraining loss (3.37) than all five filtered variants\" is an inference read off a figure, presented as if it were the quoted sentence's content. The orderin [...truncated]",
+    "The paper is real and the quoted number checks out, but the claim's load-bearing inference is contradicted by the paper's own Section 5. Verified by extracting the full PDF text (cached at /home/bakasur/.claude/projects/-home-bakasur-BTP/299f837e-76ed-4244-9f3f-a2606d1a08ec/tool-results/webfetch-1787051108342-nqw0we.pdf).\n\nWHAT SURVIVES. \"A Bitter Lesson for Data Filtering,\" Christopher Mohri, John Duchi, Tatsunori Hashimoto, arXiv:2605.19407, preprint dated 19 May 2026, marked \"Preprint.\" on page 1, no venue. Body text: \"Overall, the pool (CC) reaches the best loss of 3.37 on the 1B model, and its loss has not visibly plateaued from scaling model size.\" Figure 1 caption: \"Comparison of models on 670M token CC pool and five filtered subsets. For sufficiently large models (330M+), the unfiltered pool (black) outperforms all five filters (colors) after sufficiently many optimization steps.\" Legend confirms the five filters exactly as the claim lists them: RefinedWeb, English, Repetition, Stop Words, DCLM-Baseline. Loss is averaged over C4-English, FineWeb-Edu and Cosmopedia (external held-out sets, so not a circular in-distribution comparison), and downstream ARC-Easy, PIQA, SocialIQ [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "Unfiltered general web data is already competitive with manually curated medical pretraining corpora, which weakens the case that hand-curated domain corpora carry special value. Table 1 body numbers: unfiltered FineWeb-2-Medical scores 45.02 Min-Max / 45.45 WP versus NACHOS (the DrBERT corpus) at 45.57 / 40.26 and TransCorpus-bio-fr (translated PubMed, the TransBERT-bio-fr corpus) at 38.41 / 32.47. The released FineMed corpus is 21.1M documents and 19.2B words versus NACHOS at 2.4M documents and 1.3B words (Table 4).",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2606.22079",
+   "title": "Where Does the Signal Live? A Web Data Recipe for Medical Encoder Pretraining (Huang, Sun, Bouchacourt, Barascud, Fogel; arXiv:2606.22079, June 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-06-20",
+   "quote": "FW2-Med ranks alongside NACHOS and above TransCorpus-bio-fr: web data is competitive with curated medical corpora. Web sources span wider registers, formats, and topics than narrowly sourced curated corpora, and FineWeb-2 inherits modern text-quality curation.",
+   "refutationEvidence": [
+    "SOURCE IS REAL AND THE QUOTED NUMBERS ARE CORRECT. arXiv:2606.22079, \"Where Does the Signal Live? A Web Data Recipe for Medical Encoder Pretraining\", Huang, Sun, Bouchacourt, Barascud, Fogel (Doctolib, June 2026). Table 1 verified: FW2-Med Unfiltered 45.02 Min-Max / 45.45 WP, NACHOS 45.57 / 40.26, TransCorpus-bio-fr 38.41 / 32.47. Table 4 verified: FineMed 21.1M docs / 19.2B words, NACHOS 2.4M / 1.3B. The supporting quote is verbatim. The claim is nonetheless refuted on interpretation, five independent grounds.\n\n1. CHERRY-PICKED ROW; THE SAME TABLE REFUTES THE CONCLUSION. The claim quotes one baseline row and omits the other ten rows of Table 1, which all apply filters to the SAME FW2-Med source at matched compute (20B tokens per configuration, ModernBERT pretrained from scratch). Med-term density >=0.1 scores 78.27 / 66.23 and Edu >=4 intersect Med-term >=0.1 scores 81.25 / 68.83, versus unfiltered FW2-Med at 45.02 / 45.45. Curation adds +36.23 Min-Max and +23.38 WP on identical source data. The paper's finding is that curation matters enormously, not that it carries no special value.\n\n2. SIGN INVERSION RELATIVE TO THE PROJECT'S PREMISE. The paper's headline is \"medical-term densi [...truncated]",
+    "NUMBERS CHECK OUT, INTERPRETATION DOES NOT. Paper is real: \"Where Does the Signal Live? A Web Data Recipe for Medical Encoder Pretraining\", Huang, Sun, Bouchacourt, Barascud, Fogel (Doctolib lab), arXiv:2606.22079v1. I pulled the HTML full text. Table 1 rows are exactly as quoted, and the supporting quote is verbatim. But the claim is refuted on five grounds.\n\n1. MISREAD OF \"UNFILTERED GENERAL WEB DATA\". Section 4 states candidate corpora are variants of \"FW2-Med (a medical-prefiltered subset of FineWeb-2)\". FW2-Med is NOT general web data, it is web data already domain-filtered to medical. \"Unfiltered\" in Table 1 means only that none of the paper's three quality axes were applied on top of that medical prefilter. The claim's own supporting quote concedes \"FineWeb-2 inherits modern text-quality curation\", which directly contradicts the word \"unfiltered\" in the claim's headline sentence.\n\n2. CHERRY-PICK THAT INVERTS THE PAPER'S THESIS. The claim lifts the single weakest row from a table whose entire purpose is to prove curation is decisive. Same Table 1, same 20B-token matched compute: Med-term >= 0.1 scores 78.27 / 66.23; Bio&Cli scores 63.59 / 50.65; Edu >= 4 (intersect) Med-term  [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "Under domain shift away from web text, parameter scale can be traded for correct stage placement of domain data: a 1B-parameter SPT model beats a 3B-parameter standard-pretrained model on domains underrepresented in the pretraining corpus. NOTE: abstract-sourced figure; no confidence interval, benchmark name or evaluation protocol is given on the abstract page.",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2603.16177",
+   "title": "The Finetuner's Fallacy: When to Pretrain with Your Finetuning Data (Baek, Maini et al., DatologyAI; arXiv:2603.16177, March 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-03-17 (v1); revised 2026-03-21 (v2)",
+   "quote": "These gains grow when the target domain is underrepresented in the pretraining corpus: on domains far from web text, a 1B SPT model outperforms a 3B standard pretrained model.",
+   "refutationEvidence": [
+    "VERIFICATION OF SOURCE: The paper is real and the quote is verbatim. arXiv:2603.16177, \"The Finetuner's Fallacy: When to Pretrain with Your Finetuning Data\", Baek, Monti, Schwab, Abbas, ... Raghunathan, Kolter, Gaza, Morcos, Leavitt, Maini, submitted 17 Mar 2026. I fetched the abs page and confirmed the abstract contains exactly: \"These gains grow when the target domain is underrepresented in the pretraining corpus: on domains far from web text, a 1B SPT model outperforms a 3B standard pretrained model.\" So the claim is not fabricated and not outdated (4 months old).\n\nWHY IT IS STILL REFUTED: the claim is an overreach once the paper body is read, and the body is freely available at https://arxiv.org/html/2603.16177v1. Two separate WebFetch passes with different prompts returned the same numbers, so this is not a summarizer artifact.\n\n1. PLURAL \"DOMAINS\" IS FALSE, n=1 OF 3. Body text: \"On ProofPile, the furthest domain from web text, the 1B SPT model closes 133% of the gap, meaning it surpasses the 3B model entirely.\" But \"MusicPile closes 81% of the gap, nearly matching the larger model\" and \"ChemPile shows more modest gains at 23%\". So the 1B model beats the 3B model on exactly on [...truncated]",
+    "Source verified as real and primary: arXiv:2603.16177, \"The Finetuner's Fallacy: When to Pretrain with Your Finetuning Data\", Baek, Monti, Schwab, ... Raghunathan, Kolter, Morcos, Leavitt, Maini (Datology AI plus CMU), submitted 17 March 2026. The supporting quote is verbatim from the abstract, so the claim is neither fabricated nor outdated. It is refuted on scope, because the paper body contradicts the plural generalization the claim makes.\n\nPaper body (arxiv.org/html/2603.16177v1): the 1B SPT beats 3B standard result holds on exactly ONE of three domains tested. ProofPile: the 1B SPT model \"closes 133% of the gap, meaning it surpasses the 3B model entirely\" (the only supporting case). MusicPile: closes 81% of the gap, i.e. it nearly matches but does NOT surpass the 3B baseline, even though music text is also far from web text. ChemPile: closes only 23%, substantially inferior to the 3B model, which the paper attributes to chemistry text being closer to the Dolma pretraining distribution.\n\nExperimental setup: 300M-token domain dataset, 200B-token pretraining budget, SPT mixture fraction delta = 2%, compute-matched at 200B tokens. Metric is DOMAIN TEST LOSS after finetuning, not a [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "The paper's headline conclusion is scoped to the high-compute, data-scarce regime and the authors explicitly retain filtering as the right choice when compute is the binding constraint, which is the regime of a single-GPU or CPU-budget CPT project. The result therefore does not refute selection for compute-limited domain-adaptive CPT, it refutes it for frontier-scale training.",
+   "verdict": "confirmed",
+   "vote": "2-1",
+   "source": "https://arxiv.org/abs/2605.19407",
+   "title": "A Bitter Lesson for Data Filtering (Mohri, Duchi, Hashimoto; Stanford; arXiv:2605.19407, May 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-05-19",
+   "quote": "When compute is a bottleneck, we expect filtering to still be important.",
+   "refutationEvidence": [
+    "VERIFIED: the paper is real and the quote is accurate. Mohri, Duchi, Hashimoto, \"A Bitter Lesson for Data Filtering,\" arXiv:2605.19407, 19 May 2026, cs.LG. Abstract scopes the study to \"the high compute, data-scarce regime.\" Section 8 (Discussion), \"Compute\" limitation heading, states verbatim: \"The compute required for raw Common Crawl to outperform our tested filters is large, up to around 1e30 FLOPs with our projections in Figure 6. When compute is a bottleneck, we expect filtering to still be important.\" So the claim's core inference (the result does not refute selection under a compute constraint) is supported by a primary source.\n\nREFUTED ON TWO CLAUSES, both errors in the project's favour:\n\n(1) The final clause \"it refutes it for frontier-scale training\" is contradicted by the paper's own figures. The paper places the crossover where the unfiltered pool overtakes filters at approximately 1e30 FLOPs, while noting best current estimates of frontier pretraining compute near 5e26 FLOPs and citing forecasts of 1e29 FLOP runs by 2030. That is roughly 3.3 orders of magnitude above today's frontier. The paper therefore does NOT refute filtering at frontier scale either; it projects  [...truncated]"
+   ],
+   "confirmationEvidence": [
+    "VERIFIED PRIMARY SOURCE. arXiv:2605.19407, \"A Bitter Lesson for Data Filtering\", Christopher Mohri, John Duchi, Tatsunori Hashimoto (Stanford), submitted 19 May 2026. Paper exists, is live at arxiv.org/abs/2605.19407 and arxiv.org/html/2605.19407v1, and is three months old, so not outdated.\n\n1. QUOTE IS REAL AND IN CONTEXT. The sentence \"When compute is a bottleneck, we expect filtering to still be important.\" appears verbatim in Section 8 (Discussion) of the paper body, not in a press summary. Confirmed by two independent fetches of the arXiv HTML.\n\n2. SCOPE CLAIM IS VERBATIM FROM THE ABSTRACT. The abstract states the work targets \"the high compute, data-scarce regime\" and concludes \"with enough compute, the best data filter is no data filter\". So the first half of the claim (headline conclusion is scoped, filtering explicitly retained under compute constraint) is directly supported, not an overreach.\n\n3. THE PAPER'S OWN DATA BACKS THE SCOPING. Reported scales are 15M to 7B parameters over pools of 670M to 10B tokens. The paper reports that filtered subsets beat the unfiltered pool at small model scale and short training, that unfiltered data only wins \"after sufficiently many opt [...truncated]"
+   ]
+  },
+  {
+   "claim": "The optimal selection ratio is not a constant but a function of training compute: the paper fits F_opt(C) = 4 x 10^-5 x C^0.25, meaning the optimal fraction of the corpus kept rises from about 3 percent at 1e20 FLOPs to about 30 percent at 1e23 FLOPs. Larger models require LESS aggressive filtering. This is falsifiable and directly load-bearing for a CPT-stage selection policy: a selection ratio tuned at one compute budget is provably wrong at another, so any single fixed keep-rate reported as 'the' policy is a scale-specific artefact. It also implies a small-compute project should filter far more aggressively than published large-scale recipes suggest. (Numbers from the arXiv HTML v1 body, not the abstract.)",
+   "verdict": "confirmed",
+   "vote": "3-0",
+   "source": "https://arxiv.org/abs/2507.12466",
+   "title": "Language Models Improve When Pretraining Data Matches Target Tasks (BETR; arXiv:2507.12466, July 2025)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-07-16",
+   "quote": "Optimal filtering rate depends strongly on scale ... Fopt(C)=4x10-5 x C0.25 ... from 3% at 10^20 FLOPs to 30% at 10^23 FLOPs.",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "VERIFIED AGAINST PRIMARY SOURCE. Paper: \"Language Models Improve When Pretraining Data Matches Target Tasks\", Mizrahi, Larsen, Allardice, Petryk, Gorokhov, Li, Fang, Gardner, Gunter, Dehghan (Apple), arXiv:2507.12466, submitted 16 July 2025. Method is BETR (benchmark-targeted ranking).\n\nCONFIRMED ELEMENTS (each checked in the HTML v1 body, Section 6.2 and Figure 10, via two independent retrievals):\n1. The formula is verbatim in the paper: \"Fopt(C) = 4x10^-5 C^0.25\", where Fopt is the percentage of tokens retained and C is training FLOPs. The claim's transcription is exact.\n2. The 3 percent to 30 percent range is the paper's own phrasing: \"increasing from 3% at 10^20 FLOPs to 30% at 10^23 FLOPs\" (with 10% at 10^22 as the midpoint).\n3. \"Larger models require less aggressive filtering\" is verbatim in the ABSTRACT, so the directional finding is not a body-only inference.\n4. Selection ratio is correctly interpreted: the paper filters by TOKENS, not documents, so \"fraction of the corpus kept\" is the right reading.\n5. Section 6.2 supports the mechanism: \"aggressive top 3% filtering achieves the highest accuracy at small compute budgets but is overtaken by progressively lighter filtering a [...truncated]"
+   ]
+  },
+  {
+   "claim": "Selecting data against one target benchmark suite measurably degrades performance on held-out tasks: BETR Target-Core is best on the Core suite it targeted but drops to third place on the held-out Noncore tasks. This is the single most useful result in the paper for the project's multi-target premise, and it cuts both ways. It empirically confirms that a selection policy optimised for one capability target trades away others (supporting Gap 2, single-objective optimisation, being a real problem), but it also means BETR already partially occupies the multi-target space, since the paper explicitly evaluates a diverse-target variant that 'matches or exceeds baselines' on disjoint benchmarks. The project cannot claim multi-target selection is unexplored at pretraining scale; it must claim the finer point that BETR still collapses its targets into one aggregate similarity score rather than preserving named capabilities separately.",
+   "verdict": "confirmed",
+   "vote": "3-0",
+   "source": "https://arxiv.org/abs/2507.12466",
+   "title": "Language Models Improve When Pretraining Data Matches Target Tasks (BETR; arXiv:2507.12466, July 2025)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-07-16",
+   "quote": "BETR Target-Core achieves the best Core performance but falls to third place on held-out Noncore tasks.",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "VERIFIED AGAINST PRIMARY PDF, not abstract or secondary summaries. Paper: \"Language Models Improve When Pretraining Data Matches Target Tasks\", Mizrahi, Larsen, Allardice, Petryk, Gorokhov, Li, Fang, Gardner, Gunter, Dehghan (Apple), arXiv:2507.12466, submitted 16 July 2025. Text extracted with pdftotext to /tmp/claude-1000/-home-bakasur-BTP/299f837e-76ed-4244-9f3f-a2606d1a08ec/scratchpad/betr.txt.\n\n1. QUOTE IS VERBATIM, TWICE. Figure 6 caption: \"At 7B-10x scale, BETR Target-Core achieves the highest Core performance but falls to third place on held-out Noncore tasks, showing the trade-off of targeted optimization.\" Body: \"it ranks third on Noncore tasks (44.2), trailing both Target-Noncore (46.4) and DCLM-Baseline (46.3). This pattern holds across both data pools.\" Conclusion section uses the claim's exact wording: \"Target-Core achieves the best Core performance but falls below baselines on held-out Noncore tasks.\" Paper's own takeaway box: \"Standard pretraining benchmarks (Core) represent a narrow slice of capabilities: models optimized exclusively for them underperform on held-out tasks.\" Paper explicitly names this Goodhart's Law.\n\n2. EXACT NUMBERS, Table 6 (7B-10x, Noncore avg [...truncated]"
+   ]
+  },
+  {
+   "claim": "Meta-rater is scoped exclusively to a single training stage, from-scratch pre-training. The paper never evaluates continual pre-training, supervised fine-tuning, or preference optimisation, and never asks whether the best pre-training subset depends on downstream SFT data. It therefore does NOT close Gap 1 (single-stage scope): a 2025 ACL Best Theme Paper on multi-dimensional selection still treats selection as a one-shot, one-stage decision. Verified from the title, abstract, and a body fetch that found no discussion of SFT, DPO, instruction tuning, continual pre-training, or domain adaptation.",
+   "verdict": "confirmed",
+   "vote": "3-0",
+   "source": "https://arxiv.org/abs/2504.14194",
+   "title": "Meta-rater: A Multi-dimensional Data Selection Method for Pre-training Language Models (Zhuang et al., ACL 2025 Best Theme Paper; arXiv:2504.14194)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-04-19 (arXiv v1; v4 dated 2025-08-06). Published version: ACL 2025 (63rd Annual Meeting of the ACL), Vienna, pages 10856 to 10896, ACL 2025 Best Theme Paper.",
+   "quote": "",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "CLAIM SURVIVES ADVERSARIAL CHECK. Independently verified against the primary source, including the version newer than the one the claim appears to have used.\n\nPAPER: \"Meta-rater: A Multi-dimensional Data Selection Method for Pre-training Language Models\", Zhuang, Peng, Ma, Wang, Bai, Wei, Qiu, Zhang, Qian, He. arXiv:2504.14194, cs.CL. arXiv Comments field reads \"Accepted by ACL 2025\".\n\nCHECK 1, quote adequacy. The supplied quote (\"offering a scalable paradigm for enhancing pre-training efficiency and model capability\") is by itself UNDER-POWERED: it establishes a pre-training focus but cannot on its own establish the strong negative \"never evaluates SFT/DPO/CPT\". However the claim does not rest on the quote, it explicitly states it was \"verified from ... a body fetch\". I replicated that body fetch independently and the negatives hold, so this is a weak quote choice, not a substantive overreach.\n\nCHECK 2, body verification (v3, submitted 4 Jun 2025). Absent from full text: \"supervised fine-tuning\", \"SFT\", \"instruction tuning\", \"instruction-tuned\", \"DPO\", \"preference\", \"RLHF\", \"alignment\", \"continual pre-training\", \"continued pre-training\", \"domain adaptation\", \"domain-adaptive\", \"an [...truncated]"
+   ]
+  },
+  {
+   "claim": "Classifier-based Quality Filtering (CQF) applied to a raw web corpus can beat training directly on the high-quality reference set itself, even when that high-quality set is large enough not to be the binding constraint. The paper reports 53.8% for the CQF-filtered model versus 50.1% for the model trained on the unlimited high-quality set under identical training conditions (350M parameter models; the fetched context attributes this comparison to OpenOrca as the HQ set evaluated on ARC-Easy, and that dataset/benchmark attribution is lower confidence than the two numbers themselves, which are quoted from the paper body). This complicates any selection policy whose objective is 'retrieve corpus documents that look like the target domain data', which is the operating assumption behind DSIR-style distribution matching and behind naive medical-similarity scoring for CPT.",
+   "verdict": "confirmed",
+   "vote": "2-0",
+   "source": "https://arxiv.org/abs/2510.00866",
+   "title": "Removing Noise, not Finding Gold: Quality Filtering for Large-Scale Pretraining (Nait Saada, Bethune, Klein, Grangier, Cuturi, Ablin; ICML 2026; arXiv:2510.00866)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-10-01 (arXiv v1); last revised 2026-06-24 (v4); ICML 2026",
+   "quote": "",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "VERIFIED AGAINST PRIMARY SOURCE, quote is verbatim and correctly interpreted.\n\n1. QUOTE IS EXACT. I downloaded arXiv:2510.00866v4 HTML and string-matched. Section 6 (\"CQF can outperform data augmentation\") reads verbatim: \"We compare it to a model trained directly on D_HQ under the exact same training conditions. Empirically, we observe that the model trained on the unlimited HQ set achieves an accuracy of 50.1%, while the model trained on the CQF-filtered dataset achieves 53.8%.\" Both \"50.1\" and \"53.8\" occur exactly once each in the paper; \"exact same training conditions\" and \"unlimited\" also match. This is paper body, not abstract, not secondary.\n\n2. VERSION TRAP, IMPORTANT FOR CITATION. The paper has 4 versions. v1/v2 (Oct 2025) are titled \"The Data-Quality Illusion: Rethinking Classifier-Based Quality Filtering for LLM Pretraining\" and do NOT contain the 50.1/53.8 passage (I grepped both, zero hits). v3 (22 Jun 2026) and v4 (24 Jun 2026) are retitled \"Removing Noise, not Finding Gold: Quality Filtering for Large-Scale Pretraining.\" The quote exists ONLY in v3/v4. Authors: Thiziri Nait Saada, Louis Bethune, Michal Klein, David Grangier, Marco Cuturi, Pierre Ablin (Apple). Commen [...truncated]"
+   ]
+  },
+  {
+   "claim": "The paper does not close Gap 2 (multi-objective or multi-capability selection) and does not touch continual pretraining. Its pipeline is SFT-then-RL only, its models are Qwen2.5-0.5B-Instruct and Llama3.2-1B-Instruct, and its five benchmarks (GSM8K-Platinum, MAWPS, SVAMP, MATH500, LogiQA) all measure a single capability, mathematical and logical reasoning, scored as aggregate accuracy. No CPT stage, no medical domain, and no multiple preserved capabilities appear anywhere in the work.",
+   "verdict": "confirmed",
+   "vote": "3-0",
+   "source": "https://arxiv.org/abs/2606.04466",
+   "title": "Learning What to Learn: Stage-Specific Data Sets for SFT-then-RL in Small Language Model Reasoning (He, Zhang, Wang, Li; arXiv:2606.04466, 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-06-03",
+   "quote": "Our results highlight the importance of coordinating data difficulty across SFT and RL for effective SLM reasoning post-training.",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "VERIFIED AGAINST PRIMARY SOURCE FULL TEXT. Paper: \"Learning What to Learn: Stage-Specific Data Sets for SFT-then-RL in Small Language Model Reasoning\", He, Zhang, Wang, Li (Tsinghua / NUS / DiDi / UESTC), arXiv:2606.04466v1 [cs.CL], submitted 3 June 2026. Only one version exists, so no later revision changes the picture.\n\nEvery factual component of the claim checks out:\n\n1. MODELS. Full text confirms exactly two base models: Qwen2.5-0.5B-Instruct and Llama3.2-1B-Instruct. Claim is exact.\n\n2. BENCHMARKS. Section 4.1 states verbatim: \"we use GSM8K-Platinum Vendrow et al. (2025) as the in-domain benchmark, and MAWPS ... SVAMP ... MATH500 ... and LogiQA ... as out-of-domain benchmarks.\" Exactly the five named in the claim, no others anywhere in the paper including appendices.\n\n3. NO CPT. Full-document scan (body, tables, related work, limitations, appendices) returns zero occurrences of \"continual pretraining\", \"continued pretraining\", \"domain-adaptive pretraining\", or \"CPT\". The pipeline is two stages: SFT (cross-entropy on Bridge-transformed teacher traces) then RL (GRPO), iterated by recycling all-zero-reward RL failures into Critique Fine-Tuning data for the next SFT round. Trainin [...truncated]"
+   ]
+  },
+  {
+   "claim": "A medically adapted LLM performs far worse than a generic model of similar size when used to generate medical pretraining data, and rephraser quality does not track parameter count. Table 2 body numbers at the 100k scale: MedGemma-27B scores 22.22 Min-Max / 23.81 WP versus generic Gemma-4-26B-A4B at 81.67 / 71.43, and the smaller Qwen3.5-35B-A3B (97.56 / 95.24) beats the larger Qwen3.5-122B-A10B (89.30 / 73.81). This is an independent 2026 data point that medical domain adaptation is not automatically an improvement over the general model, consistent in direction with Jeong et al. (arXiv:2411.08870), though measured in a data-generation role rather than on downstream medical QA.",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2606.22079",
+   "title": "Where Does the Signal Live? A Web Data Recipe for Medical Encoder Pretraining (Huang, Sun, Bouchacourt, Barascud, Fogel; arXiv:2606.22079, June 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-06-20",
+   "quote": "Rephraser quality is not predicted by model scale or medical tuning. At 100k, the smaller Qwen3.5-35B-A3B outperforms its larger Qwen sibling, consistent with Niklaus et al. (2026)'s rephraser-scale observations. Medically-tuned MedGemma-27B lands far below generic Gemma-4-26B-A4B at similar parameter count, and GPT-OSS-120B collapses.",
+   "refutationEvidence": [
+    "NUMBERS ARE ACCURATE, INTERPRETATION IS AN OVERREACH. I fetched arXiv:2606.22079 (\"Where Does the Signal Live? A Web Data Recipe for Medical Encoder Pretraining\", Huang, Sun, Bouchacourt, Barascud, Fogel, Doctolib, submitted 20 June 2026). Every figure in the claim matches Table 2 verbatim: MedGemma-27B 22.22 +/- 6.33 Min-Max, 23.81 +/- 15.50 WP; Gemma-4-26B-A4B 81.67 +/- 5.32, 71.43 +/- 14.29; Qwen3.5-35B-A3B 97.56 +/- 2.44, 95.24 +/- 3.01; Qwen3.5-122B-A10B 89.30 +/- 2.95, 73.81 +/- 13.51; GPT-OSS-120B 2.35 +/- 2.35, 4.76 +/- 3.01. The sub-claim \"rephraser quality does not track parameter count\" is directly supported. Four defects kill the load-bearing inference that this corroborates Jeong et al.\n\n(1) THE BASE-MODEL CONTROL IS ABSENT, WHICH INVERTS THE JEONG ARGUMENT. Full Table 2 rows are: FW2-Med no rephrasing 50.36/54.76; Standard MGA Qwen3.5-35B-A3B 27.50/26.19; then the five \"our recipe\" rows above. Gemma-3-27B, the actual base of MedGemma-27B, is NOT among them. So the contrast is a Gemma-3-derived medical model against Gemma-4-26B-A4B, a later-generation MoE. Jeong et al. (arXiv:2411.08870) exists precisely to insist that medical models be compared against THEIR OWN base  [...truncated]",
+    "NUMERIC CORE VERIFIED, INTERPRETIVE CLAIM OVERREACHES.\n\nSource is real and correctly quoted. arXiv:2606.22079, \"Where Does the Signal Live? A Web Data Recipe for Medical Encoder Pretraining\", Huang, Sun, Bouchacourt, Barascud, Fogel, submitted 20 June 2026 (preprint, not peer reviewed). I pulled the full text. Table 2 caption: \"Rephrasing ablation at the 100k-source-document scale.\" Every figure the claim cites matches verbatim: MedGemma-27B 22.22 +/- 6.33 Min-Max, 23.81 +/- 15.50 WP; Gemma-4-26B-A4B 81.67 +/- 5.32, 71.43 +/- 14.29; Qwen3.5-35B-A3B 97.56 +/- 2.44, 95.24 +/- 3.01; Qwen3.5-122B-A10B 89.30 +/- 2.95, 73.81 +/- 13.51. The supporting quote is verbatim from Section 4.2. So the claim is not fabricated. It is refuted on inference, not on arithmetic.\n\nREFUTATION 1, the omitted row inverts the reading. Table 2's worst rephraser is GPT-OSS-120B at 2.35 +/- 2.35 Min-Max / 4.76 +/- 3.01 WP, roughly ten times worse than MedGemma-27B, and GPT-OSS-120B is a GENERIC, non-medically-tuned model. The claim omits it. Generic models in this one table span 2.35 to 97.56. A second omitted row, \"Standard MGA Qwen3.5-35B-A3B\" at 27.50 / 26.19, shows the very same generic model that tops the  [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "The mechanism by which quality filtering helps is removal of low-quality documents, not selection of documents that resemble the high-quality target set. The authors state that the retained data are not retained because they look like the HQ set, and that CQF does not simply select the documents most likely to have come from the HQ distribution. If this generalises, then gains attributed to sophisticated corpus-scale selection are largely reproducible by a noise-removal baseline (dedup plus a generic quality filter), which is exactly the baseline a CPT-stage selection method has to beat to justify itself.",
+   "verdict": "refuted",
+   "vote": "0-2",
+   "source": "https://arxiv.org/abs/2510.00866",
+   "title": "Removing Noise, not Finding Gold: Quality Filtering for Large-Scale Pretraining (Nait Saada, Bethune, Klein, Grangier, Cuturi, Ablin; ICML 2026; arXiv:2510.00866)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-10-01 (arXiv v1); last revised 2026-06-24 (v4); ICML 2026",
+   "quote": "",
+   "refutationEvidence": [
+    "SPLIT VERDICT: the descriptive half is verbatim-correct, the load-bearing methodological half is an unsupported extrapolation contradicted by the paper's own results. Refuted on the part that matters for the thesis.\n\nWHAT CHECKS OUT (verified against the primary PDF, arXiv:2510.00866v2, \"The Data-Quality Illusion: Rethinking Classifier-Based Quality Filtering for LLM Pretraining\", Nait Saada, Bethune, Klein, Grangier, Cuturi, Ablin, Apple, 2 Oct 2025; note the arXiv abs page now carries the retitled \"Removing Noise, not Finding Gold\"):\n- Figure 4 caption is exact: \"CQF works by filtering out the low-quality data (red), not because the retained data (green) resemble the HQ set (orange).\" Section 4 is literally headed \"CQF does not select data that resemble the high-quality set.\"\n- Section 4 supports the second sentence: \"CQF does not select samples that are most likely to come from the HQ set only. Instead, it prefers documents that are both likely under the HQ distribution (high p_HQ(x)) and unlikely under the LQ distribution (low p_LQ(x)).\"\n\nWHY THE CLAIM IS STILL REFUTED:\n\n1. INTERNAL CONTRADICTION, Figure 7. The paper compares CQF to importance sampling (CRISP, Grangier et al. 2 [...truncated]",
+    "QUOTE IS GENUINE but the claim built on it inverts the paper's own thesis.\n\nVERIFIED: The quote is verbatim, Figure 4 caption (repeated as Figure 12 in appendix Sec 10) of arXiv:2510.00866v3 (22 Jun 2026), \"Removing Noise, not Finding Gold: Quality Filtering for Large-Scale Pretraining\", Nait Saada, Bethune, Klein, Grangier, Cuturi, Ablin (Apple, Oxford; earlier versions titled \"The Data-Quality Illusion\"). Sec 4 body also supports part: \"A simple conclusion is that CQF does not select samples that are most likely to come from the HQ set only.\"\n\nWHY IT IS REFUTED:\n\n(1) Dropped qualifier. The Sec 4 sentence continues: \"Instead, it prefers documents that are both likely under the HQ distribution (high p_HQ(x)) and unlikely under the LQ distribution (low p_LQ(x)). With CQF, data are filtered based on a trade-off between being close to the HQ set and far from the LQ set.\" HQ resemblance is one of two terms, not absent. The word \"only\" is load bearing and the claim omits it.\n\n(2) The paper's stated mechanism is targeted selection, NOT noise removal. Abstract: \"We explain this paradox by the fact that CQF implicitly filters the high-quality dataset as well as the low-quality one.\" Sec 4. [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "Below a model-size threshold the crossing point never occurs at all: the 15M model was trained to 100B total tokens and the unfiltered pool still never overtook four of the five filters, and for the 80M model the crossing point disappears entirely once the pool grows to 10B tokens. The number of epochs needed for no-filter to win also grows super-linearly with pool size at fixed 1B model size (roughly 1 epoch at 670M tokens, roughly 3 at 2B tokens, roughly 10 at 10B tokens), so the effect gets harder to reach as pools grow.",
+   "verdict": "confirmed",
+   "vote": "2-1",
+   "source": "https://arxiv.org/abs/2605.19407",
+   "title": "A Bitter Lesson for Data Filtering (Mohri, Duchi, Hashimoto; Stanford; arXiv:2605.19407, May 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-05-19",
+   "quote": "",
+   "refutationEvidence": [
+    "Source verified as real and primary: \"A Bitter Lesson for Data Filtering\", Christopher Mohri, John Duchi, Tatsunori Hashimoto (Stanford), arXiv:2605.19407, submitted 19 May 2026. Two of the three sub-claims check out against the paper body, but the third is a misread that the claim's own numbers refute arithmetically.\n\nVERIFIED PARTS:\n1. 15M model. Paper text: \"While we have not trained the 15M model until the loss starts to increase again because the loss continues to decrease even at a training budget of 100B total tokens, it does not appear as though the pool will ever outperform any of the first four filtered datasets.\" Supports the 100B-token and four-of-five-filters detail. Note the paper hedges (\"does not appear as though ... will ever\"), whereas the claim asserts flatly that the crossing point \"never occurs at all\". That is a hardening of an explicitly extrapolated, not observed, result.\n2. 80M model. The supplied quote is verbatim from the paper and supports \"crossing point disappears once the pool grows to 10B tokens\".\n\nREFUTED PART (load bearing, quantitative):\n3. The claim states \"The number of epochs needed for no-filter to win also grows super-linearly with pool size  [...truncated]"
+   ],
+   "confirmationEvidence": [
+    "VERDICT: not refuted. All three quantitative sub-claims are verbatim-verifiable in the primary source. I downloaded and grepped the raw HTML of arXiv:2605.19407v1, \"A Bitter Lesson for Data Filtering\", Christopher Mohri, John Duchi, Tatsunori Hashimoto (Stanford), submitted 19 May 2026.\n\nSUB-CLAIM 1 (15M model, 100B tokens, four of five filters). CONFIRMED verbatim, Section 3: \"While we have not trained the 15M model until the loss starts to increase again because the loss continues to decrease even at a training budget of 100B total tokens, it does not appear as though the pool will ever outperform any of the first four filtered datasets.\" The paper curates exactly five filters (English filter 28.2% retained, Repetition filter 45.3%, Stop word filter 50.4%, RefinedWeb 13%, DCLM-Baseline 2.1%), so \"four of the five\" is accurate. Figure 1 caption supplies the model-size threshold the claim asserts: \"For sufficiently large models (330M+), the unfiltered pool (black) outperforms all five filters (colors) after sufficiently many optimization steps.\"\n\nSUB-CLAIM 2 (80M, crossing point gone at 10B pool). CONFIRMED verbatim, matches the supplied quote exactly. Independently corroborated by [...truncated]"
+   ]
+  },
+  {
+   "claim": "BRIDGE is a concrete, open, non-MCQ medical benchmark covering most of the project's six claimed clinical capabilities: 87 tasks drawn from 59 real-world clinical text datasets, nine languages, 1,418,042 samples (138,472 held out for testing), eight task types including named entity recognition, event extraction, normalization and coding (ICD-10), summarization, QA, classification, NLI and semantic similarity. The fully open-access subset is redistributed at huggingface.co/datasets/YLab-Open/BRIDGE-Open, and the leaderboard accepts model submissions without requiring direct data access.",
+   "verdict": "confirmed",
+   "vote": "3-0",
+   "source": "https://arxiv.org/abs/2504.19467",
+   "title": "BRIDGE: Benchmarking Large Language Models for Understanding Real-world Clinical Practice Text (Wu, Gu, Zhou, Xie, Snyder, Jiang, Alsentzer, Celi, Rodman, Chen, Romero-Brufau, Lin, Yang; arXiv:2504.19467, April 2025)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-04-28 (arXiv v1); latest revision v4 dated 2026-03-29",
+   "quote": "",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "bakasur. I downloaded both arXiv PDFs (v1 and the current v4, 2026-03-29) and extracted full text with pdftotext, then checked every element in the paper body rather than the abstract.\n\nNumbers, all CONFIRMED verbatim in v4 body (Results, Benchmark Overview): \"In total, our benchmark encompasses 87 tasks from 59 clinical text datasets. These tasks span nine languages and 1,418,042 samples, with 138,472 samples reserved for testing.\" The v4 abstract independently says \"87 tasks sourced from 59 real-world clinical data sources across nine languages\". Note the supporting quote is v4 text, not v1: the v1 body reads \"87 tasks spanning nine languages and 1,418,042 samples, with 138,472 samples reserved for testing\" with no mention of 59 datasets. The counts are identical across v1 and v4, so nothing is outdated. What moved between versions is only the number of evaluated LLMs (52 in v1, 95 in v4, 107 on the live leaderboard), which the claim does not assert.\n\nEight task types, CONFIRMED and an exact match to the claim's list (v4 Methods, Task Definition and Categorization): 1 text classification, 2 semantic similarity, 3 NLI, 4 normalization and coding (e.g., ICD, SNOMED), 5 NER, 6 event [...truncated]"
+   ]
+  },
+  {
+   "claim": "Quality-and-reward-only curation of DPO data raised the aggregate average while REGRESSING specific capabilities: UltraMix-170k beat TuluDPO on overall score (54.16 vs 53.96 on Llama-3.1-8B-TuluSFT) yet lost on HumanEval (65.61 vs 67.24), HumanEval+ (45.76 vs 46.36), MATH (21.22 vs 22.66) and IFEval (79.38 vs 80.35). Only after adding an explicit task-category-aware filtering and boosting step did the mixture recover those capabilities. This is direct published evidence that aggregate accuracy hides per-capability loss, and simultaneously means capability-aware data mixing is already occupied territory at the DPO stage.",
+   "verdict": "confirmed",
+   "vote": "3-0",
+   "source": "https://arxiv.org/abs/2511.10985",
+   "title": "When Data is the Algorithm: A Systematic Study and Curation of Preference Optimization Datasets (Djuhera, Ahmed, Kadhe, Zawad, Ludwig, Boche; ICLR 2026; arXiv:2511.10985, Nov 2025, revised Mar 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-11-14 (arXiv v1); revised 2026-03-01 (v2); published at ICLR 2026",
+   "quote": "",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "WHAT I FETCHED: arXiv abs page, full rendered HTML of both v2 (https://arxiv.org/html/2511.10985v2) and v1 (https://arxiv.org/html/2511.10985v1) stripped to plain text, the arXiv API metadata record, and the PDF. I checked the numbers against Table 2 in the paper body, not the abstract.\n\nNUMBERS: All ten are exactly correct. Table 2, Llama-3.1-8B-TuluSFT block, column order SFT / TuluDPO / UM-170k / UM-187k / UM-190k. IFEval 72.45 / 80.35 / 79.38 / 80.19 / 81.13. MATH (4-shot) 12.08 / 22.66 / 21.22 / 22.03 / 23.56. HumanEval 57.93 / 67.24 / 65.61 / 68.06 / 69.05. HumanEval+ 43.29 / 46.36 / 45.76 / 47.67 / 48.08. Overall 50.09 / 53.96 / 54.16 / 55.36 / 56.04. Every figure the claim cites matches, and the model is correctly identified as Llama-3.1-8B-TuluSFT.\n\nQUOTE: Verbatim. The two sentences joined by \"[...]\" are real and appear at the ends of the \"Performance Analysis\" and \"Task Analysis\" paragraphs of Section 5.1 respectively.\n\nTHE RECOVERY SUB-CLAIM HOLDS, and is more precisely true than the claim states. UM-187k (absolute math and code boost, +17k samples) recovered HumanEval 68.06 and HumanEval+ 47.67 but still lost to TuluDPO on IFEval 80.19 vs 80.35 and MATH 22.03 vs 22.66. [...truncated]"
+   ]
+  },
+  {
+   "claim": "20 to 30 percent of preference pairs in widely used open DPO datasets, including the ones considered high quality (TuluDPO, UltraFeedback), have a preference order that contradicts an independent reward model, meaning the chosen response is not actually rated better than the rejected one. Reward-model agreement with the labelled preference order is only roughly 70 to 80 percent across TuluDPO, ORPO, UltraFeedback and HelpSteer.",
+   "verdict": "confirmed",
+   "vote": "3-0",
+   "source": "https://arxiv.org/abs/2511.10985",
+   "title": "When Data is the Algorithm: A Systematic Study and Curation of Preference Optimization Datasets (Djuhera, Ahmed, Kadhe, Zawad, Ludwig, Boche; ICLR 2026; arXiv:2511.10985, Nov 2025, revised Mar 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-11-14 (arXiv v1); revised 2026-03-01 (v2); published at ICLR 2026",
+   "quote": "",
+   "refutationEvidence": [],
+   "confirmationEvidence": [
+    "CHECKED BY DIRECT TEXT EXTRACTION, NOT SUMMARIZATION. I downloaded https://arxiv.org/html/2511.10985v2 (838 KB), stripped tags to plain text (159 KB), and grep/regex searched it. Note that my first two attempts failed misleadingly: WebFetch on the abstract page and on the PDF both reported the numbers were absent. The abstract genuinely does not contain them, and the PDF extraction was unusable. The numbers are in the body, and my regex initially missed them because the paper writes \"20-30%\" with an en dash.\n\n1. NUMBERS VERIFIED VERBATIM IN THE BODY (both halves of the supporting quote are real, not paraphrase):\n- Sec B.2: \"Our results eventually show that even 'high-quality' datasets (e.g., TuluDPO, UltraFeedback) contain 20-30% of samples with contradicting preference order.\"\n- Sec 4.3 (Preference Reward Analysis): \"Surprisingly, we observe a non-negligible number of cases where the reward model assigns a higher score to the discarded response. [...] TuluDPO, ORPO, UltraFeedback, and HelpSteer exhibit similar patterns, with only 70-80% of samples aligning with the chosen preference. [...] Interestingly, Code-Preference-Pairs appears less affected by such inconsistencies.\"\n- App A [...truncated]"
+   ]
+  },
+  {
+   "claim": "propella-1 provides no evidence that multi-property annotation actually improves a trained model. The authors state explicitly that they have not run any downstream training experiment, and they name the exact open question (does selecting on several dimensions jointly beat selecting on any single dimension) as future work. Their evaluation is agreement with a single frontier reference annotator (Gemini-3-Pro), not human annotation, which they concede could mask shared systematic biases. So the interpretable multi-dimensional annotation niche is occupied at the annotation-artifact level but still open at the validated-selection level.",
+   "verdict": "confirmed",
+   "vote": "2-1",
+   "source": "https://arxiv.org/abs/2602.12414",
+   "title": "propella-1: Multi-Property Document Annotation for LLM Data Curation at Scale (Idahl, Droste, Pluester, Harries; arXiv:2602.12414, Feb 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-02-12 (v1), revised 2026-02-19 (v2)",
+   "quote": "",
+   "refutationEvidence": [
+    "CHECKED: fetched arxiv.org/abs/2602.12414 (metadata), arxiv.org/html/2602.12414v2, and downloaded the PDF (arxiv.org/pdf/2602.12414, 14 pages) to grep the body locally rather than trust fetch summaries. Confirmed no v3 exists (v3 URL returns HTTP 404). Repo docs under /home/bakasur/BTP/docs contain no prior propella reference.\n\nWHAT HOLDS (4 of 5 components, verbatim in the PDF, not just the abstract):\n1. Paper exists as described. Title, authors (Idahl, Droste, Pluester/Plüster, Harries), v1 2026-02-12, v2 2026-02-19 all correct.\n2. Limitations, verbatim: \"Most importantly, we have not yet evaluated whether filtering with propella-1 annotations improves downstream model training, which is the ultimate measure of their utility.\"\n3. Future Work, verbatim, and it does name the exact open question the claim attributes to it: \"Does selecting documents that are high on educational value, reasoning indicators, and content quality simultaneously produce better models than selecting on any single dimension? [...] We plan to perform various ablation experiments.\"\n4. Gemini-3-Pro is correct and is the sole reference annotator (PDF line 382: \"Gemini-3-Pro with reasoning effort set to 'high'.  [...truncated]"
+   ],
+   "confirmationEvidence": [
+    "Checked the primary source directly, not the abstract. Downloaded the full v2 HTML (https://arxiv.org/html/2602.12414v2) and extracted plain text to /tmp/claude-1000/-home-bakasur-BTP/299f837e-76ed-4244-9f3f-a2606d1a08ec/scratchpad/prop_v2.txt, then grepped it.\n\n1. Quote fidelity. Both supporting quotes are verbatim in section 8 (Discussion and Future Work). \"Most importantly, we have not yet evaluated whether filtering with propella-1 annotations improves downstream model training, which is the ultimate measure of their utility.\" and \"Our evaluation relies on agreement with Gemini-3-Pro rather than human annotations, which introduces a dependency on a specific model's judgments.\"\n\n2. The \"shared systematic biases\" concession is real, not the reviewer's gloss. Next sentence in the paper: \"Because the distilled models and the evaluation reference may share systematic biases originating from frontier LLM outputs, high agreement could mask shared errors that human evaluation would reveal.\"\n\n3. The \"exact open question\" is verbatim, not a paraphrase. Future work: \"The most important next step is evaluating the downstream training impact of multi-property filtering. Does selecting docum [...truncated]"
+   ]
+  },
+  {
+   "claim": "The standard proxy-model protocol for comparing data recipes, holding training hyperparameters identical across all recipes in the name of fair comparison, is itself the source of unreliability: conclusions about which data is better can reverse under minor hyperparameter changes because the optimal training configuration is data-dependent. This is a direct methodological threat to any project that validates a CPT data selection policy with small cheap runs and assumes the ranking transfers.",
+   "verdict": "confirmed",
+   "vote": "1-1",
+   "source": "https://arxiv.org/abs/2512.24503",
+   "title": "Can Small Training Runs Reliably Guide Data Curation? Rethinking Proxy-Model Practice (Wang, Wu, Lyu, Zou, Song, Jia, Mittal; ICLR 2026; arXiv:2512.24503, submitted 30 Dec 2025)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-12-30 (v1); v2 posted 2026-04-12; accepted to ICLR 2026",
+   "quote": "we uncover a subtle yet critical issue in the standard experimental protocol for data recipe assessment: the use of identical small-scale model training configurations across all data recipes in the name of \"fair\" comparison. We show that the experiment conclusions about data quality can flip with even minor adjustments to training hyperparameters, as the optimal training configuration is inherently data-dependent.",
+   "refutationEvidence": [
+    "WHAT I CHECKED. Fetched arxiv.org/abs/2512.24503 and /abs/2512.24503v2, downloaded the v2 PDF and extracted its full text locally (2,198 lines, header \"Published as a conference paper at ICLR 2026\", arXiv:2512.24503v2 [cs.LG] 12 Apr 2026). Also read the project's own configs at /home/bakasur/BTP/configs/model/ and /home/bakasur/BTP/configs/experiment/cpt_baseline.yaml.\n\nWHAT HOLDS UP. The supporting quote is verbatim from the abstract of both v1 and v2. The paper is real, credible, and current (ICLR 2026 camera-ready; Princeton, Stanford, Berkeley, Tsinghua, Virginia Tech; over 20,000 training runs). The reversal is genuinely demonstrated: Figure 3 trains GPT2-Small on DCLM vs DCLM-dedup-GS at two nearby practitioner learning rates and the ranking reverses on both validation loss and downstream accuracy. Numbers check out: 23 recipes, four dimensions (domain composition, quality filtering, deduplication, major corpora), 23 choose 2 = 253 pairs, Spearman below 0.75 at standard learning rates with \"near-zero or negative correlations in many domains\", above 0.95 at 1e-5. Not outdated or superseded. Sentences 1 and 2 of the claim are a fair paraphrase of the abstract. I found no source [...truncated]"
+   ],
+   "confirmationEvidence": [
+    "CHECKED THE SOURCE. Fetched https://arxiv.org/abs/2512.24503, the v2 full text at https://arxiv.org/html/2512.24503v2, the ICLR 2026 virtual poster page (https://iclr.cc/virtual/2026/poster/10011765), and a third-party summary (emergentmind.com/papers/2512.24503). OpenReview forum 2FZC0c06jP returned a bot-verification page, so reviewer text could not be read. Paper is real and accepted: \"Can Small Training Runs Reliably Guide Data Curation? Rethinking Proxy-Model Practice\", Wang, Wu, Lyu, Zou, Song, Jia, Mittal, ICLR 2026 poster, v1 2025-12-30, v2 2026-04-12. The supporting quote is verbatim from the abstract, word for word, including the scare quotes around \"fair\".\n\nCLAIM VS PAPER BODY. The diagnosis holds and is not an abstract-only assertion. Body quotes: \"dataset rankings can be inconsistent with respect to the chosen learning rate. At a lower learning rate, DCLM is superior on both the validation loss and the downstream benchmarks. However, a slight increase in learning rate reverses this performance ranking\", and \"even minor variations in training hyperparameters, particularly learning rate, can dramatically alter data recipe rankings\". Quantified: Spearman rank correlation  [...truncated]"
+   ]
+  },
+  {
+   "claim": "Even the best-performing targeted selection methods fail to beat plain zero-shot inference in some regimes, meaning fine-tuning on a selected subset can be worse than not fine-tuning at all. The paper criticises the prior literature for omitting zero-shot baselines entirely.",
+   "verdict": "refuted",
+   "vote": "1-2",
+   "source": "https://arxiv.org/abs/2602.14696",
+   "title": "A Critical Look at Targeted Instruction Selection: Disentangling What Matters (and What Doesn't) (Nayak, Rodriguez-Diaz, Hulkund, Beery, Alvarez-Melis; ICML 2026; arXiv:2602.14696, Feb 2026, revised Jun 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-02-16 (v1); revised 2026-06-18 (v2); ICML 2026",
+   "quote": "",
+   "refutationEvidence": [
+    "WHAT I CHECKED. I fetched https://arxiv.org/abs/2602.14696 and downloaded the full v2 HTML (https://arxiv.org/html/2602.14696v2, 535 KB), stripped it to text, and grepped every one of the 7 occurrences of \"zero-shot\" plus Appendix A, Appendix M and the training-details appendix. I also pulled the arXiv submission history and comments field, and checked Ivison et al. 2025 (arXiv:2503.01807), one of the three prior works the paper surveys.\n\nSOURCE IS REAL AND METADATA IS CORRECT. Title: \"A Critical Look at Targeted Instruction Selection: Disentangling What Matters (and What Doesn't)\", Nayak, Rodriguez-Diaz, Hulkund, Beery, Alvarez-Melis (Harvard / MIT / Kempner). Submission history confirms v1 Mon 16 Feb 2026, v2 Thu 18 Jun 2026; comments field reads \"ICML 2026\". So the citation string in the claim is accurate and not outdated.\n\nSENTENCE 1 HOLDS. The supporting quote is verbatim in the v2 introduction: \"Gradient-based representations provide the most reliable distance-to-query signal for query loss, but this signal does not consistently translate into downstream performance gains, and even the strongest methods fail to improve over zero-shot inference in some regimes (Section 5.1, Se [...truncated]",
+    "WHAT I CHECKED. Fetched the abstract page (arxiv.org/abs/2602.14696), downloaded the full v2 HTML to /home/bakasur/BTP scratchpad, stripped tags, and enumerated all 7 occurrences of \"zero-shot\" in the paper body myself rather than trusting a summarizer. Also confirmed ICML 2026 acceptance (icml.cc/virtual/2026/poster/65407), authors Nayak, Rodriguez-Diaz, Hulkund, Beery, Alvarez-Melis, v1 2026-02-16 and v2 2026-06-18, code at github.com/dcml-lab/targeted-instruction-selection. Cross checked Ivison et al. 2025 (arXiv:2503.01807) full text. The paper is real, the version cited is current, and the source quality is fine. bakasur.\n\nSENTENCE 1 HOLDS. The supporting quote is verbatim in the Introduction: \"even the strongest methods fail to improve over zero-shot inference in some regimes (Section 5.1, Section 5.2, Appendix M, Appendix O).\"\n\nSENTENCE 2 IS A MISREAD, AND IT IS THE REASON I REFUTE. The paper never says prior work omits zero-shot baselines \"entirely.\" Its two actual statements are hedged frequency claims: abstract, \"methods vary widely in selection budgets, often omit zero-shot baselines, and frequently entangle the contributions of key components\"; introduction, \"lack key b [...truncated]"
+   ],
+   "confirmationEvidence": [
+    "Checked: arxiv.org/abs/2602.14696 (v1 and v2 abstracts), full text of arxiv.org/html/2602.14696v2 (stripped to plain text, grepped every \"zero-shot\" occurrence), Appendix A, Sections 5.1 to 5.3, Appendix G, M, N, O, plus the authors' code repo github.com/dcml-lab/targeted-instruction-selection including its released per-run result CSVs under assets/plot_data and assets/dolci_plot_data.\n\n1. Quote accuracy. The supporting quote is near verbatim from the Introduction. Paper text: \"but this signal does not consistently translate into downstream performance gains, and even the strongest methods fail to improve over zero-shot inference in some regimes (Section 5.1, Section 5.2, Appendix M, Appendix O).\" The only difference is the added lead-in \"Furthermore,\" which changes nothing substantive. The cited section and appendix pointers are exactly as the claim states.\n\n2. The gloss \"can be worse than not fine-tuning at all\" is directly supported, not inferred. Appendix M states: \"on some datasets and models (MMLU Pro with Qwen3 4B Base), we observe that the zero-shot baseline outperforms even instruction-tuned models\". Appendix G confirms they really do run zero-shot evaluation of the pretra [...truncated]"
+   ]
+  },
+  {
+   "claim": "Forgetting magnitude is stage-dependent by roughly a factor of five: instruction fine-tuning causes an average capability drop of -12.66% while DPO causes only -2.71%, and DPO applied after IFT can partially recover capabilities already lost. This is direct empirical support for the premise that different post-training stages behave differently and therefore warrant different data policies. Note the paper measures forgetting from post-training algorithms, not from data selection.",
+   "verdict": "refuted",
+   "vote": "1-2",
+   "source": "https://arxiv.org/abs/2603.06610",
+   "title": "CapTrack: Multifaceted Evaluation of Forgetting in LLM Post-Training (Thede, Winzeck, Akata, Schwarz; arXiv:2603.06610, 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-02-19 (v1); revised 2026-05-22 (v2)",
+   "quote": "",
+   "refutationEvidence": [
+    "WHAT I CHECKED. Fetched https://arxiv.org/abs/2603.06610 (raw HTML via curl, plus WebFetch) and the full text of both https://arxiv.org/html/2603.06610v1 and v2, then grepped the stripped text for 12.66, 2.71, 2.43 and read Section 4.2, Appendix A.2, Section 5.1, Appendix D.6, and Appendix H (Limitations) in full. Also searched for contradicting work and read arXiv:2510.17776.\n\nWHAT HOLDS. The paper is real: \"CapTrack: Multifaceted Evaluation of Forgetting in LLM Post-Training\", Lukas Thede, Stefan Winzeck, Zeynep Akata, Jonathan Richard Schwarz, cs.LG. Submission history confirmed verbatim: \"[v1] Thu, 19 Feb 2026 ... [v2] Fri, 22 May 2026\". The supporting quote is verbatim from Section 4.2 of v2: \"DPO retains low forgetting (-2.71% vs. -2.43%) and remains substantially more stable than IFT (-12.66%), indicating that these differences are not primarily driven by data composition (see App. A.2).\" Those three numbers occur in v2 only and not in v1, so citing v2 is correct. Domains studied are legal AND medical, families are Qwen, Llama and Gemma, 4B to 80B, so there is no domain or family scope creep. The DPO-after-IFT recovery sentence is also verbatim: \"DPO is substantially more co [...truncated]",
+    "WHAT I CHECKED. Fetched https://arxiv.org/abs/2603.06610 (paper exists: Lukas Thede, Stefan Winzeck, Zeynep Akata, Jonathan Richard Schwarz; Thomson Reuters Foundational Research / Tuebingen / Helmholtz Munich / TUM / Imperial; v1 19 Feb 2026, v2 22 May 2026). Downloaded the v2 PDF and extracted full text with pdftotext, then grepped for the three numbers. Also searched for contradicting work and checked the project's own docs/references.bib and docs/literature_review.md.\n\nNUMBERS: verbatim correct, but mischaracterised. The three figures appear exactly once, in a single main-text sentence (Section 4.2): \"To rule out data composition as a confounding factor, we perform a controlled DPO experiment under matched training conditions. DPO retains low forgetting (-2.71% vs. -2.43%) and remains substantially more stable than IFT (-12.66%), indicating that these differences are not primarily driven by data composition (see App. A.2).\" So the quote is accurate. Three problems with how the claim uses it:\n(a) The claim calls -12.66% \"an average capability drop\". Appendix A.2, describing the same controlled comparison, words it differently: \"controlled DPO exhibits only minor average forgetti [...truncated]"
+   ],
+   "confirmationEvidence": [
+    "CHECKED: fetched https://arxiv.org/abs/2603.06610 (raw HTML, confirmed via citation_title/citation_author/citation_date meta tags, not just a summarizer) plus the full text of both https://arxiv.org/html/2603.06610v2 and v1, and ran WebSearch for contradicting work.\n\n1. SOURCE EXISTS AND IS AS DESCRIBED. Title, all four authors (Thede, Winzeck, Akata, Schwarz), citation_date 2026/02/19, citation_online_date 2026/05/22 all match. Affiliations: Thomson Reuters Foundational Research, Tuebingen AI Center, Helmholtz Munich, MCML/TU Munich, Imperial College London.\n\n2. NUMBERS ARE VERBATIM CORRECT. The supporting quote appears word for word in v2 section 4.2: \"DPO retains low forgetting (-2.71% vs. -2.43%) and remains substantially more stable than IFT (-12.66%), indicating that these differences are not primarily driven by data composition (see App. A.2).\" Preceded verbatim by \"DPO is substantially more conservative when applied to the OOB model and can partially recover capability losses when applied after IFT, most notably within WILL.\" The abstract independently states \"Instruction fine-tuning induces the strongest relative drift, while preference optimization is more conservative an [...truncated]"
+   ]
+  },
+  {
+   "claim": "The BRIDGE authors attribute the underperformance of medical LLMs partly to their training corpora being drawn from biomedical literature such as PubMed rather than EHR text, and to over-reliance on medical question datasets causing overfitting and reduced cross-task generalizability. This challenges the choice of a PubMed abstract corpus as the CPT source and an MCQ-heavy evaluation: it predicts that selecting better PubMed abstracts may not transfer to clinical capability, and that task diversity, not just data quality, is the binding constraint.",
+   "verdict": "refuted",
+   "vote": "1-2",
+   "source": "https://arxiv.org/abs/2504.19467",
+   "title": "BRIDGE: Benchmarking Large Language Models for Understanding Real-world Clinical Practice Text (Wu, Gu, Zhou, Xie, Snyder, Jiang, Alsentzer, Celi, Rodman, Chen, Romero-Brufau, Lin, Yang; arXiv:2504.19467, April 2025)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-04-28 (arXiv v1); latest revision v4 dated 2026-03-29",
+   "quote": "",
+   "refutationEvidence": [
+    "What I checked. I downloaded and text-extracted both the v1 PDF (arxiv.org/pdf/2504.19467v1) and the latest v4 PDF (arxiv.org/pdf/2504.19467v4, 6745 extracted lines) and grepped the full body, not the abstract. The Nature Biomed Eng version (s41551-026-01719-2) is paywalled behind an idp.nature.com redirect, so v4 is the best available accepted text.\n\nQuote verification. The supporting quote matches v4 verbatim (v4 lines 767 to 778): \"This gap partially stems from the outdated base models these medical LLMs were built on, and the limited clinical relevance of their training data, which is mainly drawn from biomedical literature (e.g., PubMed) rather than EHR data. [...] The lack of task diversity may lead to overfitting and reduce the LLM's generalizability across tasks.\" v4 also says medical models \"often lack broad multi-task instruction fine-tuning or disproportionately rely on medical question datasets\", which supports the claim's second attribution. Note the quote does NOT match v1, where the wording is \"primarily drawn from medical textbooks or literature (e.g., PubMed)\". So sentence one of the claim (the attribution) is accurate against the cited latest revision. Source qual [...truncated]",
+    "WHAT I CHECKED. arXiv HTML is not published for 2504.19467 (all of /html/2504.19467v1..v4 return 404), so I downloaded the PDFs directly (v1, v2, v3, v4) and extracted text with pdftotext. Local copies: /tmp/claude-1000/-home-bakasur-BTP/299f837e-76ed-4244-9f3f-a2606d1a08ec/scratchpad/bridgev1.txt and bridgev4.txt. Version dates confirmed as stated in the claim: v1 2025-04-28, v2 2025-05-01, v3 2025-10-28, v4 2026-03-29. The work is now also published in Nature Biomedical Engineering (s41551-026-01719-2), so source quality is high.\n\nQUOTE CHECK: PASSES. The supporting quote is verbatim v4 (bridgev4.txt lines 759 to 780): \"This gap partially stems from the outdated base models these medical LLMs were built on, and the limited clinical relevance of their training data,85 which is mainly drawn from biomedical literature (e.g., PubMed) rather than EHR data.86,87\" and \"The lack of task diversity may lead to overfitting and reduce the LLM's generalizability across tasks.88\". The elided sentence is \"Although some models (e.g., BioMistral-7B and MMed-Llama 3) have undergone domain-specific pretraining and demonstrate strong potential, they often lack broad multi-task instruction fine-tunin [...truncated]"
+   ],
+   "confirmationEvidence": [
+    "WHAT I CHECKED. Fetched the arXiv abstract page for 2504.19467 (confirming version history v1 2025-04-28, v2 2025-05-01, v3 2025-10-28, v4 2026-03-29), then downloaded the v4 PDF (https://arxiv.org/pdf/2504.19467v4, 6.4 MB) and extracted the full text with pdftotext to /tmp/claude-1000/-home-bakasur-BTP/299f837e-76ed-4244-9f3f-a2606d1a08ec/scratchpad/bridge_v4.txt (6745 lines). The arXiv HTML and ar5iv renderings both 404 or fail conversion, so the PDF was the only route to the body. I grepped for every load-bearing phrase and read the surrounding passages.\n\n1. QUOTE ACCURACY: EXACT. The supporting quote is verbatim in the v4 Discussion (lines 759 to 778): \"Nevertheless, most medical-specific variants generally underperform their general-purpose counterparts. This gap partially stems from the outdated base models these medical LLMs were built on, and the limited clinical relevance of their training data,85 which is mainly drawn from biomedical literature (e.g., PubMed) rather than EHR data.86,87\" and \"The lack of task diversity may lead to overfitting and reduce the LLM's generalizability across tasks.88\" The ellipsis in the quote hides only: \"Although some models (e.g., BioMistral [...truncated]"
+   ]
+  },
+  {
+   "claim": "CapTrack covers only instruction fine-tuning and preference optimisation applied to already instruction-tuned third-party models, and performs no continual pretraining, so its stage-comparison result does not extend to the CPT stage. The gap for CPT-stage capability retention measurement therefore remains open, and this paper cannot be cited as covering it.",
+   "verdict": "refuted",
+   "vote": "1-2",
+   "source": "https://arxiv.org/abs/2603.06610",
+   "title": "CapTrack: Multifaceted Evaluation of Forgetting in LLM Post-Training (Thede, Winzeck, Akata, Schwarz; arXiv:2603.06610, 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-02-19 (v1); revised 2026-05-22 (v2)",
+   "quote": "",
+   "refutationEvidence": [
+    "I fetched arXiv:2603.06610 (abs page) and downloaded the full v2 HTML (arxiv.org/html/2603.06610v2, 534 KB) and grepped the whole body plus appendices.\n\nVERIFIED PARTS. The paper is real: \"CapTrack: Multifaceted Evaluation of Forgetting in LLM Post-Training\", Thede, Winzeck, Akata, Schwarz, v1 19 Feb 2026, v2 22 May 2026 (cs.LG). The supporting quote is verbatim in Section 4.1: \"All experiments are conducted on instruction-tuned models, reflecting the common setting in which aligned third-party models are further adapted rather than retrained from base checkpoints (see App. A.1).\" Appendix A.1 repeats it. The seven models are all released instruct variants (Qwen3-Next-80B-A3B-Instruct, Qwen3-14B, Qwen3-4B-Instruct-2507, Llama-3.3-70B-Instruct, Llama-3.1-8B-Instruct, gemma-3-12b-it, gemma-3-4b-it). Grepping the full text for \"continual pre-train\", \"continued pre-train\", \"CPT\", \"DAPT\", \"domain-adaptive\" returns hits only in Section 2.2 related work and in the Table 1 \"Setting\" row. There are no continual pretraining experiments anywhere, including the appendices. So \"performs no continual pretraining\" and \"cannot be cited as covering the CPT stage\" both hold.\n\nDEFECT 1, factual incom [...truncated]",
+    "What I checked: fetched https://arxiv.org/abs/2603.06610 and the v2 full text at https://arxiv.org/html/2603.06610v2 (four separate targeted passes), plus web searches for the paper and for CPT-stage capability retention literature.\n\nSource is real and correctly identified. \"CapTrack: Multifaceted Evaluation of Forgetting in LLM Post-Training\", Thede, Winzeck, Akata, Schwarz, v1 2026-02-19, v2 2026-05-22. The supporting quote is verbatim in the body: \"All experiments are conducted on instruction-tuned models, reflecting the common setting in which aligned third-party models are further adapted rather than retrained from base checkpoints.\"\n\nFirst half of the claim holds. The Limitations section says verbatim: \"Our experiments are restricted to instruction-tuned base models from three families, two domains (legal and medical), and two primary algorithms (IFT and DPO), with GRPO evaluated on a subset.\" No experiment trains on raw text with a language-modeling objective. Models are Qwen 3 Next 80B, Llama 3.1/3.3 and Gemma 3 instruction-tuned checkpoints. LoRA and model merging appear as mitigation strategies, not stages. One minor imprecision: the claim says \"only instruction fine-tuni [...truncated]"
+   ],
+   "confirmationEvidence": [
+    "bakasur. I tried hard to break this claim and could not. What I checked, all against the paper body rather than the abstract:\n\n1. Source identity and version. Fetched https://arxiv.org/abs/2603.06610 and downloaded the full v2 HTML (https://arxiv.org/html/2603.06610v2, 534 KB, 155k chars of text) into the scratchpad and grepped it locally. Title: \"CapTrack: Multifaceted Evaluation of Forgetting in LLM Post-Training\", Thede, Winzeck, Akata, Schwarz. Submission history on the abs page: [v1] 19 Feb 2026, [v2] 22 May 2026. No v3 exists, so the claim is not superseded by a later revision. The cited dates in the claim match the arXiv page exactly.\n\n2. Supporting quote. Verbatim in Section 4.1: \"All experiments are conducted on instruction-tuned models, reflecting the common setting in which aligned third-party models are further adapted rather than retrained from base checkpoints (see App. A.1).\" Appendix A.1 repeats it: \"All models are evaluated in their publicly released instruction-tuned variants, reflecting the common practical setting in which post-training is applied to already aligned models rather than to base checkpoints.\" Models: \"seven instruction-tuned LLMs from three model f [...truncated]"
+   ]
+  },
+  {
+   "claim": "Marmoka-en, an 8B model continually pretrained on 26 billion words of English medical text (PubMed 25.9B words, WikiMed 54.4M, EMEA 12.9M), gains under 1.6 accuracy points over Llama 3.1-8B-Instruct on MMLU clinical (73.29 vs 72.90), MedQA (61.34 vs 60.42) and CareQA-En (67.50 vs 65.93), and actually LOSES on PubMedQA (80.60 vs 81.40). This is a direct, same-base-model, fair-comparison null result for large-scale English medical CPT.",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2604.06854",
+   "title": "To Adapt or not to Adapt, Rethinking the Value of Medical Knowledge-Aware Large Language Models (Domingo-Aldama, De La Iglesia, Urruela, Atutxa, Barrena; arXiv:2604.06854, 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-04-08",
+   "quote": "",
+   "refutationEvidence": [
+    "Verified by extracting the full text of arXiv:2604.06854v1 (fetched the PDF, ran pdftotext; working copy at /tmp/claude-1000/-home-bakasur-BTP/299f837e-76ed-4244-9f3f-a2606d1a08ec/scratchpad/marmoka.txt). Only v1 exists (submitted 8 Apr 2026), so not superseded. Note for context, bakasur: I checked every number, not just the abstract.\n\nWHAT HOLDS UP (all of it, exactly):\n1. Base model. Section 3.3.1: \"we use an instruction-tuned model as the source rather than a base model. Specifically, we choose Llama 3.1-8B-Instruct as the starting point.\" Table 3 lists \"Llama-3.1-8B-Instruct\" as the baseline. So the same-base-model framing is correct.\n2. Corpus. Table 2, English: WikiMed 54.4M, PubMed 25.9B, EMEA 12.9M, Total 26B. Matches the claim exactly.\n3. \"MMLU clinical\" is correct. Table 1: \"A subset with the clinical tasks was extracted.\"\n4. All eight accuracy figures are exactly right. Tables 4 and 5, \"None\" (unperturbed) row: Llama 3.1 absolutes MMLU 72.90, PubMedQA 81.40, MedQA 60.42, CareQA-En 65.93; Marmoka-en deltas +0.39, -0.80, +0.92, +1.57; Marmoka-en+it deltas +0.62, -0.20, +1.99, +2.12. Adding gives 73.29 / 80.60 / 61.34 / 67.50 and 73.52 / 81.20 / 62.41 / 68.05. Every claimed [...truncated]",
+    "I fetched arXiv:2604.06854 (abs page) and downloaded the full HTML (https://arxiv.org/html/2604.06854v1, 242 KB) to /tmp scratchpad and read Sections 3.3.1, 4.1, 4.2.1, and 5 plus Tables 2, 3, 4 directly. Version check: v1 returns 200, v2 and v3 return 404, so no later version supersedes it.\n\nWHAT CHECKS OUT. The paper is real, the title and author list are correct, and it is dated 8 April 2026. Table 3 confirms the baseline is Llama-3.1-8B-Instruct, and Section 3.3.1 confirms Marmoka starts from it (\"we use an instruction-tuned model as the source rather than a base model. Specifically, we choose Llama 3.1-8B-Instruct as the starting point\"). Table 2 gives English word counts exactly as claimed: WikiMed 54.4M, PubMed 25.9B, EMEA 12.9M, Total 26B. Every accuracy figure in the claim is arithmetically correct. Section 4.1 and Figure 3 confirm all Llama 3.1 variants kept format adherence, and Section 3.3.1 confirms 1.4M Magpie general instructions were replayed to prevent forgetting with no medical instructions in Marmoka-en, so the CPT isolation is genuinely well controlled. I found no source disputing any of this.\n\nWHY IT STILL FAILS.\n\n1. The supporting quote does not exist in the p [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "HealthBench is a concrete, openly released medical benchmark that evaluates open-ended generation rather than multiple choice: 5,000 multi-turn conversations scored against 48,562 physician-written, conversation-specific rubric criteria, released under CC BY-4.0 via github.com/openai/simple-evals. This is directly usable by a project that cannot access credentialed data such as MIMIC-IV, since it requires no data use agreement.",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2505.08775",
+   "title": "HealthBench: Evaluating Large Language Models Towards Improved Human Health (OpenAI; arXiv:2505.08775, May 2025)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-05-13",
+   "quote": "",
+   "refutationEvidence": [
+    "I fetched the arXiv abstract page, the full v1 PDF (extracted to text), the simple-evals repo LICENSE and README, healthbench_eval.py, the OpenAI HuggingFace dataset card, and I downloaded and analysed the actual released data file (2025-05-07-06-14-12_oss_eval.jsonl, 60 MB, 5,000 lines). Two of the claim's specific factual assertions are wrong.\n\n1. LICENSE IS WRONG. HealthBench is released under MIT, not CC BY-4.0. github.com/openai/simple-evals ships an MIT LICENSE file (\"MIT License, Copyright (c) 2024 OpenAI\"), and its README lists the eval explicitly as \"HealthBench: ... [MIT License](https://github.com/openai/simple-evals/blob/main/LICENSE)\". The same README lists MGSM separately as CC-BY, so OpenAI does distinguish per-eval licences and did not choose CC BY for HealthBench. OpenAI's own dataset card at huggingface.co/datasets/openai/healthbench carries license: mit (confirmed via the HF API, tag \"license:mit\"). The paper text contains no occurrence of \"CC BY\" or any licence statement at all. The CC BY 4.0 the claim cites is the arXiv submission licence for the paper PDF and TeX source: on the abs page that creativecommons.org/licenses/by/4.0 link sits inside the \"Access Pape [...truncated]",
+    "Two specific attributes in the claim are wrong, verified against primary artifacts rather than the abstract.\n\n1. LICENSE IS MIT, NOT CC BY-4.0. The arXiv abs page for 2505.08775 carries \"CC BY 4.0\" as the license of the preprint article itself (I fetched https://arxiv.org/abs/2505.08775 and confirmed the only creativecommons link on the page is the article rights link). The benchmark is not CC BY-4.0. The simple-evals README line 85 reads: \"HealthBench: Evaluating Large Language Models Towards Improved Human Health, reference: https://openai.com/index/healthbench, [MIT License](https://github.com/openai/simple-evals/blob/main/LICENSE)\". The same README list marks MGSM as \"Creative Commons Attribution 4.0 International Public License (CC-BY)\", so the repo distinguishes the two licenses deliberately and puts HealthBench under MIT. The GitHub API reports the repo license as MIT. The official HuggingFace mirror openai/healthbench also states MIT. The full paper text has zero license mentions for the data (grep for \"licen\" in the extracted PDF hits only USMLE citations), so the CC BY-4.0 figure can only have come from conflating the arXiv preprint license with the benchmark license.\n\n2. [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "The value of medical continual pretraining is confounded with the base model's language coverage, not just with the medical domain: the same recipe applied to Spanish with a far smaller corpus (908.3 million words, versus 26 billion for English) produces clear gains, Casimedicos 55.20% vs Llama 3.1's 50.80% (+4.4 points) and CareQA-Es 60.87% (63.28% for the merged instruction variant) vs 58.58%. The implication is that headroom comes from what the base model is missing, so English medical CPT sits in the regime with the least headroom.",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2604.06854",
+   "title": "To Adapt or not to Adapt, Rethinking the Value of Medical Knowledge-Aware Large Language Models (Domingo-Aldama, De La Iglesia, Urruela, Atutxa, Barrena; arXiv:2604.06854, 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-04-08",
+   "quote": "",
+   "refutationEvidence": [
+    "I fetched arXiv:2604.06854 abstract page and downloaded the full HTML body (https://arxiv.org/html/2604.06854v1, converted to text locally at /tmp/claude-1000/-home-bakasur-BTP/299f837e-76ed-4244-9f3f-a2606d1a08ec/scratchpad/paper.txt), and checked the arXiv API for later versions.\n\nWHAT CHECKS OUT. Title confirmed: \"To Adapt or not to Adapt, Rethinking the Value of Medical Knowledge-Aware Large Language Models\" (Domingo-Aldama et al., HiTZ, submitted 2026-04-08). Corpus figures are right: Table 2 gives English total 26B words (PubMed 25.9B, WikiMed 54.4M, EMEA 12.9M) and Spanish total 908.3M (MedCrawler 850.7M, SciELO 29M, WikiMed 16.3M, MeSpEn 6.9M, PubMed 5.5M). The accuracies are correct once you add the paper's deltas to the Llama 3.1 baseline: Table 6 \"None\" row gives Casimedicos-exp Llama 3.1 = 50.80 with Marmoka-es +4.40 and Marmoka-es+it +4.40, so 55.20; CareQA-Es Llama 3.1 = 58.58 with Marmoka-es +2.29 (60.87) and Marmoka-es+it +4.70 (63.28). Only v1 exists, so the claim is not outdated. The supporting quote is genuine.\n\nWHY IT STILL FAILS.\n\n1. The headline Casimedicos gain is not a \"clear gain\". Table 1 gives Casimedicos-exp a 125-item test set and a 63-item dev set. A 4 [...truncated]",
+    "Checked the primary source in full. Fetched https://arxiv.org/abs/2604.06854 and the full text at https://arxiv.org/html/2604.06854v1 (Domingo-Aldama, De La Iglesia, Urruela, Atutxa, Barrena; only v1 exists, submitted 8 Apr 2026, so not superseded).\n\nNUMBERS: all check out, but two are derived, not printed. Table 2 gives English total 26B words (WikiMed 54.4M, PubMed 25.9B, EMEA 12.9M) and Spanish total 908.3M (WikiMed 16.3M, PubMed 5.5M, MedCrawler 850.7M, MeSpEn 6.9M, SciELO 29M), so both corpus figures are exact. Table 6 reports Llama 3.1 absolutes and Marmoka DELTAS: \"None\" row, Casimedicos-exp Llama 50.80, Marmoka-es +4.40, Marmoka-es+it +4.40; CareQA-Es Llama 58.58, Marmoka-es +2.29, Marmoka-es+it +4.70. The strings 55.20, 60.87 and 63.28 appear nowhere in the paper; they are correct additions of those deltas.\n\nWHY THE CLAIM STILL FAILS, on four grounds.\n\n1. The stated implication contradicts the paper's own conclusion. The claim says English medical CPT \"sits in the regime with the least headroom\". The paper's RQ1 answer says the opposite about what its flat English result means: \"this research does not dismiss the necessity of specialized medical LLMs, but rather highlights [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "Across 95 LLMs and 87 real-world clinical text tasks, medically fine-tuned models mostly failed to beat their own general-purpose counterparts, replicating and extending Jeong et al. (arXiv:2411.08870) beyond exam-style MCQ into clinical text. Concrete losses reported in the body with significance: HuatuoGPT-o1-72B scored 41.0 versus Qwen2.5-72B-Instruct 41.6; Llama-3.1-8B-UltraMedical scored 20.2 versus Llama-3.1-8B-Instruct 29.0 (p<10^-4); MeLLaMA-70B-chat 32.3 and Llama-3-70B-UltraMedical 33.4 both fell below Llama-3.1-70B-Instruct at 39.1 (p<10^-4).",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2504.19467",
+   "title": "BRIDGE: Benchmarking Large Language Models for Understanding Real-world Clinical Practice Text (Wu, Gu, Zhou, Xie, Snyder, Jiang, Alsentzer, Celi, Rodman, Chen, Romero-Brufau, Lin, Yang; arXiv:2504.19467, April 2025)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-04-28 (arXiv v1); latest revision v4 dated 2026-03-29",
+   "quote": "",
+   "refutationEvidence": [
+    "Numbers check out; the interpretation does not. What I did: downloaded the actual v4 PDF (https://arxiv.org/pdf/2504.19467v4, 6.4 MB) and extracted full text with pdftotext -layout, then read the body and supplementary tables rather than the abstract.\n\nVERIFIED. Every number is correct. Body page 8: \"most medical variants did not surpass their general-purpose counterparts: MeLLaMA-70B-chat (32.3) and Llama-3-70B-UltraMedical (33.4) scored lower than the related Llama-3.1-70B-Instruct (39.1) (p<10-4). Some even lagged behind their foundation models. For instance, HuatuoGPT-o1-72B (41.0) trailed Qwen2.5-72B-Instruct (41.6), and Llama-3.1-8B-UltraMedical (20.2) fell well below Llama-3.1-8B-Instruct (29.0) (p<10-4).\" Supplementary Table S3 confirms each as a zero-shot score with 95% CIs: HuatuoGPT-o1-72B 41.0 [40.2, 41.8], Qwen2.5-72B-Instruct 41.6 [40.8, 42.4], Llama-3.1-8B-UltraMedical 20.2 [19.5, 20.9], Llama-3.1-8B-Instruct 29.0 [28.2, 29.8], Llama-3-70B-UltraMedical 33.4 [32.6, 34.2], MeLLaMA-70B-chat 32.3 [31.5, 33.1], Llama-3.1-70B-Instruct 39.1 [38.3, 39.9]. 95 LLMs and 87 tasks confirmed in the v4 abstract and body (v1 had 52 LLMs, so the 95 figure correctly tracks the current [...truncated]",
+    "I downloaded the BRIDGE v4 PDF (arXiv:2504.19467v4, 2026-03-29) and extracted it with pdftotext -layout, then checked the body prose and Supplementary Table S3 directly rather than relying on the abstract.\n\nWHAT HOLDS. Every number is correct. Table S3 \"Score Zero-shot\" gives HuatuoGPT-o1-72B 41.0 [40.2, 41.8], Qwen2.5-72B-Instruct 41.6 [40.8, 42.4], Llama-3.1-8B-UltraMedical 20.2 [19.5, 20.9], Llama-3.1-8B-Instruct 29.0 [28.2, 29.8], MeLLaMA-70B-chat 32.3 [31.5, 33.1], Llama-3-70B-UltraMedical 33.4 [32.6, 34.2], Llama-3.1-70B-Instruct 39.1 [38.3, 39.9]. The body prose matches the supporting quote (the PDF has a typo \"(391)\" for 39.1). Scale of 95 LLMs and 87 tasks is confirmed in the abstract. The direction also survives CoT and 5-shot columns, so it is not a cherry-picked strategy. Source quality is high (Brigham/Harvard, Mayo, Stanford, MIT authors; bootstrapped 95% CIs, 1000 resamples). The claim is not outdated: it tracks v4, the latest revision.\n\nDEFECT 1, the Jeong attribution is unsupported by this source. I grepped the full text and the extracted reference list (lines 1470 to 2184, 100+ numbered refs) for \"Jeong\", \"Oberst\", \"Lipton\", \"08870\", \"Limited Impact\", \"making prog [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "The MultiMedQA suite, which is the family containing MedQA, MedMCQA and PubMedQA, has mostly saturated because it tests basic medical knowledge recall that frontier models have largely mastered. All three of the project's datasets sit inside the suite this 2026 paper declares saturated, so they may no longer discriminate between selection policies. The paper attributes saturation to task type (recall) rather than to measured contamination, and reports no contamination rates.",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2605.01417",
+   "title": "Medmarks: A Comprehensive Open-Source LLM Benchmark Suite for Medical Tasks (Warner, Grandhi, Kieffer, Ouraq, Panigrahi et al.; arXiv:2605.01417, May 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-05-02",
+   "quote": "",
+   "refutationEvidence": [
+    "I fetched arXiv:2605.01417 (abs page and the full v1 HTML, saved and stripped to plain text at /tmp/claude-1000/-home-bakasur-BTP/299f837e-76ed-4244-9f3f-a2606d1a08ec/scratchpad/medmarks.txt, 178k chars) and grepped the whole body, not just the abstract. Only v1 exists (submission history shows a single entry, 2 May 2026), so the claim is not superseded.\n\nWHAT HOLDS. The supporting quote is verbatim and appears in Section 1: \"Medical LLM benchmarks have seen wide adoption but they have all saturated, heavily depend on restricted datasets, or lack comprehensive task and model coverage. For example, the MultiMedQA benchmark suite (84) has mostly saturated because it mainly comprises basic question answering tasks on medical knowledge recall that frontier models have largely mastered.\" Table 6 confirms MultiMedQA has 7 datasets, and MedQA, MedMCQA and PubMedQA are among them. The contamination sub-claim also holds: grep for \"contaminat\" returns 0 hits in the entire paper, so the paper does attribute saturation to task type and reports no contamination rates.\n\nWHAT REFUTES THE INTERPRETATION. The paper's own body contradicts \"all three sit inside the suite this paper declares saturated [...truncated]",
+    "What I checked: downloaded the full paper HTML (https://arxiv.org/html/2605.01417v1, 793 KB, converted to ~172 KB plain text) and grepped it end to end, plus the arXiv API metadata for version history, plus a web search for contradicting work.\n\nWHAT HOLDS.\n1. The supporting quote is verbatim and correctly located. Section 1 reads: \"Medical LLM benchmarks have seen wide adoption but they have all saturated, heavily depend on restricted datasets, or lack comprehensive task and model coverage. For example, the MultiMedQA benchmark suite (84) has mostly saturated because it mainly comprises basic question answering tasks on medical knowledge recall that frontier models have largely mastered.\" Note two hedges the claim drops: \"mostly\" and \"frontier models\".\n2. The contamination part of the claim is correct. The strings \"contamin\", \"memoriz\" and \"leak\" each return ZERO hits in the raw HTML. The paper never measures or reports contamination, and its stated cause of saturation is task type. That sentence of the claim survives.\n3. Not outdated. arXiv API returns only v1, published 2026-05-02. No v2.\n\nWHY I REFUTE IT ANYWAY: the interpretation contradicts the same paper's own results and its [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "Random uniform sampling often matches or outperforms popular targeted instruction selection methods, and the advantage of selection shrinks as the selection budget grows. The paper reports this for TyDiQA and MMLU-Pro over budgets of 500 to 10,000 examples with Tulu V2 as the candidate pool. This is direct disconfirming evidence for the premise that learned selection reliably beats random.",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2602.14696",
+   "title": "A Critical Look at Targeted Instruction Selection: Disentangling What Matters (and What Doesn't) (Nayak, Rodriguez-Diaz, Hulkund, Beery, Alvarez-Melis; ICML 2026; arXiv:2602.14696, Feb 2026, revised Jun 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-02-16 (v1); revised 2026-06-18 (v2); ICML 2026",
+   "quote": "",
+   "refutationEvidence": [
+    "WHAT I CHECKED. I downloaded the full HTML of arXiv:2602.14696v2 (534 KB), stripped tags, and grepped the raw text rather than trusting a summarizer. I also pulled v1, the arXiv abs page for version history, and searched for corroborating and contradicting literature.\n\nFACTS THAT HOLD UP (all verified verbatim, none of these is the reason for refutation):\n1. The paper exists and is real. Nayak, Rodriguez-Diaz (Harvard), Hulkund, Beery (MIT), Alvarez-Melis (Harvard/Kempner). ICML 2026. Code at github.com/dcml-lab/targeted-instruction-selection. Submission history shows only v1 (16 Feb 2026) and v2 (18 Jun 2026), so v2 is current and the claim is not superseded.\n2. The supporting quote is exact, in both versions, in the introduction: \"Surprisingly, randomly sampled subsets often match or outperform many popular selection methods (TyDiQA and MMLU-Pro in Figure 5), especially as the budget increases, highlighting the brittleness of current practice.\"\n3. Budgets are correct: \"B in {500, 1,000, 2,500, 5,000, 10,000}\" (Sections 5.2 and 5.3, Figure 4/6 captions).\n4. Candidate pool is correct: \"We use the subsampled Tulu V2 dataset from Ivison et al. 2025 as the candidate pool.\"\n5. \"Random  [...truncated]",
+    "WHAT I CHECKED. Fetched arxiv.org/abs/2602.14696, the v1 and v2 full HTML (arxiv.org/html/2602.14696v1 and v2), the Hugging Face paper page, and searched for critiques. The paper is real and correctly cited: \"A Critical Look at Targeted Instruction Selection: Disentangling What Matters (and What Doesn't)\", Nayak, Rodriguez-Diaz, Hulkund, Beery, Alvarez-Melis, v1 2026-02-16, v2 2026-06-18, ICML 2026, code at github.com/dcml-lab/targeted-instruction-selection.\n\nNUMBERS THAT CHECK OUT. Budgets are B in {500, 1000, 2500, 5000, 10000}, so \"500 to 10,000\" is right. Candidate pool is Tulu V2 (subsampled), correct. The supporting quote is verbatim from the v2 introduction, and Figure 5 does cover TyDiQA and MMLU-Pro. The budget-shrinking half of the claim is well supported: the abstract says \"gradient-based representations paired with greedy round-robin selection often perform best on average at low budgets, but these gains diminish at larger budgets\", and Theorem 6.2 gives a B^(-1/d) decay in the gap between optimal and random selection.\n\nWHY IT IS STILL REFUTED. Three problems, the first two from the paper's own text.\n\n1. The claim inverts what Figure 5 reports on the two tasks it names. [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "MedGemma-27B-it beat Gemma-3-27B-it by only 0.9 points (40.8, 95% CI 40.0 to 41.6, versus 39.9, 95% CI 39.1 to 40.7) and the difference was NOT statistically significant (p=0.12). On 87 real-world clinical tasks the medical adaptation of Gemma 3 buys a statistically indistinguishable gain. MedGemma-27B-it did nonetheless rank 14th of 95 models and post the highest average score across clinical specialties (44.7), ranking first in 3 specialties, so the paper reads the result as 'promising yet inconsistent' rather than a flat null.",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2504.19467",
+   "title": "BRIDGE: Benchmarking Large Language Models for Understanding Real-world Clinical Practice Text (Wu, Gu, Zhou, Xie, Snyder, Jiang, Alsentzer, Celi, Rodman, Chen, Romero-Brufau, Lin, Yang; arXiv:2504.19467, April 2025)",
+   "sourceQuality": "primary",
+   "publishDate": "2025-04-28 (arXiv v1); latest revision v4 dated 2026-03-29",
+   "quote": "",
+   "refutationEvidence": [
+    "What I checked: downloaded the actual latest PDF (arxiv.org/pdf/2504.19467v4, 6.4 MB, confirmed v4 dated 29 Mar 2026 from the abstract page listing v1 28 Apr 2025, v2 1 May 2025, v3 28 Oct 2025, v4 29 Mar 2026), extracted text with pdftotext -layout, and read the results body plus Supplementary Tables S3 and S6. Also confirmed the paper is now peer reviewed in Nature Biomedical Engineering (s41551-026-01719-2), so source quality is not the problem.\n\nWHAT HOLDS. Both supporting quotes are verbatim in the v4 body. Line 379: \"MedGemma-27B-it outperformed the Gemma-3-27B-it (40.8 [40.0 to 41.6] > 39.9 [39.1 to 40.7], p=0.12).\" Line 632: \"Among these, MedGemma-27B-it demonstrated the broadest versatility, ranking first in 3 clinical specialties and achieving the highest average score across specialties (44.7), placing 14th among all 95 models.\" Section header \"Domain-specialized LLMs demonstrated promising yet inconsistent trends\" confirmed. 87 tasks (from 59 datasets, nine languages), 95 LLMs confirmed. Methods (line 1326 onward): bootstrap, 1,000 resamples, two sided significance test, so p=0.12 is genuinely non significant at conventional alpha. Table S3 row confirms 40.8 [40.0, 41.6 [...truncated]",
+    "I downloaded the full arXiv v4 PDF (https://arxiv.org/pdf/2504.19467v4, 6.4 MB, extracted with pdftotext -layout) and parsed the supplementary tables programmatically, so the checks below are against the paper body and its 95-row tables, not the abstract.\n\nWHAT VERIFIES. The quoted sentences are verbatim and the raw numbers are right. Body text: \"Domain-specialized LLMs demonstrated promising yet inconsistent trends. For instance, MedGemma-27B-it outperformed the Gemma-3-27B-it (40.8 [40.0 to 41.6] > 39.9 [39.1 to 40.7], p=0.12).\" Table S3 confirms medgemma-27b-it zero-shot 40.8 [40.0, 41.6] and gemma-3-27b-it zero-shot 39.9 [39.1, 40.7]. Methods state bootstrap CIs (1,000 resamples) and \"pairwise model comparisons were assessed with a two-sided significance test\", so calling p=0.12 non-significant at 0.05 is defensible, though the paper itself writes \"outperformed\" and never uses the word non-significant. 87 tasks and 95 models confirmed. Version metadata confirmed: v1 28 Apr 2025, v2 1 May 2025, v3 28 Oct 2025, v4 29 Mar 2026 (latest). A peer-reviewed version now exists as Nature Biomedical Engineering s41551-026-01719-2; it is paywalled and I could not confirm its numbers are id [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "Standard aggregate accuracy benchmarks systematically hide capability loss: a Qwen 3 80B Next model post-trained on legal data changed by only +0.4% on MMLU-Pro yet lost 16.4% on multilingual robustness (with instruction following +0.7% and verbosity -4.3% reported alongside). This is falsifiable evidence that three MCQ datasets (MedQA, MedMCQA, PubMedQA) cannot detect capability regression.",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2603.06610",
+   "title": "CapTrack: Multifaceted Evaluation of Forgetting in LLM Post-Training (Thede, Winzeck, Akata, Schwarz; arXiv:2603.06610, 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-02-19 (v1); revised 2026-05-22 (v2)",
+   "quote": "",
+   "refutationEvidence": [
+    "WHAT I CHECKED. Fetched the abstract page (arxiv.org/abs/2603.06610 and /abs/2603.06610v1), then downloaded the full v2 HTML (arxiv.org/html/2603.06610v2, 534 KB) and extracted the text with math alttext preserved, because the percentages sit inside math tags and vanish from a naive tag strip. Grepped the full body, not just the abstract. Also ran two web searches for critiques and for contradicting medical-benchmark evidence.\n\nWHAT HOLDS UP. The paper is real: \"CapTrack: Multifaceted Evaluation of Forgetting in LLM Post-Training\", Thede, Winzeck, Akata, Schwarz, v1 2026-02-19, v2 2026-05-22, matching the cited dates. The supporting quote is verbatim and all four numbers are exactly right in v2: \"a Qwen 3 80B Next model post-trained on legal data may appear stable on standard benchmarks, with negligible changes in factual accuracy (+0.4% on MMLU-Pro) and instruction-following scores (+0.7% on IFEval), yet exhibits substantial degradation in other capabilities such as multilingual robustness (-16.4%) and verbosity (-4.3%).\" No numbers were revised between versions and no critique of the paper surfaced. The paper's core thesis, that accuracy-centric evaluation of forgetting is insuff [...truncated]",
+    "WHAT I CHECKED. Fetched the abs page (arxiv.org/abs/2603.06610), the v1 HTML, and the v2 HTML, plus two web searches for critical commentary.\n\nWHAT HOLDS UP. The source is real and correctly cited: \"CapTrack: Multifaceted Evaluation of Forgetting in LLM Post-Training\", Thede, Winzeck, Akata, Schwarz, v1 2026-02-19, v2 2026-05-22, matching the claim's metadata. The supporting quote is verbatim from the Introduction and all four numbers are correct in both v1 and v2: \"+0.4% on MMLU-Pro\", \"+0.7% on IFEval\", multilingual robustness -16.4%, verbosity -4.3%. Model name \"Qwen 3 80B Next\" is the paper's own wording. So the claim is not refuted on numbers, source existence, or currency.\n\nWHY IT IS STILL REFUTED (interpretation). Four independent problems, the first decisive:\n\n1. The paper's own results contradict \"cannot detect\". Section 4.2 reports: \"Parametric knowledge (C1) is largely preserved under DPO, whereas IFT induces moderate to major forgetting (e.g., -4.3% for Llama, -11.3% for Gemma), driven primarily by math and code benchmarks.\" Table 2 lists C1 as measured by MMLU-Pro, PopQA, GSM8K, LiveMathBench, HumanEval, MBPP, i.e. exactly the accuracy/MCQ style instruments the claim sa [...truncated]"
+   ],
+   "confirmationEvidence": []
+  },
+  {
+   "claim": "Medmarks reports that medically fine-tuned models DO beat their own base models, with body-level mean win rates: Gemma 3 4B 0.321 rising to MedGemma 4B 0.378 and MedGemma 4B 1.5 0.376; Gemma 3 27B 0.461 rising to MedGemma 27B 0.502; Ling Flash 2.0 0.517 rising to AntAngelMed 0.552. This complicates the contested premise from Jeong et al. 2024 (medical LLMs won only 26.7% of fair comparisons) using precisely the Gemma 3 family, and it also reveals a MedGemma 4B 1.5 release that supersedes arXiv:2507.05201.",
+   "verdict": "refuted",
+   "vote": "0-3",
+   "source": "https://arxiv.org/abs/2605.01417",
+   "title": "Medmarks: A Comprehensive Open-Source LLM Benchmark Suite for Medical Tasks (Warner, Grandhi, Kieffer, Ouraq, Panigrahi et al.; arXiv:2605.01417, May 2026)",
+   "sourceQuality": "primary",
+   "publishDate": "2026-05-02",
+   "quote": "",
+   "refutationEvidence": [
+    "I downloaded the actual PDF of arXiv:2605.01417v1 (Medmarks, Warner et al., submitted 2 May 2026, only v1 exists) and extracted the full text with pdftotext, then checked the body, Table 3, Table 4, Table 5 and Appendix G.\n\nWHAT HOLDS. The supporting quote is verbatim in the paper, Section 3.5, page 6. All seven numbers are exactly right against Table 4 (\"All models by mean win rate on MEDMARKS-V\", Appendix B): Gemma 3 4B 0.3214, MedGemma 4B 0.3779, MedGemma 4B 1.5 0.3759, Gemma 3 27B 0.4610, MedGemma 27B 0.5024, Ling Flash 2.0 0.5174, AntAngelMed 100B 0.5524. The abstract does conclude \"medically fine-tuned models outperform their generalist counterparts.\" So the descriptive half of the claim is sound.\n\nWHY THE INTERPRETATION FAILS.\n\n1. These are not fair comparisons in Jeong et al.'s sense, so they cannot complicate a finding about fair comparisons. Section 2 states \"All language models were evaluated using their officially recommended sampling parameters.\" Appendix G's parameter table shows the consequence: MedGemma 4B and MedGemma 27B ran at Temp 0.0, top p 1.0, top k 0 (greedy), MedGemma 4B 1.5 at Temp 0.0, top p 0.95, top k 64 (greedy), while Gemma 3 4B, 12B and 27B all ran a [...truncated]",
+    "WHAT I CHECKED. Fetched arxiv.org/abs/2605.01417, the HTML full text, and the 7.5 MB PDF, which I extracted locally with pdftotext (2624 lines) and grepped directly rather than trusting a summarizer. Also extracted Jeong et al. locally and fetched both Jeong papers.\n\nWHAT HOLDS UP. The supporting quote is verbatim in Section 3.5 (PDF lines 351 to 354). All seven numbers are exactly right against Table 4 (\"All models by mean win rate on MEDMARKS-V\"): Gemma 3 4B 0.3214, MedGemma 4B 0.3779, MedGemma 4B 1.5 0.3759, Gemma 3 27B 0.4610, MedGemma 27B 0.5024, Ling Flash 2.0 0.5174, AntAngelMed 100B 0.5524. The paper's abstract (\"medically fine-tuned models outperform their generalist counterparts\"), key finding (4) (\"medical fine-tuning yields near-Pareto improvements over base models\"), and Section 3.5 all assert the headline. Only v1 exists (submitted 2 May 2026), so not superseded. The 26.7 percent Jeong figure is real: it is not in arXiv:2411.04118 (that abstract says 12.1 / 49.8 / 38.2), but it IS in the extended paper arXiv:2411.08870, for clinical-note QA at 3-shot (26.7 win / 16.7 tie / 56.7 loss). So the number is not fabricated, though 26.7 percent is Jeong's most medical-favorab [...truncated]"
+   ],
+   "confirmationEvidence": []
+  }
+ ]
+}

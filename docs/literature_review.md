@@ -4,6 +4,10 @@
 **Status:** Working document. Sections 3 (CPT) and 7 (data selection) are the seed; dataset
 sections are for their owners to extend. See [contributing.md](contributing.md) for who owns what.
 
+**Newer findings:** [research_update_2026-08.md](research_update_2026-08.md) carries the August 2026
+research pass, including reworded Gap 1 and Gap 2 claims and the experiment decisions that follow.
+Read it alongside sections 7 to 10; where the two disagree, the update is newer.
+
 ---
 
 ## Contents
@@ -387,10 +391,10 @@ cannot use MIMIC-IV-style credentialed data. Four are concrete and usable now:
 
 | Benchmark | Capability covered | Access | Headroom in 2026 |
 |---|---|---|---|
-| HealthBench [Op25] | Open-ended clinical response quality, safety, communication | CC BY-4.0, github.com/openai/simple-evals | Main split moved 16% to 60% in two years; HealthBench Hard still sits at 32% for the best model at release, so it has not saturated |
-| BRIDGE [Wu25] | Information extraction, ICD-10 coding, summarisation, NLI, classification | Open, 87 tasks over 59 real clinical text datasets | ICD-10 coding accuracy around 15%, generation tasks around 20%, large headroom |
+| HealthBench [Op25] | Open-ended clinical response quality, safety, communication | **MIT**, github.com/openai/simple-evals; data file downloadable without auth | Main split moved 16% to 60% in two years; HealthBench Hard still sits at 32% for the best model at release, so it has not saturated |
+| BRIDGE [Wu25] | Information extraction, ICD-10 coding, summarisation, NLI, classification, plus diagnosis and temporal reasoning | 87 tasks over 59 real clinical text datasets, but only **55 openly redistributable** (BRIDGE-Open); the rest need standardized request or PhysioNet credentials | ICD-10 coding accuracy around 15%, generation tasks around 20%, large headroom |
 | ACI-Bench [Yi23] | Clinical summarisation (visit-note generation from dialogue) | CC BY 4.0, no credentialing, Figshare DOI 10.6084/m9.figshare.22494601 | Only 207 dialogue-note pairs total (40 per test split), too small to power a regression benchmark; usable as a qualitative probe only |
-| Medmarks [Wa26] | QA, information extraction, medical calculation, open-ended reasoning | Open, 30 benchmarks, includes an RL-trainable split (Medmarks-T) | Reports the MultiMedQA suite (MedQA, MedMCQA, PubMedQA's core) as mostly saturated, which independently confirms why this section exists |
+| Medmarks [Wa26] | QA, information extraction, medical calculation, open-ended reasoning | Open, 30 benchmarks, includes an RL-trainable split (Medmarks-T) | Calls the MultiMedQA suite "mostly saturated" **for frontier models**, but its own difficulty table puts MedMCQA at 0.656 and MedQA at 0.784 in the moderate tier, not the near-ceiling cluster, and it keeps all three in Medmarks-V and Medmarks-T. See the correction in [research_update_2026-08.md](research_update_2026-08.md) |
 
 Two more are worth knowing about without adopting outright: LiveMedBench [Yn26] refreshes weekly
 from real clinical cases specifically to stay contamination-free, at the cost of being a moving

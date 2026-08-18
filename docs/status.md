@@ -3,7 +3,11 @@
 Where the project stands at the end of stage 1, what to look at in review, and what is
 deliberately still open. Read this before the team review; it is the map to everything else.
 
-Last updated 2026-07-29.
+Last updated 2026-08-18.
+
+**Newest document:** [research_update_2026-08.md](research_update_2026-08.md) is an adversarial
+verification audit of the July research pass. It corrects three access-terms errors, records five
+misreadings to avoid, and adds four references. Read it before citing the 2025-2026 work.
 
 ---
 
@@ -61,12 +65,21 @@ Animesh, Arkajyoti, Srinjoy) and were deliberately left for each owner to extend
 ### 1. Two citations need a human read before the gap analysis is defended
 
 `[He26]` (arXiv:2606.04466) and `[Ya26]` (arXiv:2507.15640) are the two papers that narrowed Gap 1
-and Gap 2 in Section 8. Their findings are recorded in the review, but nobody on the team has read
-either primary source in full. **These reshape the project's novelty claim, so read them before
-presenting it.** If either says something other than what Section 8 reports, the gap analysis needs
-revising, not the citation.
+and Gap 2 in Section 8. **These reshape the project's novelty claim, so read them before
+presenting it.**
+
+**Partly discharged, 2026-08-18.** The August verification pass had three independent adversarial
+readers fetch each primary source and check every number against the paper body. Both confirmed
+3-0, so the gap analysis is no longer resting on an unread source. See
+[research_update_2026-08.md](research_update_2026-08.md) section 1. A human read is still worth
+doing before the defence, but it is now a confirmation rather than a risk.
 
 ### 2. Non-MCQ benchmark integration
+
+**Access terms corrected 2026-08-18.** HealthBench is MIT, not CC BY-4.0, and BRIDGE ships only 55
+of its 87 tasks openly. Also, the Medmarks "saturated" line does not apply at this project's model
+scale, so MedQA, MedMCQA and PubMedQA remain usable. Details in
+[research_update_2026-08.md](research_update_2026-08.md) section 2.
 
 The proposal claims six clinical capabilities; MedQA, MedMCQA and PubMedQA measure roughly one and
 a half. Section 6.5 of the review names four open, non-credentialed candidates with access terms

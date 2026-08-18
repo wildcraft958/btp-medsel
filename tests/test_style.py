@@ -14,7 +14,16 @@ DASHES = {chr(0x2013): "en dash", chr(0x2014): "em dash"}
 
 TEXT_SUFFIXES = {".py", ".md", ".yaml", ".yml", ".toml", ".bib", ".cfg", ".txt"}
 
-SKIP_DIRS = {".git", ".venv", ".ruff_cache", "__pycache__", "data", "runs", "fixtures"}
+SKIP_DIRS = {
+    ".git",
+    ".venv",
+    ".ruff_cache",
+    "__pycache__",
+    "data",
+    "runs",
+    "fixtures",
+    ".playwright-mcp",
+}
 
 
 def _text_files() -> list[Path]:
