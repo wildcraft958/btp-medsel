@@ -29,6 +29,7 @@ hardware.
 | Selection interface, top-k and stratified selectors | done |
 | Scorers: `random`, `length`, `dsir`, `perplexity` | done, all four verified on GPU |
 | `medsel select` command writing a reproducible manifest | done |
+| Streaming selection for pools larger than memory | done, `--stream` |
 | TracIn scorer | not ported, spec in [tracin_port.md](tracin_port.md) |
 | PubMed to PubMedQA contamination filter | done, opt-in via `exclude_pmids` |
 | Literature review and dataset reference | done, refreshed with 2025-2026 work |
@@ -49,6 +50,7 @@ and teach the model nothing), but they are reproducible in minutes:
 | Select | `dsir` on 300 PubMed docs, target MedMCQA | pool mean 0.086 against selected mean 3.296 | seconds |
 | Select | `perplexity mode=mid` on 300 PubMed docs | selected scores cluster at the pool median, as the mode intends | seconds |
 | Select | `length` on 600 MedMCQA, stratified by subject | all 21 subjects retained at `min_per_group=1`, none dropped | seconds |
+| Select | `length` on 55,997 PubMed docs, in memory against `--stream` | identical uids; 270 MB against 133 MB peak RSS | 24 s against 4 s |
 
 Neither loss means anything about model quality. They exist to prove the path runs. Both smoke
 configs are named `_cpu` but are device agnostic: they picked up the GPU with no edit, which is what
@@ -158,8 +160,9 @@ is a design decision the team should make together rather than one person pickin
   the three design decisions worth preserving and the reason to run the cheap baselines first.
 - **`embed_similarity`**, cosine to the target-set centroid. Uses base-model hidden states, so it
   needs no new dependency. The cheapest remaining port.
-- **Streaming selection.** `medsel select` holds the pool in memory. Correct at current sizes,
-  will not hold 23.9M PubMed documents, and is a precondition for TracIn at full scale.
+Streaming selection is **done**: `medsel select --stream` keeps memory proportional to the budget
+rather than the pool. Measured at 270 MB against 133 MB on a 56k document pool, with identical
+selected uids, and the gap widens linearly with pool size.
 
 ### 4. Three selection and evaluation improvements the 2026 literature now supports
 

@@ -128,8 +128,14 @@ That writes a manifest carrying the provenance to reproduce the subset plus a sc
 the summary first: if the selected mean sits on top of the pool mean, the scorer did not
 discriminate and nothing downstream will mean anything.
 
-Selection is in memory. That is fine at current pool sizes and will not hold the full PubMed
-corpus; see [tracin_port.md](tracin_port.md) for what streaming would need.
+For a pool larger than memory, add `--stream`: it scores in chunks and keeps a bounded heap, so
+memory follows the budget rather than the pool. It returns the same subset as the in-memory path,
+which the equivalence tests assert. Streaming needs a whole-number budget, because a fraction of the
+pool is not defined until the stream ends and the records it would have kept are gone by then.
+
+If your scorer's score is relative to the pool, put that state in `fit` rather than in `score`.
+Fitting inside `score` makes each chunk its own reference frame and the scores incomparable
+between chunks.
 
 ## House rules
 

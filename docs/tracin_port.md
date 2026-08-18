@@ -64,25 +64,22 @@ in what is being measured, not a refinement.
 1. **A checkpoint trajectory.** Our CPT stage saves checkpoints but does not record the learning
    rate at each save, so the `w_t` weights cannot be recovered afterwards. Recording it during
    training is a small change and should happen before anyone needs it.
-2. **A fit phase.** `Scorer.score(records)` receives everything in one call and holds no state
-   between calls. That is fine for `dsir` and `perplexity`, which fit in the same call, but TracIn
-   has to load a model per checkpoint and that loop must sit outside any per-batch loop. The
-   original solves this with `fit(ctx)` plus `score_pool(ctx)` and a `SelectionContext` carrying
-   cache paths.
-3. **A gradient cache.** Extraction is the expensive step and must survive a crash. The original
-   caches projected gradients keyed on checkpoint and shard.
+2. **A gradient cache.** Extraction is the expensive step and must survive a crash. The original
+   caches projected gradients keyed on checkpoint and shard. Nothing here does that yet.
+
+`Scorer.fit` and the chunked scoring loop already exist, so the checkpoint loop has somewhere to
+live that is outside the per-chunk work. That was the largest structural gap and it is closed.
 
 ## Suggested order
 
 1. Record the learning rate in the CPT stage's checkpoint metadata. Independently useful, small.
-2. Add an optional `fit(records)` hook to `Scorer`, defaulting to a no-op. Existing scorers are
-   unaffected; TracIn gets somewhere to put the checkpoint loop.
-3. Port `projection.py` and `adam.py` first. Both are self-contained and unit testable against
+2. Port `projection.py` and `adam.py` first. Both are self-contained and unit testable against
    known matrices without any model, so they are the cheap half.
-4. Port `grads.py` against a tiny LoRA model, and test it the only way that means anything: compare
+3. Port `grads.py` against a tiny LoRA model, and test it the only way that means anything: compare
    the hook-derived per-example gradients against a loop of single-example backward passes. If
    those do not match to tolerance, nothing downstream is worth running.
-5. Only then wire up the scorer.
+4. Add the gradient cache before running anything at full scale, not after the first crash.
+5. Only then wire up the scorer, putting the checkpoint loop in `fit`.
 
 ## Cost, which is the real blocker
 
@@ -100,12 +97,27 @@ improve on. If they do not, that is the more interesting finding and it cost day
 
 ---
 
-## A limitation this repo has today
+## Streaming already exists
 
-Selection is **in memory**: `medsel select` loads the records, scores them all in one call, and
-applies the budget. That is correct for the pool sizes used so far and it keeps the interface small,
-but it will not hold the full 23.9M document PubMed corpus. The original streams parquet shards for
-exactly this reason.
+`medsel select --stream` scores in chunks and keeps a bounded heap, so memory follows the budget
+rather than the pool. Measured on the lab box with the `length` scorer:
 
-Anyone scaling past what fits in RAM should add streaming rather than raise the machine's memory,
-and that change is a precondition for TracIn at full pool size, not a separate nicety.
+| Pool | In memory | Streaming |
+|---|---|---|
+| 15,312 documents | 151 MB | 130 MB |
+| 55,997 documents | 270 MB | 133 MB |
+
+In-memory grows at roughly 2.6 KB per document, which extrapolates to about 62 GB for the full
+23.9M corpus, more than the machine has. Streaming is flat. The selected uids are identical between
+the two paths, which is asserted in `tests/test_selection_stream.py` and was confirmed on real
+PubMed shards.
+
+**What this means for TracIn.** The per-chunk scoring loop and the `Scorer.fit` hook are already
+there, so the missing piece is narrower than it was: TracIn needs the checkpoint loop to sit
+*outside* the chunk loop, which `fit` gives it a place to do, plus a gradient cache keyed on
+checkpoint and chunk so an interrupted extraction resumes instead of restarting.
+
+One caveat inherited from the streaming design: the fit sample is the first `fit_size` records
+rather than a uniform sample. Fine for shard-sampled PubMed, wrong for a corpus ordered by date or
+journal. A TracIn probe set is chosen rather than sampled, so this does not affect it directly, but
+any pool statistic it depends on carries the same assumption.

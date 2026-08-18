@@ -42,6 +42,10 @@ uv run medsel select --source pubmed --scorer dsir --budget 0.1 \
 # Keep a spread across every MedMCQA subject rather than a global top-k.
 uv run medsel select --source medmcqa --split train --scorer length --budget 0.1 \
   --limit 600 --stratify-by subject_name --min-per-group 1
+
+# Same selection, from a pool too large to hold in memory.
+uv run medsel select --source pubmed --scorer dsir --budget 5000 --stream \
+  --loader num_shards=8 --scorer-arg target=medmcqa
 ```
 
 Everything long-running shows a `tqdm` progress bar: dataset normalisation, PubMed shard
@@ -118,6 +122,7 @@ the review with `uv pip install markdown && uv run python scripts/build_pdf.py` 
 | MCQ evaluator with per-subject breakdown | done |
 | Selection interface + `random`, `length`, `dsir`, `perplexity` scorers | done |
 | `medsel select` with top-k and stratified budgets | done, verified on GPU |
+| Streaming selection for pools larger than memory | done, `--stream` |
 | Literature review + docs | done |
 | SFT stage | done, verified end to end on CPU and GPU |
 | Preference optimisation | stub, blocked on constructing medical preference pairs |
