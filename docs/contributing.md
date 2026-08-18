@@ -137,6 +137,20 @@ If your scorer's score is relative to the pool, put that state in `fit` rather t
 Fitting inside `score` makes each chunk its own reference frame and the scores incomparable
 between chunks.
 
+Whether streaming is exact depends on what the scorer fits, so it is worth knowing which one you
+are using:
+
+| Scorer | What `fit` depends on | Exact under `--stream` |
+|---|---|---|
+| `random`, `length` | nothing | yes |
+| `perplexity` `low` and `high` | nothing, both are monotone in the likelihood | yes |
+| `embed_similarity` | the target only, never the pool | yes, at any `--fit-size` |
+| `dsir` | a background distribution fitted over the pool | only if the fit sample is representative |
+| `perplexity` `mid` | the pool median | only if the fit sample is representative |
+
+For the last two, `--fit-size` is the knob that matters, and the sample is the first N records
+rather than a uniform draw. Shuffle the source if its order relates to content.
+
 ## House rules
 
 **Verify against the data, not the docs.** Every dataset trap in

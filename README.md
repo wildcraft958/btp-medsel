@@ -120,7 +120,7 @@ the review with `uv pip install markdown && uv run python scripts/build_pdf.py` 
 | PubMed CPT corpus loader + packing | done |
 | CPT training stage | done, verified end to end on CPU and GPU |
 | MCQ evaluator with per-subject breakdown | done |
-| Selection interface + `random`, `length`, `dsir`, `perplexity` scorers | done |
+| Selection interface + `random`, `length`, `dsir`, `perplexity`, `embed_similarity` scorers | done |
 | `medsel select` with top-k and stratified budgets | done, verified on GPU |
 | Streaming selection for pools larger than memory | done, `--stream` |
 | Literature review + docs | done |

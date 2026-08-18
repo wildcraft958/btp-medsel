@@ -3,9 +3,13 @@
 A specification for the one selection method from the parallel CPT work that has not been ported.
 It is written so that whoever picks it up does not have to rediscover the design.
 
-`dsir` and `perplexity` are already in `src/medsel/selection/scorers/`. TracIn is not, because it
-is not a scorer with a different formula. It needs a training trajectory, per-example gradients and
-a caching layer, none of which the current interface has.
+`dsir`, `perplexity` and `embed_similarity` are already in `src/medsel/selection/scorers/`. TracIn
+is not, because it is not a scorer with a different formula. It needs a training trajectory,
+per-example gradients and a caching layer, none of which the current interface has.
+
+`embed_similarity` is worth noting here specifically: it ranks by cosine to the target centroid in
+the model's own representation space, which is the cheap non-gradient version of the same question
+TracIn asks. It is the baseline TracIn has to beat to justify its cost.
 
 ---
 
@@ -32,7 +36,7 @@ statistics, which is why it is worth the cost.
 | `grads.py` | Exact per-example LoRA gradients from **one** batched backward pass, via forward and grad hooks |
 | `projection.py` | Per-tensor Johnson-Lindenstrauss projection, so gradients fit in memory |
 | `adam.py` | Read `optimizer.pt` and turn raw gradients into Adam update directions |
-| `target_set.py` | Build the probe set |
+| `target_set.py` | Build the probe set. **Not needed:** `TargetedScorer` in `selection/targets.py` already does this from our loaders, with the split guard attached |
 
 `grads.py` is the subtle one. Per-example gradients normally mean one backward pass per example,
 which is unaffordable. It hooks the LoRA modules and reconstructs each example's gradient from the
