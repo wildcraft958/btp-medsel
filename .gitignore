@@ -20,6 +20,7 @@ build/
 
 # Tooling / personal
 .claude/
+/.playwright-mcp/
 gotchas.md
 .env
 .DS_Store
