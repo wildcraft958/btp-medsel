@@ -151,7 +151,13 @@ people do not pick the same item.
   `exclude_pmids: pubmedqa` in your CPT experiment's `loader:` block, or any PubMedQA number from
   the resulting model measures nothing.
 - `transformers` 5.x renamed `torch_dtype` → `dtype` and `Trainer(tokenizer=)` →
-  `processing_class=`.
+  `processing_class=`. 5.15 also removed `TrainingArguments.warmup_ratio`: pass `warmup_steps`,
+  which reads a float as a ratio of total steps. On 5.14 the old argument is accepted and then
+  ignored, so warmup silently does nothing rather than failing loudly.
+- **Never call `torch.cuda.is_bf16_supported()` directly.** It returns `True` on the lab P5000,
+  which has no bf16 hardware, because it counts an emulation path. Go through `resolve_dtype` and
+  `autocast_flags` in `medsel.utils.device`, which gate on compute capability. A training stage
+  must not decide precision for itself.
 - Gemma weights are licence-gated: `hf auth login` and accept the licence before using
   `configs/model/gemma3_1b.yaml`.
 

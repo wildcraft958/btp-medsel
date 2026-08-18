@@ -3,11 +3,16 @@
 Where the project stands at the end of stage 1, what to look at in review, and what is
 deliberately still open. Read this before the team review; it is the map to everything else.
 
-Last updated 2026-08-18.
+Last updated 2026-08-19.
 
 **Newest document:** [research_update_2026-08.md](research_update_2026-08.md) is an adversarial
 verification audit of the July research pass. It corrects three access-terms errors, records five
 misreadings to avoid, and adds four references. Read it before citing the 2025-2026 work.
+
+**Newest result:** the project now has GPU access, and both training stages plus the evaluator have
+been run on it. There is a committed base-model control in [../results/](../results/). See
+[Running on the lab GPU](#running-on-the-lab-gpu) for the two bugs that only appeared on real
+hardware.
 
 ---
 
@@ -18,8 +23,8 @@ misreadings to avoid, and adds four references. Read it before citing the 2025-2
 | Core schema, registry, parquet cache, disk guard | done |
 | MedQA / MedMCQA / PubMedQA / PubMed loaders | done |
 | Sequence packing | done |
-| CPT training stage | done, verified end to end on CPU |
-| SFT training stage | done, verified end to end on CPU |
+| CPT training stage | done, verified end to end on CPU and GPU |
+| SFT training stage | done, verified end to end on CPU and GPU |
 | MCQ evaluator with per-subject breakdown | done |
 | Selection interface, `random` and `length` scorers, top-k and stratified selectors | done |
 | PubMed to PubMedQA contamination filter | done, opt-in via `exclude_pmids` |
@@ -27,18 +32,24 @@ misreadings to avoid, and adds four references. Read it before citing the 2025-2
 | Preference optimisation (`stages/align.py`) | stub, see open items |
 | lm-evaluation-harness adapter (`eval/harness_adapter.py`) | stub, see open items |
 
-348 tests, all offline. `uv run pytest` needs no network and no GPU.
+369 tests, all offline. `uv run pytest` needs no network and no GPU.
 
-**Pipeline verification evidence.** Both training stages were run end to end on CPU before this
-review. The checkpoints themselves were deleted afterwards (they are gitignored, 2 GB each, and
-teach the model nothing), but they are reproducible in minutes:
+**Pipeline verification evidence.** Both training stages have been run end to end on CPU and again
+on the lab GPU. The checkpoints themselves were deleted afterwards (they are gitignored, 2 GB each,
+and teach the model nothing), but they are reproducible in minutes:
 
-| Run | Config | Result |
-|---|---|---|
-| CPT | `configs/experiment/smoke_cpu.yaml` | 522 blocks packed from 500 documents, 20 steps, loss 2.904 to 2.833 |
-| SFT | `configs/experiment/sft_smoke_cpu.yaml` | 200 MedMCQA examples, 20 steps, train_loss 0.9493 |
+| Run | Config | Result | GPU time |
+|---|---|---|---|
+| CPT | `configs/experiment/smoke_cpu.yaml` | 522 blocks packed from 500 documents, 20 steps, loss 2.954 to 2.833 | 24.6 s |
+| SFT | `configs/experiment/sft_smoke_cpu.yaml` | 200 MedMCQA examples, 20 steps, train_loss 0.9493 | 25.3 s |
+| Eval | `Qwen/Qwen3-0.6B-Base`, three tasks | base-model control, see [../results/](../results/) | ~25 min |
 
-Neither number means anything about model quality. They exist to prove the path runs.
+Neither loss means anything about model quality. They exist to prove the path runs. Both smoke
+configs are named `_cpu` but are device agnostic: they picked up the GPU with no edit, which is what
+`dtype: auto` and the portable-by-default design were for.
+
+The CPT run packed the same 522 blocks and the SFT run reported the same `train_loss` of 0.9493 on
+both devices, which is the reproducibility check worth having.
 
 ---
 
@@ -57,6 +68,50 @@ Suggested reading order for someone seeing this repo for the first time:
 
 **Sections 6.1 to 6.4 of the literature review are owned by their dataset owners** (Debmalya,
 Animesh, Arkajyoti, Srinjoy) and were deliberately left for each owner to extend.
+
+---
+
+## Running on the lab GPU
+
+The GPU is a **Quadro P5000, 16 GB, compute capability 6.1**. Pascal, from 2016, and its age is not
+a detail. It has no tensor cores, an `ollama` service holds about 5.5 GB of its VRAM
+persistently, and the machine has no sudo and no git.
+
+**The working stack, established by running it rather than by reading pins:**
+
+| Package | Version | Why this one |
+|---|---|---|
+| torch | 2.6.0+cu126 | The cu128 wheels dropped Pascal. This is the newest build that runs here. |
+| transformers | 5.15.0 | Coexists with torch 2.6 despite the newer torch it normally ships beside. |
+| trl / peft / datasets | 1.10.0 / 0.20.0 / 5.0.1 | No conflicts. |
+
+### Two bugs that only appeared on real hardware
+
+Both had passed the full offline suite and both were silent rather than loud, which is the argument
+for running the pipeline on the target machine before trusting any result from it.
+
+**`torch.cuda.is_bf16_supported()` returns `True` on this card.** It counts an emulation path, so
+`dtype: auto` was selecting bf16 on hardware with no bf16 in it. The dtype rule now gates on compute
+capability: bf16 from Ampere (8.0), fp16 back to Volta (7.0) where half precision still has tensor
+cores behind it, fp32 below that. On this GPU `auto` correctly resolves to **fp32**, which is also
+the conclusion the parallel project on the same box reached independently.
+
+**Both training stages set `fp16=True` whenever bf16 was unavailable**, duplicating a precision
+decision that belongs in one place. On Pascal that selects fp16 on a card where fp16 throughput is a
+fraction of fp32. Stages now call `autocast_flags` next to `resolve_dtype`, so a stage cannot
+contradict the dtype rule.
+
+Separately, `transformers` 5.15 removed `TrainingArguments.warmup_ratio`, which crashed the stage on
+construction. `warmup_steps` takes a float as a ratio and replaces it. On 5.14 the old argument was
+still accepted but `get_warmup_steps` never read it, so **configured warmup had been silently doing
+nothing** there too.
+
+### Deploying
+
+The box is a run target, not a development machine: one-way `rsync`, no git, and `DEPLOYED_COMMIT`
+in the deploy directory records which commit is running. When rsyncing, **anchor the excludes**.
+A bare `--exclude='data'` matches at every level and silently drops `configs/data/` and the whole
+`src/medsel/data/` loader package. This is the same trap the `.gitignore` comment warns about.
 
 ---
 
@@ -129,7 +184,10 @@ into a write-up.
 
 - **Run the base-model control** for every benchmark before any CPT run and commit it as a
   reference result. Per Jeong et al. and its 2026 follow-ups, a CPT result is a delta and a delta
-  needs a control run, not a published number.
+  needs a control run, not a published number. **Done for `Qwen/Qwen3-0.6B-Base`**, committed in
+  [../results/](../results/): MedQA 0.3802 on 1273 items, MedMCQA 0.4117 on 4183, PubMedQA 0.5240
+  on 500, all well clear of chance. Still owed for any other base checkpoint the project trains,
+  and the control has to be rerun whenever the prompt template version changes.
 - **Add bootstrap confidence intervals** to `EvalReport`. MedQA's test split is 1,273 items; a
   1.5-point difference there is inside noise.
 
@@ -148,5 +206,11 @@ Each of these is enforced in code, but they are worth knowing before you write a
   any CPT experiment whose model will be scored on PubMedQA. `cpt_baseline.yaml` already does.
   Without it, that PubMedQA number is not a measurement.
 - **Never commit data.** `data/` and `runs/` are gitignored. A single training run writes gigabytes.
+- **Do not ask torch whether bf16 works.** `torch.cuda.is_bf16_supported()` returns `True` on the
+  lab P5000, which has no bf16 hardware. Go through `resolve_dtype` and `autocast_flags`, never the
+  torch flag directly, and never let a stage decide precision for itself.
+- **`accuracy_norm` equalling `accuracy` is not a bug in `letter` mode.** Every continuation is one
+  option letter, so there is nothing for length normalisation to normalise. The two separate only
+  in `text` mode.
 
 Full list with the underlying evidence in [datasets.md](datasets.md).

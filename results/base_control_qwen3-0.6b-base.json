@@ -1,0 +1,128 @@
+{
+  "model": "Qwen/Qwen3-0.6B-Base",
+  "mode": "letter",
+  "device": "cuda",
+  "results": {
+    "medqa": {
+      "source": "medqa",
+      "split": "test",
+      "model": "Qwen/Qwen3-0.6B-Base",
+      "mode": "letter",
+      "n_scored": 1273,
+      "n_skipped_unlabeled": 0,
+      "accuracy": 0.3802,
+      "accuracy_norm": 0.3802,
+      "template_version": 1,
+      "by_subject": {}
+    },
+    "medmcqa": {
+      "source": "medmcqa",
+      "split": "validation",
+      "model": "Qwen/Qwen3-0.6B-Base",
+      "mode": "letter",
+      "n_scored": 4183,
+      "n_skipped_unlabeled": 0,
+      "accuracy": 0.4117,
+      "accuracy_norm": 0.4117,
+      "template_version": 1,
+      "by_subject": {
+        "Anaesthesia": {
+          "accuracy": 0.2941,
+          "n": 34
+        },
+        "Anatomy": {
+          "accuracy": 0.406,
+          "n": 234
+        },
+        "Biochemistry": {
+          "accuracy": 0.4444,
+          "n": 171
+        },
+        "Dental": {
+          "accuracy": 0.4256,
+          "n": 1318
+        },
+        "ENT": {
+          "accuracy": 0.4906,
+          "n": 53
+        },
+        "Forensic Medicine": {
+          "accuracy": 0.4179,
+          "n": 67
+        },
+        "Gynaecology & Obstetrics": {
+          "accuracy": 0.3884,
+          "n": 224
+        },
+        "Medicine": {
+          "accuracy": 0.4,
+          "n": 295
+        },
+        "Microbiology": {
+          "accuracy": 0.3525,
+          "n": 122
+        },
+        "Ophthalmology": {
+          "accuracy": 0.3966,
+          "n": 58
+        },
+        "Orthopaedics": {
+          "accuracy": 0.35,
+          "n": 20
+        },
+        "Pathology": {
+          "accuracy": 0.4362,
+          "n": 337
+        },
+        "Pediatrics": {
+          "accuracy": 0.3504,
+          "n": 234
+        },
+        "Pharmacology": {
+          "accuracy": 0.4321,
+          "n": 243
+        },
+        "Physiology": {
+          "accuracy": 0.4737,
+          "n": 171
+        },
+        "Psychiatry": {
+          "accuracy": 0.25,
+          "n": 16
+        },
+        "Radiology": {
+          "accuracy": 0.4058,
+          "n": 69
+        },
+        "Skin": {
+          "accuracy": 0.2941,
+          "n": 17
+        },
+        "Social & Preventive Medicine": {
+          "accuracy": 0.4341,
+          "n": 129
+        },
+        "Surgery": {
+          "accuracy": 0.3767,
+          "n": 369
+        },
+        "Unknown": {
+          "accuracy": 0.5,
+          "n": 2
+        }
+      }
+    },
+    "pubmedqa": {
+      "source": "pubmedqa",
+      "split": "train[:500]",
+      "model": "Qwen/Qwen3-0.6B-Base",
+      "mode": "letter",
+      "n_scored": 500,
+      "n_skipped_unlabeled": 0,
+      "accuracy": 0.524,
+      "accuracy_norm": 0.524,
+      "template_version": 1,
+      "by_subject": {}
+    }
+  }
+}

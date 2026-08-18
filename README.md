@@ -89,6 +89,7 @@ See `docs/contributing.md`.
 | [docs/architecture.md](docs/architecture.md) | What the pieces are, why they're separate, where new work attaches |
 | [docs/contributing.md](docs/contributing.md) | Setup, ownership, how to add a loader or scorer |
 | [docs/medsel_literature_review_2026-07.pdf](docs/medsel_literature_review_2026-07.pdf) | The review plus the raw research findings, as one shareable 23-page PDF |
+| [results/](results/) | Committed reference results, currently the `Qwen3-0.6B-Base` base-model control |
 
 The PDF is the version to hand to someone who is not cloning the repo. Rebuild it after editing
 the review with `uv pip install markdown && uv run python scripts/build_pdf.py` (needs Chrome).
@@ -100,11 +101,11 @@ the review with `uv pip install markdown && uv run python scripts/build_pdf.py` 
 | Core schema, registry, parquet cache, disk guard | done |
 | MedQA / MedMCQA / PubMedQA loaders | done |
 | PubMed CPT corpus loader + packing | done |
-| CPT training stage | done, verified end to end on CPU |
+| CPT training stage | done, verified end to end on CPU and GPU |
 | MCQ evaluator with per-subject breakdown | done |
 | Selection interface + baseline scorers | done |
 | Literature review + docs | done |
-| SFT stage | done, verified end to end on CPU |
+| SFT stage | done, verified end to end on CPU and GPU |
 | Preference optimisation | stub, blocked on constructing medical preference pairs |
 | Influence-based scorers (LESS, 3DS, TRAK) | not started |
 | PubMed→PubMedQA contamination filter | done, opt-in via `exclude_pmids` |
