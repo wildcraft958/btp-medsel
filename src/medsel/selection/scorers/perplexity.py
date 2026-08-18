@@ -25,16 +25,21 @@ __all__ = ["PerplexityScorer", "rank_by_mode", "sequence_nll"]
 MODES = ("low", "mid", "high")
 
 
-def rank_by_mode(nll: Sequence[float], mode: str) -> list[float]:
-    """Turn mean token negative log likelihood into a score where higher means keep."""
+def rank_by_mode(nll: Sequence[float], mode: str, median: float | None = None) -> list[float]:
+    """Turn mean token negative log likelihood into a score where higher means keep.
+
+    ``median`` only affects ``mid``. Pass one fitted over the pool when scoring in chunks; without
+    it each chunk becomes its own reference frame and "middle of the distribution" means something
+    different in every chunk.
+    """
     if not nll:
         return []
     if mode == "low":
         return [-value for value in nll]
     if mode == "high":
         return list(nll)
-    median = statistics.median(nll)
-    return [-abs(value - median) for value in nll]
+    centre = statistics.median(nll) if median is None else median
+    return [-abs(value - centre) for value in nll]
 
 
 def sequence_nll(
@@ -91,6 +96,7 @@ class PerplexityScorer(Scorer):
         self.dtype = dtype
         self.progress = progress
         self._loaded: tuple[Any, Any] | None = None
+        self._median: float | None = None
 
     def _model(self) -> tuple[Any, Any]:
         """Load once per scorer. Reuses the evaluator's loader so padding, dtype and device
@@ -101,10 +107,16 @@ class PerplexityScorer(Scorer):
             self._loaded = load_model(self.model_name, dtype=self.dtype)
         return self._loaded
 
-    def score(self, records: Sequence[Any]) -> list[float]:
-        if not records:
-            return []
+    def fit(self, records: Sequence[Any]) -> None:
+        """Fix the pool median that ``mid`` measures distance from.
 
+        Only ``mid`` needs it. ``low`` and ``high`` are monotone in the raw likelihood, so they
+        rank identically whether scored in one call or in chunks.
+        """
+        if self.mode == "mid" and records:
+            self._median = statistics.median(self._negative_log_likelihood(records))
+
+    def _negative_log_likelihood(self, records: Sequence[Any]) -> list[float]:
         from tqdm.auto import tqdm
 
         model, tokenizer = self._model()
@@ -126,7 +138,12 @@ class PerplexityScorer(Scorer):
                     device,
                 )
             )
-        return rank_by_mode(nll, self.mode)
+        return nll
+
+    def score(self, records: Sequence[Any]) -> list[float]:
+        if not records:
+            return []
+        return rank_by_mode(self._negative_log_likelihood(records), self.mode, self._median)
 
     def __repr__(self) -> str:
         return f"PerplexityScorer(model={self.model_name!r}, mode={self.mode!r})"

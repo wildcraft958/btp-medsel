@@ -138,6 +138,9 @@ class DSIRScorer(Scorer):
         self.alpha = alpha
         self.gumbel = gumbel
         self.seed = seed
+        self._pool_model: _BagOfNgrams | None = None
+        self._target_model: _BagOfNgrams | None = None
+        self._rng: random.Random | None = None
 
     def resolve_target_split(self) -> str | None:
         """The split the target text is drawn from, or ``None`` for explicit texts.
@@ -188,27 +191,39 @@ class DSIRScorer(Scorer):
         model.finalize()
         return model
 
-    def score(self, records: Sequence[Any]) -> list[float]:
-        if not records:
-            return []
+    def fit(self, records: Sequence[Any]) -> None:
+        """Fit the target and background distributions over a sample of the pool.
 
+        Both are reference frames for every later score, so they are fitted once. Calling
+        :meth:`score` on a chunk after this reuses them rather than rebuilding a background from
+        the chunk, which would make scores from different chunks incomparable.
+        """
         target_texts = self._target_texts()
         if not target_texts:
             raise ValueError(
                 f"target {self.target!r} produced no text, so there is no distribution to select "
                 "towards"
             )
+        self._target_model = self._fit(target_texts)
+        self._pool_model = self._fit([record_text(record) for record in records])
+        # One generator for the scorer's whole life. A fresh one per chunk would replay the same
+        # noise sequence on every chunk, which correlates the noise with position in the pool.
+        self._rng = random.Random(self.seed)
 
-        pool_texts = [record_text(record) for record in records]
-        target_model = self._fit(target_texts)
-        pool_model = self._fit(pool_texts)
+    def score(self, records: Sequence[Any]) -> list[float]:
+        if not records:
+            return []
 
-        rng = random.Random(self.seed)
+        if self._pool_model is None:
+            self.fit(records)
+        assert self._target_model is not None and self._pool_model is not None
+        rng = self._rng or random.Random(self.seed)
+
         scores: list[float] = []
-        for text in pool_texts:
-            counts = hashed_ngram_counts(text, self.buckets, self.ngram)
+        for record in records:
+            counts = hashed_ngram_counts(record_text(record), self.buckets, self.ngram)
             total = sum(counts.values()) or 1
-            weight = (target_model.loglik(counts) - pool_model.loglik(counts)) / total
+            weight = (self._target_model.loglik(counts) - self._pool_model.loglik(counts)) / total
             if self.gumbel:
                 weight += -math.log(-math.log(rng.random() + 1e-12) + 1e-12)
             scores.append(weight)

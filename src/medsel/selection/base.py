@@ -50,6 +50,19 @@ class Scorer(ABC):
 
     name: ClassVar[str] = ""
 
+    def fit(self, records: Sequence[Any]) -> None:
+        """Build any state that describes the pool as a whole, before scoring begins.
+
+        Most scorers need nothing here and inherit this no-op. It exists for the ones whose score
+        is relative to the pool: a background n-gram distribution, a median perplexity. Those must
+        be fitted once over a sample of the whole pool, because fitting them per chunk would make
+        each chunk its own reference frame and the scores incomparable between chunks.
+
+        Scoring without fitting stays valid: a scorer that needs pool state fits it from the
+        records handed to :meth:`score` when it has not been fitted already.
+        """
+        return None
+
     @abstractmethod
     def score(self, records: Sequence[Any]) -> list[float]:
         """Return one score per record, in input order."""
