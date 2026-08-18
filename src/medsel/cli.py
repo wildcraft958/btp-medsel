@@ -9,11 +9,12 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from pathlib import Path
 from typing import Any
 
 from medsel import __version__
 
-__all__ = ["main", "build_parser"]
+__all__ = ["main", "build_parser", "build_manifest"]
 
 
 def _coerce(value: str) -> Any:
@@ -162,6 +163,96 @@ def cmd_info(args: argparse.Namespace) -> int:
     return 0
 
 
+def build_manifest(
+    *,
+    records: list[Any],
+    scores: list[float],
+    chosen: list[int],
+    source: str,
+    split: str,
+    scorer: str,
+    scorer_args: dict[str, Any],
+    budget: int | float,
+    strategy: str,
+) -> dict[str, Any]:
+    """Describe a selection completely enough to reproduce and to audit it.
+
+    The uids rather than the records: a manifest is meant to be committed and read, and a training
+    run resolves it back through the loader. Score summaries are included because the first
+    question asked of any selection is whether the scorer actually discriminated, and a flat
+    distribution says the answer is no.
+    """
+    summary: dict[str, float] = {}
+    if scores:
+        summary = {
+            "min": min(scores),
+            "max": max(scores),
+            "mean": sum(scores) / len(scores),
+        }
+        if chosen:
+            picked = [scores[i] for i in chosen]
+            summary["selected_min"] = min(picked)
+            summary["selected_max"] = max(picked)
+            summary["selected_mean"] = sum(picked) / len(picked)
+
+    return {
+        "source": source,
+        "split": split,
+        "scorer": scorer,
+        "scorer_args": scorer_args,
+        "budget": budget,
+        "strategy": strategy,
+        "n_candidates": len(records),
+        "n_selected": len(chosen),
+        "score_summary": summary,
+        "selected_uids": [records[i].uid for i in chosen],
+    }
+
+
+def cmd_select(args: argparse.Namespace) -> int:
+    from medsel.registry import get_loader
+    from medsel.selection.base import get_scorer
+    from medsel.selection.selector import select_stratified, select_top_k
+
+    loader = get_loader(args.source, **_parse_kwargs(args.loader))
+    split = args.split or getattr(loader, "eval_split", None) or "train"
+    records = list(loader.load(split, limit=args.limit))
+
+    scorer_args = _parse_kwargs(args.scorer_arg)
+    scorer = get_scorer(args.scorer, **scorer_args)
+    scores = scorer(records)
+
+    if args.stratify_by:
+        groups = [str(getattr(r, "labels", {}).get(args.stratify_by, "unknown")) for r in records]
+        chosen = select_stratified(scores, groups, args.budget, args.min_per_group)
+        strategy = f"stratified:{args.stratify_by}"
+    else:
+        chosen = select_top_k(scores, args.budget)
+        strategy = "top_k"
+
+    manifest = build_manifest(
+        records=records,
+        scores=scores,
+        chosen=chosen,
+        source=args.source,
+        split=split,
+        scorer=args.scorer,
+        scorer_args=scorer_args,
+        budget=args.budget,
+        strategy=strategy,
+    )
+
+    if args.output:
+        path = Path(args.output)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(manifest, indent=2) + "\n")
+        manifest = {**manifest, "written_to": str(path)}
+        manifest.pop("selected_uids", None)
+
+    _emit(manifest)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="medsel", description=__doc__)
     parser.add_argument("--version", action="version", version=f"medsel {__version__}")
@@ -224,6 +315,39 @@ def build_parser() -> argparse.ArgumentParser:
     evaluation.add_argument("--seed", type=int, default=42)
     evaluation.add_argument("--output", help="write the report JSON here")
     evaluation.set_defaults(func=cmd_eval)
+
+    selection = sub.add_parser("select", help="score a pool and choose a subset under a budget")
+    selection.add_argument("--source", required=True, help="loader name, e.g. pubmed")
+    selection.add_argument("--scorer", default="random", help="scorer name, e.g. dsir perplexity")
+    selection.add_argument(
+        "--budget",
+        type=float,
+        default=0.1,
+        help="fraction of the pool to keep, or a whole number to keep exactly that many",
+    )
+    selection.add_argument("--split", help="defaults to the loader's evaluation split")
+    selection.add_argument("--limit", type=int, help="score only the first N records")
+    selection.add_argument(
+        "--loader", nargs="*", metavar="KEY=VALUE", help="loader kwargs, e.g. num_shards=1"
+    )
+    selection.add_argument(
+        "--scorer-arg",
+        nargs="*",
+        metavar="KEY=VALUE",
+        help="scorer kwargs, e.g. target=medmcqa mode=mid",
+    )
+    selection.add_argument(
+        "--stratify-by",
+        help="label key to allocate the budget across, e.g. subject_name",
+    )
+    selection.add_argument(
+        "--min-per-group",
+        type=int,
+        default=0,
+        help="floor of records per group, the capability-retention lever",
+    )
+    selection.add_argument("--output", help="write the selection manifest JSON here")
+    selection.set_defaults(func=cmd_select)
 
     return parser
 
