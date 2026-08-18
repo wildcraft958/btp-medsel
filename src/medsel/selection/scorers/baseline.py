@@ -10,18 +10,9 @@ import random
 from collections.abc import Sequence
 from typing import Any
 
-from medsel.schema import CorpusDoc, QAExample
-from medsel.selection.base import Scorer, register_scorer
+from medsel.selection.base import Scorer, record_text, register_scorer
 
 __all__ = ["RandomScorer", "LengthScorer"]
-
-
-def _text_of(record: Any) -> str:
-    if isinstance(record, CorpusDoc):
-        return record.full_text
-    if isinstance(record, QAExample):
-        return record.question
-    return str(record)
 
 
 @register_scorer("random")
@@ -59,8 +50,8 @@ class LengthScorer(Scorer):
 
     def score(self, records: Sequence[Any]) -> list[float]:
         if self.unit == "words":
-            return [float(len(_text_of(r).split())) for r in records]
-        return [float(len(_text_of(r))) for r in records]
+            return [float(len(record_text(r).split())) for r in records]
+        return [float(len(record_text(r))) for r in records]
 
     def __repr__(self) -> str:
         return f"LengthScorer(unit={self.unit!r})"

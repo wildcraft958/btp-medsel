@@ -17,7 +17,23 @@ from abc import ABC, abstractmethod
 from collections.abc import Callable, Sequence
 from typing import Any, ClassVar, TypeVar
 
-__all__ = ["Scorer", "register_scorer", "get_scorer", "available_scorers"]
+__all__ = ["Scorer", "record_text", "register_scorer", "get_scorer", "available_scorers"]
+
+
+def record_text(record: Any) -> str:
+    """The text a scorer should read from a record, whatever kind of record it is.
+
+    Shared so that two scorers cannot disagree about whether a corpus document means its abstract
+    or its title plus its abstract.
+    """
+    from medsel.schema import CorpusDoc, QAExample
+
+    if isinstance(record, CorpusDoc):
+        return record.full_text
+    if isinstance(record, QAExample):
+        return record.question
+    return str(record)
+
 
 _SCORERS: dict[str, type] = {}
 _discovered = False
