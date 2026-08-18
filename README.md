@@ -32,6 +32,18 @@ uv run medsel train --config configs/experiment/smoke_cpu.yaml    # whole CPT pa
 uv run medsel eval --model runs/smoke-cpu --tasks medmcqa --limit 100
 ```
 
+Selecting a subset, which is what the project is actually about:
+
+```bash
+# Keep the 10% of PubMed that most resembles MedMCQA.
+uv run medsel select --source pubmed --scorer dsir --budget 0.1 \
+  --limit 300 --loader num_shards=1 --scorer-arg target=medmcqa
+
+# Keep a spread across every MedMCQA subject rather than a global top-k.
+uv run medsel select --source medmcqa --split train --scorer length --budget 0.1 \
+  --limit 600 --stratify-by subject_name --min-per-group 1
+```
+
 Everything long-running shows a `tqdm` progress bar: dataset normalisation, PubMed shard
 download, token packing, caching, and evaluation.
 
@@ -66,7 +78,7 @@ src/medsel/
   registry.py     name -> loader, so adding a dataset touches no core file
   data/           per-source loaders, parquet cache, token packing
   stages/         cpt, sft (implemented), align (stub)
-  selection/      Scorer interface + baseline scorers
+  selection/      Scorer interface, scorers, budget and stratified selectors
   eval/           MCQ log-prob evaluator, per-capability breakdown
 configs/          data / model / experiment YAML
 docs/             literature review, architecture, dataset notes, contributing
@@ -88,6 +100,7 @@ See `docs/contributing.md`.
 | [docs/datasets.md](docs/datasets.md) | Field-level schemas and the traps that produce plausible-but-wrong numbers |
 | [docs/architecture.md](docs/architecture.md) | What the pieces are, why they're separate, where new work attaches |
 | [docs/contributing.md](docs/contributing.md) | Setup, ownership, how to add a loader or scorer |
+| [docs/tracin_port.md](docs/tracin_port.md) | Spec for the one selection method still to port, and why cheap baselines come first |
 | [docs/medsel_literature_review_2026-07.pdf](docs/medsel_literature_review_2026-07.pdf) | The review plus the raw research findings, as one shareable 23-page PDF |
 | [results/](results/) | Committed reference results, currently the `Qwen3-0.6B-Base` base-model control |
 
@@ -103,11 +116,12 @@ the review with `uv pip install markdown && uv run python scripts/build_pdf.py` 
 | PubMed CPT corpus loader + packing | done |
 | CPT training stage | done, verified end to end on CPU and GPU |
 | MCQ evaluator with per-subject breakdown | done |
-| Selection interface + baseline scorers | done |
+| Selection interface + `random`, `length`, `dsir`, `perplexity` scorers | done |
+| `medsel select` with top-k and stratified budgets | done, verified on GPU |
 | Literature review + docs | done |
 | SFT stage | done, verified end to end on CPU and GPU |
 | Preference optimisation | stub, blocked on constructing medical preference pairs |
-| Influence-based scorers (LESS, 3DS, TRAK) | not started |
+| Influence-based scorers (TracIn, LESS, 3DS) | not started, spec in [docs/tracin_port.md](docs/tracin_port.md) |
 | PubMed→PubMedQA contamination filter | done, opt-in via `exclude_pmids` |
 
 ## Known caveats

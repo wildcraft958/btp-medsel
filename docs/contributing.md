@@ -115,6 +115,22 @@ class LessScorer(Scorer):
 Scores are ranked, never thresholded on absolute value, so any monotone scale is fine. Beat
 `random` at an equal token budget or the method has not demonstrated anything.
 
+`score` receives every record in one call, so a scorer that needs to fit something (a background
+distribution, a median) fits it there. Four scorers ship: `random`, `length`, `dsir` and
+`perplexity`. Run one with:
+
+```bash
+uv run medsel select --source pubmed --scorer dsir --budget 0.1 \
+  --limit 300 --loader num_shards=1 --scorer-arg target=medmcqa --output runs/sel.json
+```
+
+That writes a manifest carrying the provenance to reproduce the subset plus a score summary. Check
+the summary first: if the selected mean sits on top of the pool mean, the scorer did not
+discriminate and nothing downstream will mean anything.
+
+Selection is in memory. That is fine at current pool sizes and will not hold the full PubMed
+corpus; see [tracin_port.md](tracin_port.md) for what streaming would need.
+
 ## House rules
 
 **Verify against the data, not the docs.** Every dataset trap in
@@ -158,6 +174,10 @@ people do not pick the same item.
   which has no bf16 hardware, because it counts an emulation path. Go through `resolve_dtype` and
   `autocast_flags` in `medsel.utils.device`, which gate on compute capability. A training stage
   must not decide precision for itself.
+- **Never point a selection target at the split you evaluate on.** Fitting the selection
+  distribution to the evaluation items inflates the result without improving the model. `dsir`
+  refuses overlapping targets in `resolve_target_split`; any new targeted scorer should reuse that
+  check. PubMedQA is the trap: it has one `train` split and its evaluation slice is `train[:500]`.
 - Gemma weights are licence-gated: `hf auth login` and accept the licence before using
   `configs/model/gemma3_1b.yaml`.
 

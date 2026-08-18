@@ -26,13 +26,16 @@ hardware.
 | CPT training stage | done, verified end to end on CPU and GPU |
 | SFT training stage | done, verified end to end on CPU and GPU |
 | MCQ evaluator with per-subject breakdown | done |
-| Selection interface, `random` and `length` scorers, top-k and stratified selectors | done |
+| Selection interface, top-k and stratified selectors | done |
+| Scorers: `random`, `length`, `dsir`, `perplexity` | done, all four verified on GPU |
+| `medsel select` command writing a reproducible manifest | done |
+| TracIn scorer | not ported, spec in [tracin_port.md](tracin_port.md) |
 | PubMed to PubMedQA contamination filter | done, opt-in via `exclude_pmids` |
 | Literature review and dataset reference | done, refreshed with 2025-2026 work |
 | Preference optimisation (`stages/align.py`) | stub, see open items |
 | lm-evaluation-harness adapter (`eval/harness_adapter.py`) | stub, see open items |
 
-369 tests, all offline. `uv run pytest` needs no network and no GPU.
+The test suite is fully offline: `uv run pytest` needs no network, no GPU and no credentials.
 
 **Pipeline verification evidence.** Both training stages have been run end to end on CPU and again
 on the lab GPU. The checkpoints themselves were deleted afterwards (they are gitignored, 2 GB each,
@@ -43,6 +46,9 @@ and teach the model nothing), but they are reproducible in minutes:
 | CPT | `configs/experiment/smoke_cpu.yaml` | 522 blocks packed from 500 documents, 20 steps, loss 2.954 to 2.833 | 24.6 s |
 | SFT | `configs/experiment/sft_smoke_cpu.yaml` | 200 MedMCQA examples, 20 steps, train_loss 0.9493 | 25.3 s |
 | Eval | `Qwen/Qwen3-0.6B-Base`, three tasks | base-model control, see [../results/](../results/) | ~25 min |
+| Select | `dsir` on 300 PubMed docs, target MedMCQA | pool mean 0.086 against selected mean 3.296 | seconds |
+| Select | `perplexity mode=mid` on 300 PubMed docs | selected scores cluster at the pool median, as the mode intends | seconds |
+| Select | `length` on 600 MedMCQA, stratified by subject | all 21 subjects retained at `min_per_group=1`, none dropped | seconds |
 
 Neither loss means anything about model quality. They exist to prove the path runs. Both smoke
 configs are named `_cpu` but are device agnostic: they picked up the GPU with no edit, which is what
@@ -65,6 +71,7 @@ Suggested reading order for someone seeing this repo for the first time:
    [PDF](medsel_literature_review_2026-07.pdf) if you are not cloning the repo.
 5. [contributing.md](contributing.md) for how to add a loader or a scorer without touching a
    central file.
+6. [tracin_port.md](tracin_port.md) if you are picking up selection work.
 
 **Sections 6.1 to 6.4 of the literature review are owned by their dataset owners** (Debmalya,
 Animesh, Arkajyoti, Srinjoy) and were deliberately left for each owner to extend.
@@ -143,7 +150,18 @@ a half. Section 6.5 of the review names four open, non-credentialed candidates w
 Not started because none of the four matches `QAExample`, so this needs a fifth record shape, which
 is a design decision the team should make together rather than one person picking.
 
-### 3. Three selection and evaluation improvements the 2026 literature now supports
+### 3. Selection work still open
+
+`dsir` and `perplexity` are ported and working. What remains:
+
+- **TracIn**, the gradient-based method. Full spec in [tracin_port.md](tracin_port.md), including
+  the three design decisions worth preserving and the reason to run the cheap baselines first.
+- **`embed_similarity`**, cosine to the target-set centroid. Uses base-model hidden states, so it
+  needs no new dependency. The cheapest remaining port.
+- **Streaming selection.** `medsel select` holds the pool in memory. Correct at current sizes,
+  will not hold 23.9M PubMed documents, and is a precondition for TracIn at full scale.
+
+### 4. Three selection and evaluation improvements the 2026 literature now supports
 
 None are implemented. All are proposals, listed highest value first:
 
@@ -160,7 +178,7 @@ None are implemented. All are proposals, listed highest value first:
   exists. This is the closest thing to a direct measurement of the proposal's capability-retention
   claim.
 
-### 4. Alignment stage
+### 5. Alignment stage
 
 `stages/align.py` is a stub. The blocker is data, not training code. A 2026 survey found no open
 *medical* preference corpus, so pairs must be constructed from PubMedQA long answers or MedMCQA
@@ -168,7 +186,7 @@ explanations. Five usable general-domain corpora exist and could serve as a repl
 Section 5 of the review, including the finding that only 70 to 80 percent of pairs in those corpora
 agree with a reward-model ordering, so their labels are not ground truth.
 
-### 5. lm-evaluation-harness adapter
+### 6. lm-evaluation-harness adapter
 
 `eval/harness_adapter.py` is a stub with the intended design recorded. Two evaluators exist on
 purpose: `eval/mcq.py` is the inner loop, sharing our loaders and prompts so a change to either
@@ -180,7 +198,7 @@ Our current numbers are internally consistent but should **not** be quoted again
 figures. Building this is what makes that comparison honest, and it matters before any result goes
 into a write-up.
 
-### 6. Standing experimental practice, not yet done
+### 7. Standing experimental practice, not yet done
 
 - **Run the base-model control** for every benchmark before any CPT run and commit it as a
   reference result. Per Jeong et al. and its 2026 follow-ups, a CPT result is a delta and a delta
