@@ -11,7 +11,7 @@ from __future__ import annotations
 from collections import defaultdict
 from collections.abc import Sequence
 
-__all__ = ["resolve_budget", "select_top_k", "select_stratified"]
+__all__ = ["resolve_budget", "allocate_quotas", "select_top_k", "select_stratified"]
 
 
 def resolve_budget(budget: int | float, n: int) -> int:
@@ -42,6 +42,61 @@ def select_top_k(scores: Sequence[float], budget: int | float) -> list[int]:
     k = resolve_budget(budget, len(scores))
     order = sorted(range(len(scores)), key=lambda i: (-scores[i], i))
     return order[:k]
+
+
+def allocate_quotas(
+    group_sizes: dict[str, int], total: int, min_per_group: int = 0
+) -> dict[str, int]:
+    """How many records each group may contribute, given how large each group is.
+
+    Proportional to group size, then the rounding shortfall goes to the largest groups so the
+    budget is met exactly rather than approximately.
+
+    Separated from :func:`select_stratified` because the streaming selector has to allocate from
+    counts it accumulated rather than from lists of indices. Two implementations of this would
+    eventually disagree, and the disagreement would look like a difference between selection
+    methods rather than a bug.
+
+    Raises:
+        ValueError: If the budget cannot give every group ``min_per_group`` records.
+    """
+    if min_per_group:
+        floor = min_per_group * len(group_sizes)
+        if floor > total:
+            raise ValueError(
+                f"min_per_group={min_per_group} across {len(group_sizes)} group(s) needs {floor} "
+                f"records but the budget resolves to {total}. Raise the budget or lower the floor."
+            )
+
+    n = sum(group_sizes.values())
+    if not n:
+        return {}
+
+    quotas = {
+        group: min(size, max(min_per_group, int(size * total / n)))
+        for group, size in group_sizes.items()
+    }
+
+    order = sorted(group_sizes, key=lambda g: (-group_sizes[g], g))
+    while sum(quotas.values()) > total:
+        for group in reversed(order):
+            if sum(quotas.values()) <= total:
+                break
+            if quotas[group] > min_per_group:
+                quotas[group] -= 1
+            elif quotas[group] > 0 and sum(quotas.values()) > total:
+                quotas[group] -= 1
+    while sum(quotas.values()) < total:
+        progressed = False
+        for group in order:
+            if sum(quotas.values()) >= total:
+                break
+            if quotas[group] < group_sizes[group]:
+                quotas[group] += 1
+                progressed = True
+        if not progressed:  # every group exhausted
+            break
+    return quotas
 
 
 def select_stratified(
@@ -75,46 +130,12 @@ def select_stratified(
     for index, group in enumerate(groups):
         members[group].append(index)
 
-    if min_per_group:
-        floor = min_per_group * len(members)
-        if floor > total:
-            raise ValueError(
-                f"min_per_group={min_per_group} across {len(members)} group(s) needs {floor} "
-                f"records but the budget resolves to {total}. Raise the budget or lower the floor."
-            )
+    quotas = allocate_quotas(
+        {group: len(indices) for group, indices in members.items()}, total, min_per_group
+    )
 
     for indices in members.values():
         indices.sort(key=lambda i: (-scores[i], i))
-
-    # Proportional allocation, then hand out the rounding shortfall to the largest groups so the
-    # budget is met exactly rather than approximately.
-    n = len(scores)
-    quotas = {
-        group: max(min_per_group, int(len(indices) * total / n))
-        for group, indices in members.items()
-    }
-    for group, indices in members.items():
-        quotas[group] = min(quotas[group], len(indices))
-
-    order = sorted(members, key=lambda g: (-len(members[g]), g))
-    while sum(quotas.values()) > total:
-        for group in reversed(order):
-            if sum(quotas.values()) <= total:
-                break
-            if quotas[group] > min_per_group:
-                quotas[group] -= 1
-            elif quotas[group] > 0 and sum(quotas.values()) > total:
-                quotas[group] -= 1
-    while sum(quotas.values()) < total:
-        progressed = False
-        for group in order:
-            if sum(quotas.values()) >= total:
-                break
-            if quotas[group] < len(members[group]):
-                quotas[group] += 1
-                progressed = True
-        if not progressed:  # every group exhausted
-            break
 
     chosen: list[int] = []
     for group, indices in members.items():
