@@ -1,0 +1,97 @@
+{
+  "source": "pubmed",
+  "split": "train",
+  "n_candidates": 5000,
+  "record_budget": 500,
+  "token_budget": 122577,
+  "pool_tokens": 1265291,
+  "scorers": {
+    "dsir": {
+      "record_budget": {
+        "n_selected": 500,
+        "tokens": 93547,
+        "mean_tokens": 187.094
+      },
+      "token_budget": {
+        "n_selected": 630,
+        "tokens": 122547
+      },
+      "score_min": -0.9352434640105695,
+      "score_max": 0.20526265876774233,
+      "selected_mean": -0.18235608265098682,
+      "pool_mean": -0.42430453663043743
+    },
+    "embed_similarity": {
+      "record_budget": {
+        "n_selected": 500,
+        "tokens": 106807,
+        "mean_tokens": 213.614
+      },
+      "token_budget": {
+        "n_selected": 564,
+        "tokens": 122575
+      },
+      "score_min": 0.5360452844007345,
+      "score_max": 0.9240766088589518,
+      "selected_mean": 0.8499769742412783,
+      "pool_mean": 0.765894837353294
+    },
+    "length": {
+      "record_budget": {
+        "n_selected": 500,
+        "tokens": 252183,
+        "mean_tokens": 504.366
+      },
+      "token_budget": {
+        "n_selected": 212,
+        "tokens": 122570
+      },
+      "score_min": 254.0,
+      "score_max": 3239.0,
+      "selected_mean": 2145.714,
+      "pool_mean": 1108.1074
+    },
+    "perplexity": {
+      "record_budget": {
+        "n_selected": 500,
+        "tokens": 130398,
+        "mean_tokens": 260.796
+      },
+      "token_budget": {
+        "n_selected": 469,
+        "tokens": 122565
+      },
+      "score_min": -2.132873296737671,
+      "score_max": -0.00013208389282226562,
+      "selected_mean": -0.025986538887023927,
+      "pool_mean": -0.34479556596279143
+    },
+    "random": {
+      "record_budget": {
+        "n_selected": 500,
+        "tokens": 122577,
+        "mean_tokens": 245.154
+      },
+      "token_budget": {
+        "n_selected": 500,
+        "tokens": 122577
+      },
+      "score_min": 9.234639492805563e-05,
+      "score_max": 0.9999078285092092,
+      "selected_mean": 0.9504765653596591,
+      "pool_mean": 0.5003621944399833
+    }
+  },
+  "overlap_at_record_budget": {
+    "dsir|embed_similarity": 0.1099,
+    "dsir|length": 0.0152,
+    "dsir|perplexity": 0.0384,
+    "dsir|random": 0.056,
+    "embed_similarity|length": 0.0256,
+    "embed_similarity|perplexity": 0.0428,
+    "embed_similarity|random": 0.0571,
+    "length|perplexity": 0.0627,
+    "length|random": 0.0493,
+    "perplexity|random": 0.0526
+  }
+}

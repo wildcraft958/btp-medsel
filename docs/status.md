@@ -47,7 +47,7 @@ and teach the model nothing), but they are reproducible in minutes:
 | CPT | `configs/experiment/smoke_cpu.yaml` | 522 blocks packed from 500 documents, 20 steps, loss 2.954 to 2.833 | 24.6 s |
 | SFT | `configs/experiment/sft_smoke_cpu.yaml` | 200 MedMCQA examples, 20 steps, train_loss 0.9493 | 25.3 s |
 | Eval | `Qwen/Qwen3-0.6B-Base`, three tasks | base-model control, see [../results/](../results/) | ~25 min |
-| Select | `dsir` on 300 PubMed docs, target MedMCQA | pool mean 0.086 against selected mean 3.296 | seconds |
+| Select | all five scorers on 5,000 PubMed docs at a matched budget | selections near independent, max overlap 0.11; see [../results/](../results/) | ~4 min |
 | Select | `perplexity mode=mid` on 300 PubMed docs | selected scores cluster at the pool median, as the mode intends | seconds |
 | Select | `length` on 600 MedMCQA, stratified by subject | all 21 subjects retained at `min_per_group=1`, none dropped | seconds |
 | Select | `length` on 55,997 PubMed docs, in memory against `--stream` | identical uids; 270 MB against 133 MB peak RSS | 24 s against 4 s |
@@ -155,8 +155,15 @@ is a design decision the team should make together rather than one person pickin
 
 ### 3. Selection work still open
 
-`dsir`, `perplexity` and `embed_similarity` are ported and working. What remains:
+`dsir`, `perplexity` and `embed_similarity` are ported and working, and
+[../results/](../results/) records what each keeps at a matched budget. What remains:
 
+- **Token budgeting in the library.** `scripts/compare_scorers.py` holds a token budget locally,
+  but `medsel select` still only takes a record budget. Until that moves into `selection/selector.py`
+  no experiment can honestly claim a matched-budget comparison.
+- **The downstream comparison.** The selections differ; whether that changes a trained model is
+  unanswered and needs one CPT run per scorer at a matched token budget, plus the base-model control
+  already in `results/`.
 - **TracIn**, the gradient-based method. Full spec in [tracin_port.md](tracin_port.md), including
   the three design decisions worth preserving and the reason to run the cheap baselines first.
 Streaming selection is **done**: `medsel select --stream` keeps memory proportional to the budget
@@ -232,5 +239,12 @@ Each of these is enforced in code, but they are worth knowing before you write a
 - **`accuracy_norm` equalling `accuracy` is not a bug in `letter` mode.** Every continuation is one
   option letter, so there is nothing for length normalisation to normalise. The two separate only
   in `text` mode.
+- **A record budget is not a token budget.** `length` spends 2.06x the tokens of `random` for the
+  same 500 records. Any comparison between scorers has to hold tokens fixed and say which budget it
+  held, or it is measuring budget handling rather than selection.
+- **Check that a scorer discriminates before believing its selection.** A scorer that mixes a
+  signal with noise has to keep the two on comparable scales. `dsir` added standard Gumbel noise,
+  spread 1.28, to a weight whose spread is 0.12, so it selected at random while its score summary
+  looked healthy. Compare selections against `random` rather than reading the summary alone.
 
 Full list with the underlying evidence in [datasets.md](datasets.md).
