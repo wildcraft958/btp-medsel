@@ -27,40 +27,13 @@ from typing import Any
 
 import numpy as np
 
-from medsel.selection.base import Scorer, record_text, register_scorer
+from medsel.selection.base import record_text, register_scorer
+from medsel.selection.targets import TargetedScorer
 
 __all__ = ["DSIRScorer", "hashed_ngram_counts"]
 
 _NON_ALNUM = re.compile(r"[^a-z0-9 ]+")
 _WS = re.compile(r"\s+")
-
-# Where each loader's target text comes from by default. Always a training split: the point of a
-# target distribution is to describe the task, and drawing it from the split the model is scored on
-# would tune selection to the test items themselves. PubMedQA has only one split and its evaluation
-# slice is the first 500 rows, so its target starts after them.
-_DEFAULT_TARGET_SPLITS = {
-    "medqa": "train",
-    "medmcqa": "train",
-    "pubmedqa": "train[500:]",
-}
-
-
-def _parse_slice(spec: str) -> tuple[int, float]:
-    start, _, stop = spec.partition(":")
-    return int(start or 0), float(stop or "inf")
-
-
-def _overlaps(target_split: str, eval_split: str) -> bool:
-    """Whether two split specifications can share a row."""
-    target_base, _, target_slice = target_split.partition("[")
-    eval_base, _, eval_slice = eval_split.partition("[")
-    if target_base != eval_base:
-        return False
-    if not target_slice or not eval_slice:
-        return True
-    target_start, target_stop = _parse_slice(target_slice.rstrip("]"))
-    eval_start, eval_stop = _parse_slice(eval_slice.rstrip("]"))
-    return target_start < eval_stop and eval_start < target_stop
 
 
 def _normalize(text: str) -> str:
@@ -102,7 +75,7 @@ class _BagOfNgrams:
 
 
 @register_scorer("dsir")
-class DSIRScorer(Scorer):
+class DSIRScorer(TargetedScorer):
     """Rank by how much more likely a document is under the target than under the pool.
 
     ``target`` is either a loader name (``"medmcqa"``, ``"medqa"``, ``"pubmedqa"``) or an explicit
@@ -126,13 +99,11 @@ class DSIRScorer(Scorer):
         gumbel: bool = True,
         seed: int = 42,
     ) -> None:
+        super().__init__(target, target_split=target_split, target_limit=target_limit)
         if buckets < 1:
             raise ValueError(f"buckets must be positive, got {buckets}")
         if ngram < 1:
             raise ValueError(f"ngram must be at least 1, got {ngram}")
-        self.target = target
-        self.target_split = target_split
-        self.target_limit = target_limit
         self.buckets = buckets
         self.ngram = ngram
         self.alpha = alpha
@@ -141,48 +112,6 @@ class DSIRScorer(Scorer):
         self._pool_model: _BagOfNgrams | None = None
         self._target_model: _BagOfNgrams | None = None
         self._rng: random.Random | None = None
-
-    def resolve_target_split(self) -> str | None:
-        """The split the target text is drawn from, or ``None`` for explicit texts.
-
-        Raises if that split can share rows with the one the model is evaluated on. Fitting the
-        selection distribution to the evaluation items would inflate every downstream number
-        without any of it being real, and it is an easy mistake to make from a config file.
-        """
-        if not isinstance(self.target, str):
-            return None
-
-        from medsel.registry import get_loader
-
-        loader = get_loader(self.target)
-        split = self.target_split or _DEFAULT_TARGET_SPLITS.get(self.target, "train")
-        eval_split = str(getattr(loader, "eval_split", "") or "")
-
-        if eval_split and _overlaps(split, eval_split):
-            raise ValueError(
-                f"DSIR target {self.target}:{split} overlaps {self.target}:{eval_split}, which is "
-                f"the split this task is scored on. Selecting towards the evaluation set inflates "
-                f"the result without improving the model. Use a training split instead."
-            )
-        return split
-
-    def _target_texts(self) -> list[str]:
-        if not isinstance(self.target, str):
-            return [str(text) for text in self.target]
-
-        from medsel.prompts import render_prompt
-        from medsel.registry import get_loader
-        from medsel.schema import QAExample
-
-        loader = get_loader(self.target)
-        split = self.resolve_target_split()
-        assert split is not None
-        texts: list[str] = []
-        for example in loader.load(split, limit=self.target_limit):
-            texts.append(
-                render_prompt(example) if isinstance(example, QAExample) else record_text(example)
-            )
-        return texts
 
     def _fit(self, texts: Sequence[str]) -> _BagOfNgrams:
         model = _BagOfNgrams(self.buckets, self.alpha)
@@ -198,13 +127,7 @@ class DSIRScorer(Scorer):
         :meth:`score` on a chunk after this reuses them rather than rebuilding a background from
         the chunk, which would make scores from different chunks incomparable.
         """
-        target_texts = self._target_texts()
-        if not target_texts:
-            raise ValueError(
-                f"target {self.target!r} produced no text, so there is no distribution to select "
-                "towards"
-            )
-        self._target_model = self._fit(target_texts)
+        self._target_model = self._fit(self.target_texts())
         self._pool_model = self._fit([record_text(record) for record in records])
         # One generator for the scorer's whole life. A fresh one per chunk would replay the same
         # noise sequence on every chunk, which correlates the noise with position in the pool.
