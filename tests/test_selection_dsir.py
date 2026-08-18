@@ -115,3 +115,78 @@ class TestTargetSplitGuard:
 
     def test_explicit_texts_need_no_split(self):
         assert get_scorer("dsir", target=MEDICAL).resolve_target_split() is None
+
+
+class TestNoiseCalibration:
+    """Gumbel noise must perturb the ranking, not replace it.
+
+    The length-normalised importance weight has a standard deviation around 0.12 on PubMed, while
+    standard Gumbel noise has one of 1.28. Adding the two directly buries the signal under ten
+    times its own size and the scorer selects at random.
+    """
+
+    # A gradient rather than two clumps: each document mixes medical and unrelated vocabulary in a
+    # different proportion, so the clean ranking has few ties for noise to reorder freely.
+    POOL = [
+        " ".join(" ".join(MEDICAL).split()[:k] + " ".join(UNRELATED).split()[: 20 - k])
+        for k in range(1, 21)
+    ]
+
+    def ranks(self, scores):
+        order = sorted(range(len(scores)), key=lambda i: scores[i])
+        out = [0] * len(scores)
+        for rank, index in enumerate(order):
+            out[index] = rank
+        return out
+
+    def spearman(self, left, right):
+        import statistics
+
+        return statistics.correlation(
+            [float(v) for v in self.ranks(left)], [float(v) for v in self.ranks(right)]
+        )
+
+    def test_noise_scale_is_derived_from_the_weight_spread(self):
+        scorer = get_scorer("dsir", target=MEDICAL)
+        scorer.fit(docs(self.POOL))
+        assert scorer._noise_scale > 0
+
+    def test_noise_ratio_zero_matches_the_noiseless_ranking(self):
+        pool = docs(self.POOL)
+        noisy = get_scorer("dsir", target=MEDICAL, noise_ratio=0.0)(pool)
+        clean = get_scorer("dsir", target=MEDICAL, gumbel=False)(pool)
+        assert noisy == pytest.approx(clean)
+
+    def test_signal_survives_the_default_noise(self):
+        pool = docs(self.POOL)
+        noisy = get_scorer("dsir", target=MEDICAL, seed=11)(pool)
+        clean = get_scorer("dsir", target=MEDICAL, gumbel=False)(pool)
+        assert self.spearman(noisy, clean) > 0.8
+
+    def test_noise_still_perturbs_the_ranking(self):
+        pool = docs(self.POOL)
+        first = get_scorer("dsir", target=MEDICAL, seed=1)(pool)
+        second = get_scorer("dsir", target=MEDICAL, seed=2)(pool)
+        assert first != second
+
+    def test_does_not_share_a_random_stream_with_the_random_scorer(self):
+        """Same seed, same generator, and Gumbel monotone in the draw made these agree."""
+        pool = docs(self.POOL)
+        dsir = get_scorer("dsir", target=MEDICAL, seed=42, noise_ratio=1e6)(pool)
+        uniform = get_scorer("random", seed=42)(pool)
+        assert self.spearman(dsir, uniform) < 0.99
+
+    def test_rejects_a_negative_noise_ratio(self):
+        with pytest.raises(ValueError, match="noise_ratio"):
+            get_scorer("dsir", target=MEDICAL, noise_ratio=-1.0)
+
+    def test_a_pool_with_no_signal_still_breaks_ties_randomly(self):
+        """Target equal to pool means every weight is alike, and no spread to scale noise against.
+
+        Scaling to zero there would quietly return the first k records in stream order.
+        """
+        scorer = get_scorer("dsir", target=MEDICAL, seed=5)
+        pool = docs(MEDICAL)
+        scorer.fit(pool)
+        assert scorer._noise_scale > 0
+        assert scorer.score(pool) != scorer.score(pool)

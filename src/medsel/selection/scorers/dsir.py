@@ -20,6 +20,7 @@ from __future__ import annotations
 import math
 import random
 import re
+import statistics
 import zlib
 from collections import Counter
 from collections.abc import Iterable, Sequence
@@ -97,6 +98,7 @@ class DSIRScorer(TargetedScorer):
         ngram: int = 2,
         alpha: float = 1.0,
         gumbel: bool = True,
+        noise_ratio: float = 0.3,
         seed: int = 42,
     ) -> None:
         super().__init__(target, target_split=target_split, target_limit=target_limit)
@@ -104,11 +106,15 @@ class DSIRScorer(TargetedScorer):
             raise ValueError(f"buckets must be positive, got {buckets}")
         if ngram < 1:
             raise ValueError(f"ngram must be at least 1, got {ngram}")
+        if noise_ratio < 0:
+            raise ValueError(f"noise_ratio must be non-negative, got {noise_ratio}")
         self.buckets = buckets
         self.ngram = ngram
         self.alpha = alpha
         self.gumbel = gumbel
+        self.noise_ratio = noise_ratio
         self.seed = seed
+        self._noise_scale = 0.0
         self._pool_model: _BagOfNgrams | None = None
         self._target_model: _BagOfNgrams | None = None
         self._rng: random.Random | None = None
@@ -129,9 +135,34 @@ class DSIRScorer(TargetedScorer):
         """
         self._target_model = self._fit(self.target_texts())
         self._pool_model = self._fit([record_text(record) for record in records])
+        # Scale the noise to the signal it perturbs. The raw weight is a per-token average, so its
+        # spread is around 0.12 on PubMed while standard Gumbel noise has a spread of 1.28. Adding
+        # them directly buries the ranking under ten times its own size and the scorer selects at
+        # random, which is what it did until this was measured.
+        weights = [self._raw_weight(record_text(record)) for record in records]
+        spread = statistics.pstdev(weights) if len(weights) > 1 else 0.0
+        # A degenerate pool, where every document scores alike, has no spread to scale against.
+        # Falling back to unit noise keeps ties breaking randomly; scaling to zero there would
+        # silently turn the selection into "the first k in stream order".
+        self._noise_scale = self.noise_ratio * (spread if spread > 0 else 1.0)
         # One generator for the scorer's whole life. A fresh one per chunk would replay the same
         # noise sequence on every chunk, which correlates the noise with position in the pool.
-        self._rng = random.Random(self.seed)
+        # Seeded through a namespace so this stream is not the one RandomScorer draws from: Gumbel
+        # is monotone in the uniform draw, so a shared stream and a shared seed made the two
+        # scorers pick very nearly the same subset.
+        self._rng = random.Random(f"dsir:{self.seed}")
+
+    def _raw_weight(self, text: str) -> float:
+        """Per-token average log ratio of target likelihood to pool likelihood.
+
+        Averaged rather than summed. The summed form of the original paper has a spread far larger
+        than the noise, but it also correlates about -0.89 with document length on PubMed, so it
+        would rank almost purely by how short a document is.
+        """
+        assert self._target_model is not None and self._pool_model is not None
+        counts = hashed_ngram_counts(text, self.buckets, self.ngram)
+        total = sum(counts.values()) or 1
+        return (self._target_model.loglik(counts) - self._pool_model.loglik(counts)) / total
 
     def score(self, records: Sequence[Any]) -> list[float]:
         if not records:
@@ -139,21 +170,18 @@ class DSIRScorer(TargetedScorer):
 
         if self._pool_model is None:
             self.fit(records)
-        assert self._target_model is not None and self._pool_model is not None
-        rng = self._rng or random.Random(self.seed)
+        rng = self._rng or random.Random(f"dsir:{self.seed}")
 
         scores: list[float] = []
         for record in records:
-            counts = hashed_ngram_counts(record_text(record), self.buckets, self.ngram)
-            total = sum(counts.values()) or 1
-            weight = (self._target_model.loglik(counts) - self._pool_model.loglik(counts)) / total
-            if self.gumbel:
-                weight += -math.log(-math.log(rng.random() + 1e-12) + 1e-12)
+            weight = self._raw_weight(record_text(record))
+            if self.gumbel and self._noise_scale:
+                weight += self._noise_scale * -math.log(-math.log(rng.random() + 1e-12) + 1e-12)
             scores.append(weight)
         return scores
 
     def __repr__(self) -> str:
-        target = (
-            self.target if isinstance(self.target, str) else f"<{len(list(self.target))} texts>"
+        return (
+            f"DSIRScorer(target={self._target_repr()}, buckets={self.buckets}, "
+            f"ngram={self.ngram}, noise_ratio={self.noise_ratio})"
         )
-        return f"DSIRScorer(target={target!r}, buckets={self.buckets}, ngram={self.ngram})"
