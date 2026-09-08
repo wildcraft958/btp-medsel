@@ -144,6 +144,10 @@ def main() -> int:
     parser.add_argument(
         "--skip-base", action="store_true", help="do not evaluate the untrained model"
     )
+    parser.add_argument(
+        "--score-only", action="store_true",
+        help="score and write selection manifests, then stop (no training or eval)",
+    )
     args = parser.parse_args()
 
     runs_dir = Path(args.runs_dir)
@@ -172,6 +176,14 @@ def main() -> int:
         selections[name] = select_top_k(scorer(records), token_budget, costs=tokens)
         spent = sum(tokens[i] for i in selections[name])
         print(f"  {name}: {len(selections[name])} records, {spent:,} tokens")
+
+    if args.score_only:
+        for name in scorer_names:
+            sel_path = runs_dir / name / "selection.json"
+            write_selection(sel_path, records, selections[name], name, args.source, args.split)
+            print(f"  wrote {sel_path}")
+        print("score-only: selection manifests written, stopping before training")
+        return 0
 
     report: dict[str, Any] = {
         "pool": {
