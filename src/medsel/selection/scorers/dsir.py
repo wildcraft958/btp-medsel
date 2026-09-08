@@ -57,7 +57,11 @@ def hashed_ngram_counts(text: str, buckets: int, n: int = 2) -> Counter:
 
 
 class _BagOfNgrams:
-    """Smoothed categorical distribution over hash buckets."""
+    """Smoothed categorical distribution over hash buckets.
+
+    The paper's official code defaults to alpha=0 (no smoothing). We use alpha=1 (Laplace)
+    to prevent log(0) on unseen n-grams without a separate epsilon guard.
+    """
 
     def __init__(self, buckets: int, alpha: float = 1.0) -> None:
         self._counts = np.full(buckets, alpha, dtype=np.float64)
