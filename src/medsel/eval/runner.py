@@ -22,7 +22,10 @@ DEFAULT_EVAL_SPLITS = {
 
 
 def load_model(
-    name_or_path: str, dtype: str = "auto", trust_remote_code: bool = False
+    name_or_path: str,
+    dtype: str = "auto",
+    trust_remote_code: bool = False,
+    attn_implementation: str | None = None,
 ) -> tuple[Any, Any]:
     """Load a causal LM and tokenizer onto the best available device."""
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -32,11 +35,13 @@ def load_model(
         tokenizer.pad_token = tokenizer.eos_token
 
     device = pick_device()
-    model = AutoModelForCausalLM.from_pretrained(
-        name_or_path,
-        dtype=resolve_dtype(dtype, device),
-        trust_remote_code=trust_remote_code,
-    )
+    kwargs: dict[str, Any] = {
+        "dtype": resolve_dtype(dtype, device),
+        "trust_remote_code": trust_remote_code,
+    }
+    if attn_implementation is not None:
+        kwargs["attn_implementation"] = attn_implementation
+    model = AutoModelForCausalLM.from_pretrained(name_or_path, **kwargs)
     return model.to(device), tokenizer
 
 

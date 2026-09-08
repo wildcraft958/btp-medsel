@@ -106,7 +106,7 @@ def _answer_ppl_and_attention(
     labels[0, :start_token] = -100
 
     with torch.no_grad():
-        out = model(ids, labels=labels)
+        out = model(ids, labels=labels, output_attentions=True)
         raw_ppl = float(torch.exp(out.loss))
 
         logits = out.logits
@@ -118,9 +118,7 @@ def _answer_ppl_and_attention(
         )
         losses = per_token_loss.view(-1)
 
-    with torch.no_grad():
-        atten_out = model(ids, output_attentions=True)
-        atten = atten_out.attentions[-1][0].detach().cpu()
+        atten = out.attentions[-1][0].detach().cpu()
 
         if atten_method == "max":
             agg, _ = torch.max(atten, dim=0)
@@ -210,7 +208,9 @@ class ThreeDSScorer(Scorer):
         if self._loaded is None:
             from medsel.eval.runner import load_model
 
-            self._loaded = load_model(self.judge_name, dtype=self.dtype)
+            self._loaded = load_model(
+                self.judge_name, dtype=self.dtype, attn_implementation="eager"
+            )
         return self._loaded
 
     def release_model(self) -> None:
