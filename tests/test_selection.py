@@ -29,7 +29,7 @@ class TestScorerRegistry:
 
     def test_unknown_scorer_lists_alternatives(self):
         with pytest.raises(KeyError, match="random"):
-            get_scorer("less")
+            get_scorer("nonexistent_scorer")
 
     def test_duplicate_registration_is_rejected(self):
         with pytest.raises(ValueError, match="already registered"):

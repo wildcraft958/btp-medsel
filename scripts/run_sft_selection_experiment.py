@@ -35,6 +35,7 @@ SCORER_ARGS: dict[str, dict[str, Any]] = {
         "dsir_note": "per-token normalized, not summed (see dsir.py docstring)",
     },
     "embed_similarity": {"target": "medmcqa", "target_limit": 1000},
+    "less": {"cache_dir": "runs/sft-selection-experiment/less/cache"},
     "perplexity": {"mode": "mid"},
 }
 
