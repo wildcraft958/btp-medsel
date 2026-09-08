@@ -1,7 +1,5 @@
 """Tests for the 3DS (Decomposed Difficulty Data Selection) scorer."""
 
-import math
-
 import numpy as np
 import pytest
 
@@ -211,3 +209,57 @@ class TestBuildAnswerText:
         scorer = ThreeDSScorer(judge="x")
         text = scorer._build_answer_text(ex, "A")
         assert "cyclooxygenase" in text.lower()
+
+
+class TestKCenterOrder:
+    """Verify the greedy K-Center diversity helper."""
+
+    def test_square_corners_picks_opposite_first(self):
+        from medsel.selection.scorers.tds import _kcenter_order
+
+        pts = np.array([
+            [0.0, 0.0],
+            [1.0, 0.0],
+            [0.0, 1.0],
+            [1.0, 1.0],
+        ])
+        order = _kcenter_order(pts)
+        assert len(order) == 4
+        assert set(order) == {0, 1, 2, 3}
+        # First point is closest to centroid (0.5, 0.5) -- all equidistant,
+        # so any is valid. Second must be the diagonal opposite.
+        first, second = order[0], order[1]
+        diag_pairs = ({0, 3}, {1, 2})
+        assert {first, second} in diag_pairs
+
+    def test_single_point(self):
+        from medsel.selection.scorers.tds import _kcenter_order
+
+        pts = np.array([[42.0, -7.0]])
+        order = _kcenter_order(pts)
+        assert order == [0]
+
+    def test_identical_embeddings_returns_valid_order(self):
+        from medsel.selection.scorers.tds import _kcenter_order
+
+        pts = np.array([[1.0, 2.0]] * 5)
+        order = _kcenter_order(pts)
+        assert len(order) == 5
+        assert set(order) == {0, 1, 2, 3, 4}
+
+    def test_collinear_points_picks_extremes_early(self):
+        from medsel.selection.scorers.tds import _kcenter_order
+
+        pts = np.array([[float(i), 0.0] for i in range(5)])
+        order = _kcenter_order(pts)
+        assert len(order) == 5
+        # Centroid is at (2, 0). Point 2 is closest -> picked first.
+        assert order[0] == 2
+        # Second pick should be farthest from point 2 -> either 0 or 4.
+        assert order[1] in (0, 4)
+
+    def test_empty_raises(self):
+        from medsel.selection.scorers.tds import _kcenter_order
+
+        with pytest.raises(ValueError):
+            _kcenter_order(np.array([]).reshape(0, 2))

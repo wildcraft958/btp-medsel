@@ -12,8 +12,9 @@ D2 (Response Confidence): attention-weighted perplexity of the model's predicted
 D3 (Response Correctness): attention-weighted perplexity of the reference answer.
 
 Goldilocks selection keeps examples where all three metrics fall within a percentile range
-(default 25th-75th). Among those, examples closer to the median of all three distributions
-score higher, so select_top_k picks the most central examples first.
+(default 25th-75th). Among survivors, greedy K-Center diversity sampling (using D1
+instruction embeddings) picks a maximally spread subset; select_top_k takes them in
+K-Center order so earlier-picked (more diverse) examples are preferred.
 
 MCQ adaptation: the paper targets free-form instruction-response pairs. For MedMCQA the
 "response" is the full option text (text mode, not letter mode). When a rationale is
@@ -52,6 +53,37 @@ def _quality_pass(example: Any) -> bool:
     if any(not t.strip() for t in texts):
         return False
     return True
+
+
+def _kcenter_order(embeddings: np.ndarray) -> list[int]:
+    """Return indices in greedy K-Center order (farthest-first traversal).
+
+    Starts from the point closest to the pool centroid, then iteratively picks
+    the point whose minimum distance to all already-selected points is largest.
+    """
+    n = embeddings.shape[0]
+    if n == 0:
+        raise ValueError("need at least one embedding for K-Center")
+    if n == 1:
+        return [0]
+
+    centroid = embeddings.mean(axis=0)
+    dists_to_centroid = np.linalg.norm(embeddings - centroid, axis=1)
+    first = int(np.argmin(dists_to_centroid))
+
+    order = [first]
+    min_dist = np.linalg.norm(embeddings - embeddings[first], axis=1)
+    min_dist[first] = -1.0
+
+    for _ in range(n - 1):
+        pick = int(np.argmax(min_dist))
+        order.append(pick)
+        min_dist[pick] = -1.0
+        new_dist = np.linalg.norm(embeddings - embeddings[pick], axis=1)
+        mask = min_dist >= 0
+        min_dist[mask] = np.minimum(min_dist[mask], new_dist[mask])
+
+    return order
 
 
 def _instruction_ppl_and_embedding(
@@ -276,6 +308,11 @@ class ThreeDSScorer(Scorer):
             "embedding": embedding,
         }
 
+    def _emb_path(self, uid: str) -> Path:
+        """Path for a cached embedding .npy file."""
+        safe = uid.replace("/", "_")
+        return self.cache_dir / "embeddings" / f"{safe}.npy"  # type: ignore[union-attr]
+
     def _load_cache(self) -> dict[str, dict[str, Any]]:
         if self.cache_dir is None:
             return {}
@@ -285,7 +322,11 @@ class ThreeDSScorer(Scorer):
         cached: dict[str, dict[str, Any]] = {}
         for line in cache_file.read_text().splitlines():
             entry = json.loads(line)
-            cached[entry["uid"]] = entry
+            uid = entry["uid"]
+            emb_file = self._emb_path(uid)
+            if emb_file.exists():
+                entry["embedding"] = np.load(emb_file)
+            cached[uid] = entry
         return cached
 
     def _save_cache_entry(self, uid: str, entry: dict[str, Any]) -> None:
@@ -296,6 +337,10 @@ class ThreeDSScorer(Scorer):
         row = {"uid": uid, **{k: v for k, v in entry.items() if k != "embedding"}}
         with open(cache_file, "a") as f:
             f.write(json.dumps(row) + "\n")
+        if "embedding" in entry:
+            emb_file = self._emb_path(uid)
+            emb_file.parent.mkdir(parents=True, exist_ok=True)
+            np.save(emb_file, entry["embedding"])
 
     def score(self, records: Sequence[Any]) -> list[float]:
         if not records:
@@ -327,7 +372,7 @@ class ThreeDSScorer(Scorer):
                 continue
 
             m = self._score_one(record, model, tokenizer, device)
-            entry = {"d1": m["d1"], "d2": m["d2"], "d3": m["d3"]}
+            entry = {"d1": m["d1"], "d2": m["d2"], "d3": m["d3"], "embedding": m["embedding"]}
             metrics[i] = entry
             scored_indices.append(i)
             self._save_cache_entry(uid, entry)
@@ -347,21 +392,40 @@ class ThreeDSScorer(Scorer):
         for j, idx in enumerate(scored_indices):
             pct_map[idx] = (d1_pct[j], d2_pct[j], d3_pct[j])
 
-        scores: list[float] = []
-        for i in range(len(records)):
-            if not quality[i] or metrics[i] is None:
-                scores.append(float("-inf"))
-                continue
-
+        goldilocks_indices: list[int] = []
+        for i in scored_indices:
             p1, p2, p3 = pct_map[i]
-            if not (self.low_th <= p1 <= self.up_th
+            if (self.low_th <= p1 <= self.up_th
                     and self.low_th <= p2 <= self.up_th
                     and self.low_th <= p3 <= self.up_th):
-                scores.append(float("-inf"))
-                continue
+                goldilocks_indices.append(i)
 
-            dist = abs(p1 - 50.0) + abs(p2 - 50.0) + abs(p3 - 50.0)
-            scores.append(-dist)
+        scores: list[float] = [float("-inf")] * len(records)
+
+        if not goldilocks_indices:
+            return scores
+
+        embs = []
+        for i in goldilocks_indices:
+            emb = metrics[i].get("embedding") if metrics[i] else None  # type: ignore[union-attr]
+            if emb is not None:
+                embs.append(np.asarray(emb).flatten())
+            else:
+                embs.append(None)
+
+        has_all = all(e is not None for e in embs)
+        if has_all and len(embs) > 0:
+            emb_matrix = np.stack(embs)  # type: ignore[arg-type]
+            kc_order = _kcenter_order(emb_matrix)
+            n_gold = len(goldilocks_indices)
+            for rank, pos in enumerate(kc_order):
+                idx = goldilocks_indices[pos]
+                scores[idx] = float(n_gold - rank)
+        else:
+            for i in goldilocks_indices:
+                p1, p2, p3 = pct_map[i]
+                dist = abs(p1 - 50.0) + abs(p2 - 50.0) + abs(p3 - 50.0)
+                scores[i] = -dist
 
         return scores
 
