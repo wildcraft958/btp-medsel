@@ -1,0 +1,16 @@
+# Qwen3 1.7B base with LoRA adapters.
+#
+# Same family as the 0.6B used for CPT experiments. 1.7B in fp32 is about 6.8 GB of weights.
+# With LoRA (r=16) the trainable parameters are about 80 MB, and with gradient checkpointing
+# at batch_size=1 the total VRAM use is about 8.5 GB. That fits alongside the 5.5 GB ollama
+# holds on the lab GPU, but any operation that needs more headroom (LESS gradient extraction,
+# MedGemma judging) requires stopping ollama first.
+name_or_path: Qwen/Qwen3-1.7B-Base
+dtype: auto
+gradient_checkpointing: true
+
+use_lora: true
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+lora_target_modules: null

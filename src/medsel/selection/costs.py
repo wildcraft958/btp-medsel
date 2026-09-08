@@ -13,7 +13,7 @@ be tested and used without a model present.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from typing import Any
 
 from medsel.selection.base import record_text
@@ -33,6 +33,7 @@ def token_costs(
     records: Sequence[Any],
     tokenizer: Any,
     *,
+    render: Callable[[Any], str] | None = None,
     batch_size: int = 256,
     progress: bool = True,
 ) -> list[int]:
@@ -41,6 +42,11 @@ def token_costs(
     Counted without special tokens: the cost being modelled is the text's contribution to a packed
     training stream, where per-example separators are a property of packing rather than of the
     document.
+
+    ``render`` maps a record to the text whose tokens should be counted. The default is
+    :func:`record_text`, which returns ``full_text`` for corpus documents and ``question`` for QA
+    examples. For SFT cost accounting, pass a renderer that produces the full prompt and
+    completion so the budget reflects what the trainer actually sees.
 
     Every count is floored at one. A genuinely empty document would otherwise cost nothing and fit
     any budget an unlimited number of times, which the selectors reject outright.
@@ -52,7 +58,8 @@ def token_costs(
 
     from tqdm.auto import tqdm
 
-    texts = [record_text(record) for record in records]
+    to_text = render or record_text
+    texts = [to_text(record) for record in records]
     counts: list[int] = []
     starts = range(0, len(texts), batch_size)
     for start in tqdm(starts, desc="tokens", unit="batch", disable=not progress):

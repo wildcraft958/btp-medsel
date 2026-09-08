@@ -50,6 +50,19 @@ class TestTokenCosts:
             token_costs(docs(self.TEXTS), FakeTokenizer(), batch_size=0, progress=False)
 
 
+class TestCustomRender:
+    def test_render_overrides_default_text(self):
+        records = docs(["ignored"])
+        costs = token_costs(
+            records, FakeTokenizer(), render=lambda _: "a b c d e", progress=False
+        )
+        assert costs == [5]
+
+    def test_render_none_uses_default(self):
+        records = docs(["one two"])
+        assert token_costs(records, FakeTokenizer(), render=None, progress=False) == [2]
+
+
 class TestBudgetUnits:
     def test_records_and_tokens_are_the_options(self):
         assert set(BUDGET_UNITS) == {"records", "tokens"}
