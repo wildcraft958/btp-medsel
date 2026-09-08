@@ -22,8 +22,14 @@ from typing import Any
 
 from tqdm.auto import tqdm
 
+from medsel.eval.stats import accuracy_ci, subject_spread
 from medsel.prompts.templates import TEMPLATE_VERSION, render_continuation, render_prompt
 from medsel.schema import QAExample
+
+# Subjects thinner than this are dropped from the spread summary. MedMCQA's rarest subjects carry
+# a handful of validation items, where an accuracy is mostly sample-size artefact, and including
+# them would inflate the variance that the retention claim is read from.
+SUBJECT_MIN_N = 10
 
 __all__ = ["OptionScores", "EvalReport", "score_example", "evaluate"]
 
@@ -67,7 +73,15 @@ class EvalReport:
     accuracy: float
     accuracy_norm: float
     template_version: int = TEMPLATE_VERSION
+    # A 95% bootstrap interval, so a delta against a control can be told from noise. Measured on
+    # the base control it is 5.1 points wide on MedQA and 8.6 on PubMedQA, wider than most
+    # differences anyone would want to report.
+    accuracy_ci: tuple[float, float] | None = None
+    accuracy_norm_ci: tuple[float, float] | None = None
     by_subject: dict[str, dict[str, Any]] = field(default_factory=dict)
+    # Spread across subjects: aggregate accuracy can hold steady while a model trades one
+    # capability for another, and this is the only per-capability signal these datasets ship.
+    subject_spread: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -216,6 +230,10 @@ def evaluate(
             f"MedMCQA's test split withholds gold answers - evaluate on validation instead."
         )
 
+    by_subject = {
+        subject: {"accuracy": round(hits / count, 4), "n": count}
+        for subject, (hits, count) in sorted(subject_totals.items())
+    }
     return EvalReport(
         source=source,
         split=split,
@@ -225,8 +243,8 @@ def evaluate(
         n_skipped_unlabeled=n_skipped,
         accuracy=round(n_correct / n_scored, 4),
         accuracy_norm=round(n_correct_norm / n_scored, 4),
-        by_subject={
-            subject: {"accuracy": round(hits / count, 4), "n": count}
-            for subject, (hits, count) in sorted(subject_totals.items())
-        },
+        accuracy_ci=accuracy_ci(n_correct, n_scored),
+        accuracy_norm_ci=accuracy_ci(n_correct_norm, n_scored),
+        by_subject=by_subject,
+        subject_spread=subject_spread(by_subject, min_n=SUBJECT_MIN_N),
     )
