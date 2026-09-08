@@ -23,7 +23,8 @@ from pathlib import Path
 from typing import Any
 
 from medsel.registry import get_loader
-from medsel.selection.base import available_scorers, get_scorer, record_text
+from medsel.selection.base import available_scorers, get_scorer
+from medsel.selection.costs import load_tokenizer, token_costs
 from medsel.selection.selector import select_top_k
 
 # Constructor arguments per scorer. The two targeted scorers point at MedMCQA training data, which
@@ -33,31 +34,6 @@ SCORER_ARGS: dict[str, dict[str, Any]] = {
     "embed_similarity": {"target": "medmcqa", "target_limit": 500},
     "perplexity": {"mode": "mid"},
 }
-
-
-def token_counts(records: list[Any], tokenizer_name: str) -> list[int]:
-    from transformers import AutoTokenizer
-
-    tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
-    texts = [record_text(record) for record in records]
-    return [len(ids) for ids in tokenizer(texts, add_special_tokens=False)["input_ids"]]
-
-
-def take_token_budget(scores: list[float], tokens: list[int], budget: int) -> list[int]:
-    """Highest scoring records until the token budget is spent.
-
-    The honest way to compare scorers: every method gets the same number of training tokens, so a
-    preference for long documents stops being a free advantage.
-    """
-    order = sorted(range(len(scores)), key=lambda i: (-scores[i], i))
-    chosen: list[int] = []
-    spent = 0
-    for index in order:
-        if spent + tokens[index] > budget:
-            continue
-        chosen.append(index)
-        spent += tokens[index]
-    return chosen
 
 
 def jaccard(left: set[str], right: set[str]) -> float:
@@ -85,7 +61,7 @@ def main() -> int:
     records = list(loader.load(args.split, limit=args.limit))
     print(f"pool: {len(records)} records from {args.source}:{args.split}")
 
-    tokens = token_counts(records, args.tokenizer)
+    tokens = token_costs(records, load_tokenizer(args.tokenizer))
     total_tokens = sum(tokens)
     print(f"pool tokens: {total_tokens:,} ({total_tokens / len(records):.1f} per record)")
 
@@ -111,7 +87,7 @@ def main() -> int:
         scores = scorer(records)
 
         by_record = select_top_k(scores, args.budget)
-        by_token = take_token_budget(scores, tokens, token_budget)
+        by_token = select_top_k(scores, token_budget, costs=tokens)
 
         report["scorers"][name] = {
             "record_budget": {

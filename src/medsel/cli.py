@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any
 
 from medsel import __version__
+from medsel.selection.costs import BUDGET_UNITS
 
 __all__ = ["main", "build_parser", "build_manifest", "score_summary"]
 
@@ -198,6 +199,7 @@ def build_manifest(
     n_candidates: int,
     selected_uids: list[str],
     summary: dict[str, float],
+    budget_unit: str = "records",
 ) -> dict[str, Any]:
     """Describe a selection completely enough to reproduce and to audit it.
 
@@ -212,6 +214,7 @@ def build_manifest(
         "scorer": scorer,
         "scorer_args": scorer_args,
         "budget": budget,
+        "budget_unit": budget_unit,
         "strategy": strategy,
         "n_candidates": n_candidates,
         "n_selected": len(selected_uids),
@@ -230,6 +233,13 @@ def cmd_select(args: argparse.Namespace) -> int:
     scorer_args = _parse_kwargs(args.scorer_arg)
     scorer = get_scorer(args.scorer, **scorer_args)
     strategy = f"stratified:{args.stratify_by}" if args.stratify_by else "top_k"
+
+    if args.stream and args.budget_unit == "tokens":
+        raise SystemExit(
+            "a token budget needs the in-memory path. Which records fit depends on the cost of "
+            "records not yet seen, so a streamed token budget could only be approximated, and "
+            "this selector does not approximate. Drop --stream, or use --budget-unit records."
+        )
 
     if args.stream:
         from medsel.selection.stream import select_stream
@@ -251,16 +261,26 @@ def cmd_select(args: argparse.Namespace) -> int:
     else:
         records = list(loader.load(split, limit=args.limit))
         scores = scorer(records)
+
+        costs = None
+        if args.budget_unit == "tokens":
+            from medsel.selection.costs import load_tokenizer, token_costs
+
+            costs = token_costs(records, load_tokenizer(args.tokenizer))
+
         if args.stratify_by:
             groups = [
                 str(getattr(r, "labels", {}).get(args.stratify_by, "unknown")) for r in records
             ]
-            chosen = select_stratified(scores, groups, args.budget, args.min_per_group)
+            chosen = select_stratified(scores, groups, args.budget, args.min_per_group, costs=costs)
         else:
-            chosen = select_top_k(scores, args.budget)
+            chosen = select_top_k(scores, args.budget, costs=costs)
         n_candidates = len(records)
         selected_uids = [records[i].uid for i in chosen]
         summary = score_summary(scores, chosen)
+        if costs is not None:
+            summary["selected_tokens"] = float(sum(costs[i] for i in chosen))
+            summary["pool_tokens"] = float(sum(costs))
 
     manifest = build_manifest(
         source=args.source,
@@ -268,6 +288,7 @@ def cmd_select(args: argparse.Namespace) -> int:
         scorer=args.scorer,
         scorer_args=scorer_args,
         budget=args.budget,
+        budget_unit=args.budget_unit,
         strategy=strategy,
         n_candidates=n_candidates,
         selected_uids=selected_uids,
@@ -355,7 +376,21 @@ def build_parser() -> argparse.ArgumentParser:
         "--budget",
         type=_budget,
         default=0.1,
-        help="fraction of the pool to keep (0.1), or a whole number of records (5000)",
+        help="fraction of the pool to keep (0.1), or a whole number in --budget-unit (5000)",
+    )
+    selection.add_argument(
+        "--budget-unit",
+        default="records",
+        choices=list(BUDGET_UNITS),
+        help=(
+            "spend the budget in records or in tokens. Tokens is the unit a comparison between "
+            "scorers has to hold fixed, since training consumes tokens"
+        ),
+    )
+    selection.add_argument(
+        "--tokenizer",
+        default="HuggingFaceTB/SmolLM2-135M",
+        help="tokenizer used to count token costs, only read when --budget-unit is tokens",
     )
     selection.add_argument("--split", help="defaults to the loader's evaluation split")
     selection.add_argument("--limit", type=int, help="score only the first N records")

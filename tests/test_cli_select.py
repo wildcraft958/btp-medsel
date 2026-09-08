@@ -33,6 +33,19 @@ class TestSelectParser:
         )
         assert args.stream and args.budget == 500 and args.chunk_size == 64
 
+    def test_budget_unit_defaults_to_records(self):
+        assert build_parser().parse_args(["select", "--source", "pubmed"]).budget_unit == "records"
+
+    def test_accepts_a_token_budget(self):
+        args = build_parser().parse_args(
+            ["select", "--source", "pubmed", "--budget-unit", "tokens", "--budget", "100000"]
+        )
+        assert args.budget_unit == "tokens" and args.budget == 100_000
+
+    def test_rejects_an_unknown_budget_unit(self):
+        with pytest.raises(SystemExit):
+            build_parser().parse_args(["select", "--source", "pubmed", "--budget-unit", "grams"])
+
     def test_accepts_stratification(self):
         args = build_parser().parse_args(
             [
@@ -106,6 +119,10 @@ class TestBuildManifest:
         assert manifest["scorer"] == "random"
         assert manifest["scorer_args"] == {"seed": 1}
         assert manifest["strategy"] == "top_k"
+
+    def test_records_the_budget_unit(self):
+        """A budget of 500 means nothing without saying 500 of what."""
+        assert self.make()["budget_unit"] == "records"
 
     def test_empty_selection_is_representable(self):
         manifest = self.make(uids=[])
