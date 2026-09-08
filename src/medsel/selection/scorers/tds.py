@@ -354,12 +354,21 @@ class ThreeDSScorer(Scorer):
         from tqdm.auto import tqdm
 
         quality = [_quality_pass(r) for r in records]
-
-        model, tokenizer = self._model()
-        model.eval()
-        device = next(model.parameters()).device
-
         cached = self._load_cache()
+
+        needs_scoring = []
+        for i, record in enumerate(records):
+            if not quality[i]:
+                continue
+            uid = record.uid if hasattr(record, "uid") else str(i)
+            if uid not in cached:
+                needs_scoring.append(i)
+
+        model = tokenizer = device = None
+        if needs_scoring:
+            model, tokenizer = self._model()
+            model.eval()
+            device = next(model.parameters()).device
 
         metrics: list[dict[str, Any] | None] = [None] * len(records)
         scored_indices = []

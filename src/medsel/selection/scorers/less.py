@@ -382,8 +382,26 @@ class LESSScorer(TargetedScorer):
 
         for epoch in range(1, self.warmup_epochs + 1):
             print(f"LESS: processing checkpoint epoch {epoch}/{self.warmup_epochs}")
-            model, opt_state = self._load_checkpoint(epoch, device)
-            tokenizer = self._model_and_tokenizer()[1]
+
+            all_target_cached = all(
+                self._grad_cache_path(f"target_{i}", epoch, "target").exists()
+                for i in range(len(target_texts))
+            )
+            all_candidate_cached = all(
+                self._grad_cache_path(
+                    r.uid if hasattr(r, "uid") else str(j), epoch, "candidate"
+                ).exists()
+                for j, r in enumerate(records)
+                if isinstance(r, QAExample) and r.answer_key is not None
+            )
+            need_model = not (all_target_cached and all_candidate_cached)
+
+            model = opt_state = tokenizer = None
+            if need_model:
+                model, opt_state = self._load_checkpoint(epoch, device)
+                tokenizer = self._model_and_tokenizer()[1]
+            else:
+                print(f"  epoch {epoch}: all grads cached, skipping model load")
 
             target_grads = []
             for i, text in enumerate(
@@ -432,7 +450,8 @@ class LESSScorer(TargetedScorer):
                 sim = float(torch.dot(proj, mean_target))
                 scores[i] += sim
 
-            del model
+            if model is not None:
+                del model
             torch.cuda.empty_cache() if torch.cuda.is_available() else None
 
         n_epochs = self.warmup_epochs
