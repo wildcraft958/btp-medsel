@@ -27,6 +27,10 @@ def main() -> int:
     parser.add_argument("--cache-dir", default="runs/sft-selection-experiment/3ds/cache")
     parser.add_argument("--atten-method", default="mean", choices=["mean", "max"])
     parser.add_argument("--max-length", type=int, default=1024)
+    parser.add_argument(
+        "--quantization", default=None, choices=["4bit", "8bit"],
+        help="bitsandbytes quantization (for large judges on small GPUs)",
+    )
     args = parser.parse_args()
 
     loader = get_loader(args.source)
@@ -41,6 +45,7 @@ def main() -> int:
         cache_dir=args.cache_dir,
         atten_method=args.atten_method,
         max_length=args.max_length,
+        quantization=args.quantization,
     )
 
     cached = scorer._load_cache()

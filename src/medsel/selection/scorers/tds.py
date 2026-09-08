@@ -214,6 +214,7 @@ class ThreeDSScorer(Scorer):
         *,
         max_length: int = 1024,
         dtype: str = "auto",
+        quantization: str | None = None,
         low_th: float = 25.0,
         up_th: float = 75.0,
         atten_method: str = "mean",
@@ -228,6 +229,7 @@ class ThreeDSScorer(Scorer):
         self.judge_name = judge
         self.max_length = max_length
         self.dtype = dtype
+        self.quantization = quantization
         self.low_th = low_th
         self.up_th = up_th
         self.atten_method = atten_method
@@ -241,7 +243,10 @@ class ThreeDSScorer(Scorer):
             from medsel.eval.runner import load_model
 
             self._loaded = load_model(
-                self.judge_name, dtype=self.dtype, attn_implementation="eager"
+                self.judge_name,
+                dtype=self.dtype,
+                attn_implementation="eager",
+                quantization=self.quantization,
             )
         return self._loaded
 

@@ -26,8 +26,13 @@ def load_model(
     dtype: str = "auto",
     trust_remote_code: bool = False,
     attn_implementation: str | None = None,
+    quantization: str | None = None,
 ) -> tuple[Any, Any]:
-    """Load a causal LM and tokenizer onto the best available device."""
+    """Load a causal LM and tokenizer onto the best available device.
+
+    ``quantization`` accepts ``"4bit"`` or ``"8bit"`` and uses bitsandbytes NF4/INT8.
+    When quantized, the model is loaded directly onto the accelerator (no ``.to()``).
+    """
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     tokenizer = AutoTokenizer.from_pretrained(name_or_path, trust_remote_code=trust_remote_code)
@@ -36,13 +41,30 @@ def load_model(
 
     device = pick_device()
     kwargs: dict[str, Any] = {
-        "dtype": resolve_dtype(dtype, device),
         "trust_remote_code": trust_remote_code,
     }
     if attn_implementation is not None:
         kwargs["attn_implementation"] = attn_implementation
+
+    if quantization in ("4bit", "8bit"):
+        from transformers import BitsAndBytesConfig
+
+        if quantization == "4bit":
+            kwargs["quantization_config"] = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_compute_dtype=resolve_dtype(dtype, device),
+            )
+        else:
+            kwargs["quantization_config"] = BitsAndBytesConfig(load_in_8bit=True)
+        kwargs["device_map"] = "auto"
+    else:
+        kwargs["dtype"] = resolve_dtype(dtype, device)
+
     model = AutoModelForCausalLM.from_pretrained(name_or_path, **kwargs)
-    return model.to(device), tokenizer
+    if quantization is None:
+        model = model.to(device)
+    return model, tokenizer
 
 
 def evaluate_task(

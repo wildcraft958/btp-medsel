@@ -32,6 +32,8 @@ train = [
     "peft>=0.12",
     # SFTConfig(max_length=, completion_only_loss=) is TRL 1.x. Verified against 1.9.2.
     "trl>=1.0",
+    # Optional: 4-bit/8-bit quantization for large judges on small GPUs (Colab T4, etc.)
+    "bitsandbytes>=0.43",
 ]
 dev = [
     "pytest>=8.0",
