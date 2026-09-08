@@ -10,9 +10,9 @@ implementation are load bearing and are kept:
 
 - hashing with ``zlib.crc32`` rather than ``hash``, which is salted per process and would make
   scores irreproducible across runs;
-- Gumbel noise on the log importance weight, which makes a plain top-k equivalent to sampling
-  without replacement from the importance weights, rather than deterministically taking the most
-  target-like documents and losing all diversity.
+- Gumbel noise on the log importance weight, which approximates sampling without replacement
+  from the importance weights (the noise is scaled to the signal spread, so the equivalence is
+  approximate, not exact; see the ``fit`` method).
 """
 
 from __future__ import annotations
