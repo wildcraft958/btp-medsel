@@ -1,0 +1,116 @@
+{
+  "source": "medmcqa",
+  "split": "validation",
+  "model": "Qwen/Qwen3-1.7B-Base",
+  "mode": "letter",
+  "n_scored": 4183,
+  "n_skipped_unlabeled": 0,
+  "accuracy": 0.4891,
+  "accuracy_norm": 0.4891,
+  "template_version": 1,
+  "accuracy_ci": [
+    0.4748,
+    0.5042
+  ],
+  "accuracy_norm_ci": [
+    0.4748,
+    0.5042
+  ],
+  "by_subject": {
+    "Anaesthesia": {
+      "accuracy": 0.3529,
+      "n": 34
+    },
+    "Anatomy": {
+      "accuracy": 0.4615,
+      "n": 234
+    },
+    "Biochemistry": {
+      "accuracy": 0.5789,
+      "n": 171
+    },
+    "Dental": {
+      "accuracy": 0.4734,
+      "n": 1318
+    },
+    "ENT": {
+      "accuracy": 0.5283,
+      "n": 53
+    },
+    "Forensic Medicine": {
+      "accuracy": 0.4328,
+      "n": 67
+    },
+    "Gynaecology & Obstetrics": {
+      "accuracy": 0.433,
+      "n": 224
+    },
+    "Medicine": {
+      "accuracy": 0.478,
+      "n": 295
+    },
+    "Microbiology": {
+      "accuracy": 0.4754,
+      "n": 122
+    },
+    "Ophthalmology": {
+      "accuracy": 0.4138,
+      "n": 58
+    },
+    "Orthopaedics": {
+      "accuracy": 0.4,
+      "n": 20
+    },
+    "Pathology": {
+      "accuracy": 0.5519,
+      "n": 337
+    },
+    "Pediatrics": {
+      "accuracy": 0.453,
+      "n": 234
+    },
+    "Pharmacology": {
+      "accuracy": 0.5761,
+      "n": 243
+    },
+    "Physiology": {
+      "accuracy": 0.5497,
+      "n": 171
+    },
+    "Psychiatry": {
+      "accuracy": 0.5,
+      "n": 16
+    },
+    "Radiology": {
+      "accuracy": 0.5507,
+      "n": 69
+    },
+    "Skin": {
+      "accuracy": 0.2941,
+      "n": 17
+    },
+    "Social & Preventive Medicine": {
+      "accuracy": 0.4419,
+      "n": 129
+    },
+    "Surgery": {
+      "accuracy": 0.4959,
+      "n": 369
+    },
+    "Unknown": {
+      "accuracy": 0.5,
+      "n": 2
+    }
+  },
+  "subject_spread": {
+    "n_subjects": 20,
+    "mean": 0.4721,
+    "variance": 0.005215,
+    "std": 0.0722,
+    "min": 0.2941,
+    "max": 0.5789,
+    "range": 0.2848,
+    "worst": "Skin",
+    "best": "Biochemistry"
+  }
+}

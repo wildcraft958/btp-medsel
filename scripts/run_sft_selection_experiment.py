@@ -28,7 +28,7 @@ from medsel.selection.selector import select_top_k
 from medsel.stages.sft import SFTStage, render_completion
 
 SCORER_ARGS: dict[str, dict[str, Any]] = {
-    "3ds": {},
+    "3ds": {"cache_dir": "runs/sft-selection-experiment/3ds/cache"},
     "dsir": {"target": "medmcqa", "target_limit": 1000},
     "embed_similarity": {"target": "medmcqa", "target_limit": 1000},
     "perplexity": {"mode": "mid"},
