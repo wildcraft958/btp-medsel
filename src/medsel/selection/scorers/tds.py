@@ -104,7 +104,7 @@ def _instruction_ppl_and_embedding(
     with torch.no_grad():
         out = model(ids, labels=ids.contiguous(), output_hidden_states=True)
         ppl = float(torch.exp(out.loss))
-        embedding = out.hidden_states[-1].mean(dim=1).squeeze(0).cpu()
+        embedding = out.hidden_states[-1].mean(dim=1).squeeze(0).float().cpu()
     return ppl, embedding
 
 
