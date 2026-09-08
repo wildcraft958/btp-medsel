@@ -121,8 +121,8 @@ def print_judge_ablation(main: dict, ablation: dict) -> None:
     print("Judge Ablation: self-judged vs MedGemma-judged 3DS")
     print("=" * 80)
 
-    main_3ds = main["runs"].get("3ds")
-    ablation_3ds = ablation["runs"].get("3ds") or ablation["runs"].get("3ds_medgemma")
+    main_3ds = main["runs"].get("3ds") or ablation["runs"].get("3ds")
+    ablation_3ds = ablation["runs"].get("3ds_medgemma")
 
     if not main_3ds or not ablation_3ds:
         print("  Missing 3DS results in one or both files.")
