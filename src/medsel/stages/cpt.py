@@ -15,7 +15,7 @@ from typing import Any, ClassVar
 from medsel.data.packing import pack_to_dataset
 from medsel.registry import get_loader
 from medsel.schema import CorpusDoc
-from medsel.stages.base import Stage, StageResult
+from medsel.stages.base import Stage, StageResult, apply_selection
 from medsel.utils.device import autocast_flags, pick_device, resolve_dtype
 from medsel.utils.seed import set_seed
 
@@ -59,7 +59,9 @@ class CPTStage(Stage):
             )
 
         tokenizer = tokenizer or self.tokenizer()
-        docs = loader.load(cfg.data.split, limit=cfg.data.limit)
+        docs: Any = loader.load(cfg.data.split, limit=cfg.data.limit)
+        if cfg.data.selection:
+            docs = apply_selection(docs, cfg.data.selection, cfg.data.source, cfg.data.split)
         return pack_to_dataset(
             docs,
             tokenizer,

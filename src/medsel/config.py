@@ -32,6 +32,9 @@ class DataConfig:
     split: str = "train"
     limit: int | None = None
     loader: dict[str, Any] = field(default_factory=dict)
+    # Path to a manifest from `medsel select`. Without it a stage trains on the whole pool, which
+    # is the control condition every selection method has to beat.
+    selection: str | None = None
 
 
 @dataclass

@@ -29,7 +29,7 @@ from typing import Any, ClassVar
 from medsel.prompts.templates import TEMPLATE_VERSION, render_prompt
 from medsel.registry import get_loader
 from medsel.schema import QAExample
-from medsel.stages.base import Stage, StageResult
+from medsel.stages.base import Stage, StageResult, apply_selection
 from medsel.utils.device import autocast_flags, pick_device, resolve_dtype
 from medsel.utils.seed import set_seed
 
@@ -93,7 +93,10 @@ class SFTStage(Stage):
                 f"SFT targets. MedMCQA's 'test' split is the usual mistake; use 'train'."
             )
 
-        return list(loader.load(cfg.data.split, limit=cfg.data.limit))
+        records: Any = loader.load(cfg.data.split, limit=cfg.data.limit)
+        if cfg.data.selection:
+            records = apply_selection(records, cfg.data.selection, cfg.data.source, cfg.data.split)
+        return list(records)
 
     def prepare(self, tokenizer: Any = None) -> Any:
         """Render examples into a prompt-completion dataset. No model, no optimiser.
