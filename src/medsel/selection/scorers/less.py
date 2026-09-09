@@ -30,32 +30,30 @@ from medsel.selection.targets import TargetedScorer
 __all__ = ["LESSScorer"]
 
 
+_PROJ_INDICES_CACHE: dict[tuple[int, int, int], Any] = {}
+
+
 def _rademacher_project(
     grad: Any,
     proj_dim: int,
     seed: int,
-    block_size: int = 128,
 ) -> Any:
-    """Project a gradient vector to lower dimension via block-wise Rademacher.
+    """Project a gradient vector via random coordinate selection.
 
-    Generates the random matrix in blocks to avoid materializing a D x d matrix.
-    Equivalent to TRAK's BasicProjector.
+    The index array is cached so randperm runs only once per (D, proj_dim, seed).
     """
     import torch
 
     grad = grad.float().flatten()
     D = grad.shape[0]
-    sketch = torch.zeros(proj_dim, device=grad.device)
-    num_blocks = (proj_dim + block_size - 1) // block_size
-
-    for b in range(num_blocks):
-        bs = min(block_size, proj_dim - b * block_size)
+    cache_key = (D, proj_dim, seed)
+    if cache_key not in _PROJ_INDICES_CACHE:
         gen = torch.Generator(device="cpu")
-        gen.manual_seed(seed + b)
-        R = (torch.randint(0, 2, (D, bs), generator=gen).float() * 2 - 1).to(grad.device)
-        sketch[b * block_size : b * block_size + bs] = grad @ R
-
-    sketch /= math.sqrt(proj_dim)
+        gen.manual_seed(seed)
+        _PROJ_INDICES_CACHE[cache_key] = torch.randperm(D, generator=gen)[:proj_dim]
+    indices = _PROJ_INDICES_CACHE[cache_key].to(grad.device)
+    sketch = grad[indices]
+    sketch /= math.sqrt(proj_dim / D)
     return sketch
 
 
@@ -335,7 +333,7 @@ class LESSScorer(TargetedScorer):
         model = AutoModelForCausalLM.from_pretrained(
             self.judge_name, dtype=resolve_dtype(self.dtype, device)
         ).to(device)
-        model = PeftModel.from_pretrained(model, str(ckpt_dir))
+        model = PeftModel.from_pretrained(model, str(ckpt_dir), is_trainable=True)
         model.train()
 
         opt_path = ckpt_dir / "optimizer.pt"
