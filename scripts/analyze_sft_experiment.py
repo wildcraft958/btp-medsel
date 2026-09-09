@@ -36,7 +36,9 @@ def print_comparison_table(report: dict) -> None:
 
     print("=" * 80)
     print(f"SFT Selection Experiment: {setup['model']}")
-    print(f"Task: {setup['task']}  |  Token budget: {setup['token_budget']:,}")
+    budget = setup.get('token_budget', 'N/A')
+    budget_str = f"{budget:,}" if isinstance(budget, int) else str(budget)
+    print(f"Task: {setup['task']}  |  Token budget: {budget_str}")
     print(f"LoRA: r={16}, epochs={setup['epochs']}, lr={setup['learning_rate']}")
     print("=" * 80)
 
@@ -68,8 +70,10 @@ def print_comparison_table(report: dict) -> None:
         if base_acc is not None:
             d = acc["accuracy"] - base_acc
             delta = f"{d:+.4f}"
+        tok = sel.get('tokens')
+        tok_str = f"{tok:>10,}" if isinstance(tok, int) else f"{'--':>10}"
         print(
-            f"{name:<20}{sel.get('n_selected', 0):>8}{sel.get('tokens', 0):>10,}"
+            f"{name:<20}{sel.get('n_selected', 0):>8}{tok_str}"
             f"{acc['accuracy']:>10.4f}  [{ci[0]:.4f}, {ci[1]:.4f}]{delta:>10}"
         )
 
