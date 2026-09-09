@@ -399,7 +399,11 @@ class LESSScorer(TargetedScorer):
             model = opt_state = tokenizer = None
             if need_model:
                 model, opt_state = self._load_checkpoint(epoch, device)
-                tokenizer = self._model_and_tokenizer()[1]
+                from transformers import AutoTokenizer
+
+                tokenizer = AutoTokenizer.from_pretrained(self.judge_name)
+                if tokenizer.pad_token is None:
+                    tokenizer.pad_token = tokenizer.eos_token
             else:
                 print(f"  epoch {epoch}: all grads cached, skipping model load")
 
