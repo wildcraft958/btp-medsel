@@ -121,7 +121,9 @@ def main() -> int:
         sel = d / "selection.json"
         if sel.exists():
             m = json.loads(sel.read_text())
-            print(f"  {d.name}: {m['n_selected']} records, {m.get('tokens', '?'):,} tokens")
+            tok = m.get('tokens', '?')
+            tok_str = f"{tok:,}" if isinstance(tok, int) else str(tok)
+            print(f"  {d.name}: {m['n_selected']} records, {tok_str} tokens")
 
     return 0
 
