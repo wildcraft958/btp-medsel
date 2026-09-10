@@ -125,6 +125,42 @@ class LESSScorer(TargetedScorer):
         self.progress = progress
         self._loaded: tuple[Any, Any] | None = None
 
+    def resolve_target_split(self) -> str | None:
+        """LESS uses validation targets (the paper's design), not train.
+
+        Distribution-matching scorers (DSIR, embed_similarity) use train targets
+        to avoid inflating eval numbers. LESS is different: it selects training
+        examples whose gradients help the model on validation. Using train targets
+        would select examples similar to other training examples, defeating the
+        purpose of influence-based selection.
+        """
+        if isinstance(self.target, str):
+            return self.target_split or "validation"
+        return None
+
+    def target_texts(self) -> list[str]:
+        """Target texts with completion, so gradients match candidate format."""
+        if not isinstance(self.target, str):
+            return [str(t) for t in self.target]
+        from medsel.prompts.templates import render_prompt
+        from medsel.registry import get_loader
+        from medsel.schema import QAExample
+        from medsel.stages.sft import render_completion
+
+        loader = get_loader(self.target)
+        split = self.resolve_target_split()
+        assert split is not None
+        texts = []
+        for example in loader.load(split, limit=self.target_limit):
+            if isinstance(example, QAExample) and example.answer_key is not None:
+                texts.append(render_prompt(example) + render_completion(example))
+            else:
+                from medsel.selection.base import record_text
+                texts.append(record_text(example))
+        if not texts:
+            raise ValueError(f"target {self.target!r} produced no text")
+        return texts
+
     def _model_and_tokenizer(self) -> tuple[Any, Any]:
         if self._loaded is None:
             from medsel.eval.runner import load_model
