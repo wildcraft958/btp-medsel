@@ -1,8 +1,8 @@
 import pytest
 
-from medsel.schema import CorpusDoc
+from medsel.schema import CorpusDoc, QAExample
 from medsel.selection.base import get_scorer
-from medsel.selection.scorers.dsir import hashed_ngram_counts
+from medsel.selection.scorers.dsir import _record_as_prompt, hashed_ngram_counts
 
 MEDICAL = [
     "Patients with acute myocardial infarction received reperfusion therapy within six hours.",
@@ -79,6 +79,28 @@ class TestDSIRScorer:
         from medsel.selection.base import available_scorers
 
         assert "dsir" in available_scorers()
+
+
+class TestPoolTargetConsistency:
+    """Pool and target texts must use the same format for QAExamples."""
+
+    def test_qa_example_uses_render_prompt(self):
+        ex = QAExample(
+            uid="q1",
+            source="test",
+            split="train",
+            question="What causes fever?",
+            options={"A": "Virus", "B": "Allergy"},
+            answer_key="A",
+        )
+        text = _record_as_prompt(ex)
+        assert "Question:" in text
+        assert "A." in text
+        assert "Answer:" in text
+
+    def test_corpus_doc_falls_through(self):
+        doc = CorpusDoc(uid="d1", source="test", text="Some medical text")
+        assert _record_as_prompt(doc) == "Some medical text"
 
 
 class TestTargetSplitGuard:

@@ -31,6 +31,23 @@ import numpy as np
 from medsel.selection.base import record_text, register_scorer
 from medsel.selection.targets import TargetedScorer
 
+_pool_text = record_text  # default; overridden below for QAExample consistency
+
+
+def _record_as_prompt(record: Any) -> str:
+    """Convert a record to the same format target_texts() uses.
+
+    target_texts() renders QAExamples with render_prompt(); pool texts must match
+    so the n-gram distributions are comparable.
+    """
+    from medsel.schema import QAExample
+
+    if isinstance(record, QAExample):
+        from medsel.prompts.templates import render_prompt
+
+        return render_prompt(record)
+    return record_text(record)
+
 __all__ = ["DSIRScorer", "hashed_ngram_counts"]
 
 _NON_ALNUM = re.compile(r"[^a-z0-9 ]+")
@@ -138,12 +155,12 @@ class DSIRScorer(TargetedScorer):
         the chunk, which would make scores from different chunks incomparable.
         """
         self._target_model = self._fit(self.target_texts())
-        self._pool_model = self._fit([record_text(record) for record in records])
+        self._pool_model = self._fit([_record_as_prompt(record) for record in records])
         # Scale the noise to the signal it perturbs. The raw weight is a per-token average, so its
         # spread is around 0.12 on PubMed while standard Gumbel noise has a spread of 1.28. Adding
         # them directly buries the ranking under ten times its own size and the scorer selects at
         # random, which is what it did until this was measured.
-        weights = [self._raw_weight(record_text(record)) for record in records]
+        weights = [self._raw_weight(_record_as_prompt(record)) for record in records]
         spread = statistics.pstdev(weights) if len(weights) > 1 else 0.0
         # A degenerate pool, where every document scores alike, has no spread to scale against.
         # Falling back to unit noise keeps ties breaking randomly; scaling to zero there would
@@ -178,7 +195,7 @@ class DSIRScorer(TargetedScorer):
 
         scores: list[float] = []
         for record in records:
-            weight = self._raw_weight(record_text(record))
+            weight = self._raw_weight(_record_as_prompt(record))
             if self.gumbel and self._noise_scale:
                 weight += self._noise_scale * -math.log(-math.log(rng.random() + 1e-12) + 1e-12)
             scores.append(weight)

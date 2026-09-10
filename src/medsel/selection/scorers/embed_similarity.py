@@ -24,6 +24,17 @@ import numpy as np
 from medsel.selection.base import record_text, register_scorer
 from medsel.selection.targets import TargetedScorer
 
+
+def _record_as_prompt(record: Any) -> str:
+    """Convert a record to the same format target_texts() uses."""
+    from medsel.schema import QAExample
+
+    if isinstance(record, QAExample):
+        from medsel.prompts.templates import render_prompt
+
+        return render_prompt(record)
+    return record_text(record)
+
 __all__ = ["EmbedSimilarityScorer", "unit_centroid", "mean_pooled"]
 
 
@@ -135,7 +146,7 @@ class EmbedSimilarityScorer(TargetedScorer):
             self.fit(records)
         assert self._centroid is not None
 
-        embeddings = self._embed([record_text(record) for record in records], "embed:pool")
+        embeddings = self._embed([_record_as_prompt(record) for record in records], "embed:pool")
         return (embeddings @ self._centroid).tolist()
 
     def __repr__(self) -> str:
