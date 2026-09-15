@@ -198,7 +198,4 @@ people do not pick the same item.
   distribution to the evaluation items inflates the result without improving the model. `dsir`
   refuses overlapping targets in `resolve_target_split`; any new targeted scorer should reuse that
   check. PubMedQA is the trap: it has one `train` split and its evaluation slice is `train[:500]`.
-- Gemma weights are licence-gated: `hf auth login` and accept the licence before using
-  `configs/model/gemma3_1b.yaml`.
-
 Full list in [datasets.md](datasets.md).

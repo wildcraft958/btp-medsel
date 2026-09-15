@@ -49,7 +49,7 @@ def main() -> int:
     parser.add_argument("--budget", type=int, default=500, help="records each scorer keeps")
     parser.add_argument("--loader", nargs="*", default=["num_shards=1"], metavar="KEY=VALUE")
     parser.add_argument("--tokenizer", default="HuggingFaceTB/SmolLM2-135M")
-    parser.add_argument("--output", default="results/scorer_comparison.json")
+    parser.add_argument("--output", default="results/scorer_overlap.json")
     args = parser.parse_args()
 
     loader_kwargs: dict[str, Any] = {}

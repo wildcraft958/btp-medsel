@@ -77,7 +77,7 @@ A checkpoint whose provenance is unrecorded is not a result anyone can defend la
 
 Experiments are YAML (`configs/experiment/*.yaml`), not command-line flags, so a run is a
 reviewable artefact that can be diffed and re-run. Sections may be inline or a path to a shared
-fragment (`model: ../model/gemma3_1b.yaml`).
+fragment (`model: ../model/qwen3_1.7b_lora.yaml`).
 
 **Unknown keys raise.** A silently ignored `learning_rare` typo produces a run that looks correct
 and trains at the wrong rate, which is far more expensive than a startup failure.

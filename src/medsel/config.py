@@ -115,7 +115,7 @@ def _build(cls: type, data: dict[str, Any], where: str):
 def _resolve(section: Any, base_dir: Path, where: str) -> dict[str, Any]:
     """Allow a section to be either inline or a path to a shared YAML fragment.
 
-    ``model: configs/model/gemma3_1b.yaml`` keeps one model definition reusable across experiments
+    ``model: configs/model/qwen3_1.7b_lora.yaml`` keeps one model definition reusable across experiments
     without a templating system.
     """
     if isinstance(section, str):

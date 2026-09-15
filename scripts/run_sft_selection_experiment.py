@@ -1,6 +1,6 @@
 """Train one SFT model per scorer at a matched token budget, then evaluate all.
 
-The MedMCQA counterpart of run_selection_experiment.py. Every scorer picks a subset of
+Every scorer picks a subset of
 MedMCQA train under the same token budget, each subset gets an identical SFT run, and
 each result is scored on MedMCQA validation with a confidence interval.
 
