@@ -237,14 +237,22 @@ class PDSScorer(TargetedScorer):
         set_seed(self.seed)
         model, tokenizer = self._load_proxy_model(device)
 
-        train_batches, batch_record_indices = self._prepare_batches(
-            records, tokenizer, device
+        all_batches, all_batch_indices = self._prepare_batches(
+            records, tokenizer, "cpu"
         )
-        if not train_batches:
+        if not all_batches:
             return [float("-inf")] * len(records)
 
         target_texts = self.target_texts()
         val_batches = self._tokenize_texts(target_texts, tokenizer, device)
+
+        n_train = min(
+            max(self.pmp_steps, len(all_batches)),
+            len(all_batches),
+        )
+        rng = random.Random(self.seed)
+        train_indices = rng.sample(range(len(all_batches)), n_train)
+        train_batches = [all_batches[i] for i in train_indices]
 
         from medsel.selection.scorers.pds_solver import PMPConfig, PMPSolver
 
@@ -258,7 +266,11 @@ class PDSScorer(TargetedScorer):
         )
         solver = PMPSolver(model, config, self.cache_dir, device)
         raw_scores = solver.solve(
-            train_batches, val_batches, batch_record_indices, progress=self.progress
+            train_batches,
+            val_batches,
+            all_batches,
+            all_batch_indices,
+            progress=self.progress,
         )
 
         scores = [float("-inf")] * len(records)

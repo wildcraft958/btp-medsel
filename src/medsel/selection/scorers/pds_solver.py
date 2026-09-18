@@ -143,17 +143,17 @@ class PMPSolver:
             {k: v.cpu() for k, v in train_batches[(cfg.pmp_steps - 1) % n_batches].items()},
         )
 
-    def _reconstruct_segment(
+    def _reconstruct_segment_to_cpu(
         self,
         start_step: int,
         end_step: int,
         train_batches: list[dict[str, Tensor]],
     ) -> list[dict[str, Tensor]]:
-        """Replay forward from a checkpoint to get intermediate param states."""
+        """Replay forward from a checkpoint, returning intermediate params on CPU."""
         params_cpu, _ = self.ckpt_mgr.load_checkpoint(start_step)
         params = {n: p.to(self.device) for n, p in params_cpu.items()}
 
-        segment_params = [params]
+        segment_params = [{n: p.cpu() for n, p in params.items()}]
         n_batches = len(train_batches)
 
         for step in range(start_step, end_step):
@@ -168,7 +168,11 @@ class PMPSolver:
             )
             grads, _ = compute_grad_and_loss(loss_fn, params)
             params = {n: params[n] - self.config.pmp_lr * grads[n] for n in params}
-            segment_params.append(params)
+            segment_params.append({n: p.cpu() for n, p in params.items()})
+
+        del params
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
         return segment_params
 
@@ -203,10 +207,16 @@ class PMPSolver:
         self,
         train_batches: list[dict[str, Tensor]],
         val_batches: list[dict[str, Tensor]],
-        batch_record_indices: list[list[int]],
+        score_batches: list[dict[str, Tensor]],
+        score_batch_indices: list[list[int]],
         progress: bool = True,
     ) -> dict[int, float]:
-        """Phase 2: reverse iteration computing per-example quality scores."""
+        """Phase 2: reverse iteration computing per-example quality scores.
+
+        train_batches drive the HVP costate update (same batches as forward pass).
+        score_batches cover the entire pool so every record gets a score at each
+        compute_ct_interval step.
+        """
         cfg = self.config
         n_batches = len(train_batches)
 
@@ -221,11 +231,16 @@ class PMPSolver:
             bar = tqdm(bar, desc="PMP backward (segments)", leave=False)
 
         for seg_start, seg_end in bar:
-            seg_params = self._reconstruct_segment(seg_start, seg_end, train_batches)
+            seg_params_cpu = self._reconstruct_segment_to_cpu(
+                seg_start, seg_end, train_batches
+            )
 
             for offset in range(seg_end - seg_start - 1, -1, -1):
                 step = seg_start + offset
-                params_at_step = seg_params[offset]
+                params_at_step = {
+                    n: p.to(self.device)
+                    for n, p in seg_params_cpu[offset].items()
+                }
 
                 g_dev = self._compute_val_grad(params_at_step, val_batches)
 
@@ -236,22 +251,31 @@ class PMPSolver:
                         lam[n] = lam[n] + g_dev[n]
 
                 if step % cfg.compute_ct_interval == 0:
-                    batch = train_batches[step % n_batches]
-                    batch_dev = {k: v.to(self.device) for k, v in batch.items()}
-                    record_idxs = batch_record_indices[step % n_batches]
-
-                    scores = per_example_jvp_scores(
-                        self.model,
-                        params_at_step,
-                        batch_dev["input_ids"],
-                        batch_dev["labels"],
-                        batch_dev["attention_mask"],
-                        lam,
-                        chunk_size=cfg.chunk_size,
+                    score_iter = enumerate(
+                        zip(score_batches, score_batch_indices, strict=True)
                     )
-
-                    for i, ridx in enumerate(record_idxs):
-                        grad_gamma[ridx] = grad_gamma.get(ridx, 0.0) + scores[i].item()
+                    if progress:
+                        score_iter = tqdm(
+                            score_iter,
+                            total=len(score_batches),
+                            desc=f"  scoring pool (step {step})",
+                            leave=False,
+                        )
+                    for _bi, (sbatch, ridxs) in score_iter:
+                        sb_dev = {k: v.to(self.device) for k, v in sbatch.items()}
+                        scores = per_example_jvp_scores(
+                            self.model,
+                            params_at_step,
+                            sb_dev["input_ids"],
+                            sb_dev["labels"],
+                            sb_dev["attention_mask"],
+                            lam,
+                            chunk_size=cfg.chunk_size,
+                        )
+                        for i, ridx in enumerate(ridxs):
+                            grad_gamma[ridx] = (
+                                grad_gamma.get(ridx, 0.0) + scores[i].item()
+                            )
 
                 batch = train_batches[step % n_batches]
                 batch_dev = {k: v.to(self.device) for k, v in batch.items()}
@@ -265,7 +289,9 @@ class PMPSolver:
                 for n in lam:
                     lam[n] = lam[n] - cfg.pmp_lr * hvp_result[n]
 
-            del seg_params
+            del seg_params_cpu, params_at_step
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
 
         return grad_gamma
 
@@ -273,11 +299,21 @@ class PMPSolver:
         self,
         train_batches: list[dict[str, Tensor]],
         val_batches: list[dict[str, Tensor]],
-        batch_record_indices: list[list[int]],
+        score_batches: list[dict[str, Tensor]],
+        score_batch_indices: list[list[int]],
         progress: bool = True,
     ) -> dict[int, float]:
-        """Full PMP solve: forward pass then backward pass."""
+        """Full PMP solve: forward pass then backward pass.
+
+        train_batches are used in the forward SGD pass and for HVP in backward.
+        score_batches (covering the full pool) are scored at each backward
+        compute_ct_interval step.
+        """
         self.forward_pass(train_batches, progress=progress)
         return self.backward_pass(
-            train_batches, val_batches, batch_record_indices, progress=progress
+            train_batches,
+            val_batches,
+            score_batches,
+            score_batch_indices,
+            progress=progress,
         )
