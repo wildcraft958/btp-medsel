@@ -36,6 +36,7 @@ SCORER_ARGS: dict[str, dict[str, Any]] = {
     },
     "embed_similarity": {"target": "medmcqa", "target_limit": 1000},
     "less": {"cache_dir": "runs/sft-selection-experiment/less/cache"},
+    "pds": {"cache_dir": "runs/sft-selection-experiment/pds/cache"},
     "perplexity": {"mode": "mid"},
 }
 
