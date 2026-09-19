@@ -1,6 +1,6 @@
 # Phase 3 Experiment Report: Data Selection for Medical SFT
 
-**Date:** 2026-09-12 (updated)
+**Date:** 2026-09-19 (updated)
 **Author:** Animesh Raj
 
 ## Research Question
@@ -8,7 +8,7 @@
 Does the choice of data selection method matter for supervised fine-tuning (SFT) on MedMCQA,
 or does random selection perform comparably?
 
-We compare six selection strategies at a matched token budget, training Qwen3-1.7B-Base with
+We compare seven selection strategies at a matched token budget, training Qwen3-1.7B-Base with
 LoRA adapters on MedMCQA and evaluating on its validation split (4,183 questions).
 
 ## Experimental Setup
@@ -34,6 +34,9 @@ LoRA adapters on MedMCQA and evaluating on its validation split (4,183 questions
   (per-token normalized variant)
 - **Perplexity**: Mid-range perplexity selection (Goldilocks-style)
 - **Embed similarity**: Cosine similarity of causal LM embeddings to validation target
+- **PDS** (Gu et al., ICLR 2025): PMP-based Data Selection using optimal control theory.
+  Solves the adjoint equation backward through a proxy model's training trajectory to score
+  each example by its contribution to validation loss reduction. Uses SmolLM2-135M as proxy.
 - **Random**: Uniform random baseline
 
 ## Results
@@ -47,6 +50,7 @@ LoRA adapters on MedMCQA and evaluating on its validation split (4,183 questions
 | **DSIR** | **0.4946** | [0.4803, 0.5097] | +0.0055 |
 | Perplexity | 0.4929 | [0.4786, 0.5080] | +0.0038 |
 | Random | 0.4925 | [0.4781, 0.5075] | +0.0034 |
+| PDS | 0.4894 | [0.4750, 0.5044] | +0.0003 |
 | LESS (buggy) | 0.4829 | [0.4686, 0.4980] | -0.0062 |
 | Embed similarity | 0.4793 | [0.4650, 0.4944] | -0.0098 |
 
@@ -188,6 +192,57 @@ medical subjects (std 0.080 vs 0.068), meaning less uniform performance. This is
 the overall finding: on a homogeneous pool, the judge quality does not matter because every
 example is already on-topic.
 
+### PDS Results and Diagnostics
+
+PDS (Gu et al., ICLR 2025) was tested using SmolLM2-135M as a proxy model, with 100 PMP
+steps, batch size 2, and 2 scoring passes (compute_ct_interval=50) over the full 30,000-record
+pool. Scoring took ~7 hours on the P5000.
+
+**Result: 0.4894 accuracy (95% CI [0.475, 0.504]), slightly below random (0.4908).**
+
+PDS was run at 1 epoch (not 3) due to compute constraints. Its train loss (0.6907) and
+record count (2,482 selected) are comparable to other methods.
+
+**Score distribution analysis** shows the PDS signal is real, not degenerate:
+- Scores range from -4,783 to +4,376 (std=696), roughly normally distributed
+- All 30,000 records received finite scores (no unscored records)
+- Top 2,500 records average +1,483 vs bottom 2,500 at -1,194
+
+**Selection overlap analysis** reveals that every method picks almost entirely different
+records, not just PDS:
+
+| Method A | Method B | Jaccard | Shared |
+|---|---|---|---|
+| PDS | Random | 0.036 | 154 |
+| PDS | 3DS | 0.035 | 148 |
+| 3DS | Random | 0.035 | 130 |
+| 3DS | DSIR | 0.039 | 152 |
+| DSIR | Random | 0.035 | 141 |
+
+All pairwise Jaccard similarities are 3-5%. Each method finds a different "good" subset,
+yet all achieve nearly identical accuracy. This is the signature of a regime where many
+equally effective subsets exist and selection method choice does not matter.
+
+**Why PDS does not outperform random in this setting:**
+
+1. **Regime bottleneck.** At 6.7% budget on a homogeneous pool, there are many equally
+   effective subsets. This is consistent with recent work showing random selection is
+   competitive in low-budget medical SFT (Van Sonsbeek et al., arxiv 2411.08870).
+
+2. **Proxy model mismatch.** PDS scores are computed on SmolLM2-135M (LLaMA-family, 135M
+   params) but the SFT model is Qwen3-1.7B (Qwen-family, 1.7B). Research on proxy model
+   reliability (arxiv 2512.24503) raises doubts about whether small models can reliably
+   select data for larger models, as small proxy models estimate quality through shallow
+   patterns that may not transfer.
+
+3. **Only 2 scoring passes.** With compute_ct_interval=50, the pool is scored at only 2
+   backward steps. The reference implementation uses compute_ct_interval=10 (10 passes),
+   giving more stable score estimates.
+
+4. **PDS was designed for pretraining, not SFT.** The original paper selects from
+   CommonCrawl for pretraining runs of 400B+ tokens. SFT at 108K tokens gives the adjoint
+   equation very little trajectory to optimize over.
+
 ## Remaining Work
 
 ### LESS Rescore (Blocked)
@@ -196,18 +251,25 @@ Re-running LESS with both bugs fixed to get corrected results. Currently blocked
 constraints (ollama process holds 5.5 GB of the P5000's 16 GB; LESS requires full model +
 optimizer state + per-example gradients, which exceeds the remaining ~10.5 GB).
 
+### PDS with More Scoring Passes
+
+Rerun PDS with compute_ct_interval=10 (10 scoring passes instead of 2) to determine whether
+the noisy 2-pass score estimate is the bottleneck. Estimated cost: ~35 hours on P5000.
+
 ## Summary
 
-At a 108k token budget, data selection method choice does not meaningfully affect SFT accuracy
-on MedMCQA. All methods fall within a 1.5 percentage point band, and no method achieves
-statistical significance over random. This is consistent with recent findings in the broader
-NLP literature about the limits of data selection methods on clean, homogeneous source pools.
+Seven data selection methods (3DS, DSIR, PDS, perplexity, embed similarity, LESS, random)
+were tested at a 108k token budget on MedMCQA. All methods fall within a 1.5 percentage
+point band (0.479 to 0.495), and no method achieves statistical significance over random.
 
-The judge ablation shows that a stronger external judge does not improve 3DS selection on this
-task.
+PDS (optimal control-based selection) scores 0.4894, slightly below random (0.4908). Despite
+producing a strong and well-separated score distribution, PDS-selected data does not translate
+to downstream accuracy gains. Diagnostic analysis shows all methods select nearly disjoint
+subsets (3-5% Jaccard overlap) yet achieve identical accuracy, confirming the regime
+bottleneck hypothesis: at 6.7% budget on a homogeneous pool, many equally effective subsets
+exist.
 
-The seed sweep (3 seeds, 4 methods) confirms the ranking is stable: 3DS leads random by 0.33pp
-on average, but the difference is not statistically significant (overlapping error bars). The
-small-budget experiment (27k tokens, 1.7% of pool) shows a larger gap between smart selection
-and random (~1pp vs ~0.2pp at 108k), consistent with the budget-dependence hypothesis from
-Wettig et al. (2024).
+The judge ablation shows that a stronger external judge does not improve 3DS selection.
+The seed sweep (3 seeds, 4 methods) confirms rankings are stable but not significant.
+The small-budget experiment (27k tokens, 1.7%) shows a larger gap between smart selection
+and random (~1pp vs ~0.2pp at 108k), consistent with Wettig et al. (2024).
