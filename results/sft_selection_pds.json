@@ -1,0 +1,158 @@
+{
+  "pool": {
+    "source": "medmcqa",
+    "split": "train",
+    "n_candidates": 30000,
+    "pool_tokens": 1628044
+  },
+  "setup": {
+    "model": "Qwen/Qwen3-1.7B-Base",
+    "task": "medmcqa",
+    "token_budget": 108104,
+    "anchor_records": 2000,
+    "max_length": 1024,
+    "learning_rate": 2e-05,
+    "epochs": 1.0,
+    "seed": 42,
+    "lora": true
+  },
+  "runs": {
+    "pds": {
+      "selection": {
+        "n_selected": 2482,
+        "tokens": 108080,
+        "scorer_args": {
+          "cache_dir": "runs/sft-selection-experiment/pds/cache",
+          "max_length": 256,
+          "pmp_steps": 100,
+          "pmp_batch_size": 2,
+          "compute_ct_interval": 50,
+          "chunk_size": 1
+        }
+      },
+      "training": {
+        "train_runtime_s": 968.7,
+        "n_examples": 2482,
+        "train_loss": 0.6907351300647404
+      },
+      "eval": {
+        "accuracy": {
+          "source": "medmcqa",
+          "split": "validation",
+          "model": "runs/sft-selection-experiment/pds/model",
+          "mode": "letter",
+          "n_scored": 4183,
+          "n_skipped_unlabeled": 0,
+          "accuracy": 0.4894,
+          "accuracy_norm": 0.4894,
+          "template_version": 1,
+          "accuracy_ci": [
+            0.475,
+            0.5044
+          ],
+          "accuracy_norm_ci": [
+            0.475,
+            0.5044
+          ],
+          "by_subject": {
+            "Anaesthesia": {
+              "accuracy": 0.3824,
+              "n": 34
+            },
+            "Anatomy": {
+              "accuracy": 0.4487,
+              "n": 234
+            },
+            "Biochemistry": {
+              "accuracy": 0.5906,
+              "n": 171
+            },
+            "Dental": {
+              "accuracy": 0.4666,
+              "n": 1318
+            },
+            "ENT": {
+              "accuracy": 0.5094,
+              "n": 53
+            },
+            "Forensic Medicine": {
+              "accuracy": 0.3731,
+              "n": 67
+            },
+            "Gynaecology & Obstetrics": {
+              "accuracy": 0.442,
+              "n": 224
+            },
+            "Medicine": {
+              "accuracy": 0.4847,
+              "n": 295
+            },
+            "Microbiology": {
+              "accuracy": 0.5082,
+              "n": 122
+            },
+            "Ophthalmology": {
+              "accuracy": 0.431,
+              "n": 58
+            },
+            "Orthopaedics": {
+              "accuracy": 0.4,
+              "n": 20
+            },
+            "Pathology": {
+              "accuracy": 0.5549,
+              "n": 337
+            },
+            "Pediatrics": {
+              "accuracy": 0.4444,
+              "n": 234
+            },
+            "Pharmacology": {
+              "accuracy": 0.5761,
+              "n": 243
+            },
+            "Physiology": {
+              "accuracy": 0.5497,
+              "n": 171
+            },
+            "Psychiatry": {
+              "accuracy": 0.5,
+              "n": 16
+            },
+            "Radiology": {
+              "accuracy": 0.5217,
+              "n": 69
+            },
+            "Skin": {
+              "accuracy": 0.2941,
+              "n": 17
+            },
+            "Social & Preventive Medicine": {
+              "accuracy": 0.4729,
+              "n": 129
+            },
+            "Surgery": {
+              "accuracy": 0.5095,
+              "n": 369
+            },
+            "Unknown": {
+              "accuracy": 0.5,
+              "n": 2
+            }
+          },
+          "subject_spread": {
+            "n_subjects": 20,
+            "mean": 0.473,
+            "variance": 0.005194,
+            "std": 0.0721,
+            "min": 0.2941,
+            "max": 0.5906,
+            "range": 0.2965,
+            "worst": "Skin",
+            "best": "Biochemistry"
+          }
+        }
+      }
+    }
+  }
+}
